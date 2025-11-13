@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Xuân Hải - Luyện Chính Tả</title>
+  <meta name="description" content="Luyện chính tả tiếng Việt, tiếng Anh, tiếng Indonesia. Gõ nhanh, chính xác, theo dõi tiến độ.">
+  <meta name="theme-color" content="#10b981">
+
+  <!-- PWA: Manifest & Icons -->
+  <link rel="manifest" href="data:application/manifest+json,{
+    \"name\": \"Xuân Hải - Luyện Chính Tả\",
+    \"short_name\": \"Luyện CT\",
+    \"description\": \"Luyện gõ chính tả nhanh và chính xác\",
+    \"start_url\": \"/\",
+    \"display\": \"standalone\",
+    \"background_color\": \"#f8fafc\",
+    \"theme_color\": \"#10b981\",
+    \"orientation\": \"portrait-primary\",
+    \"icons\": [
+      {
+        \"src\": \"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 20 L30 40 L40 50 L30 60 L50 80 L70 60 L60 50 L70 40 Z' fill='none' stroke='%2310b981' stroke-width='8' stroke-linecap='round'/%3E%3Cpath d='M25 45 Q20 50 25 55 M75 45 Q80 50 75 55' fill='none' stroke='%2310b981' stroke-width='8'/%3E%3Cpath d='M35 35 Q30 30 35 25 M65 35 Q70 30 65 25' fill='none' stroke='%2310b981' stroke-width='8'/%3E%3C/svg%3E\",
+        \"sizes\": \"192x192\",
+        \"type\": \"image/svg+xml\",
+        \"purpose\": \"maskable any\"
+      },
+      {
+        \"src\": \"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 20 L30 40 L40 50 L30 60 L50 80 L70 60 L60 50 L70 40 Z' fill='none' stroke='%2310b981' stroke-width='8' stroke-linecap='round'/%3E%3Cpath d='M25 45 Q20 50 25 55 M75 45 Q80 50 75 55' fill='none' stroke='%2310b981' stroke-width='8'/%3E%3Cpath d='M35 35 Q30 30 35 25 M65 35 Q70 30 65 25' fill='none' stroke='%2310b981' stroke-width='8'/%3E%3C/svg%3E\",
+        \"sizes\": \"512x512\",
+        \"type\": \"image/svg+xml\",
+        \"purpose\": \"maskable any\"
+      }
+    ]
+  }">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 20 L30 40 L40 50 L30 60 L50 80 L70 60 L60 50 L70 40 Z' fill='none' stroke='%2310b981' stroke-width='8'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 20 L30 40 L40 50 L30 60 L50 80 L70 60 L60 50 L70 40 Z' fill='none' stroke='%2310b981' stroke-width='8'/%3E%3C/svg%3E">
+
+  <!-- Font & Chart -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #10b981;
+      --primary-light: #34d399;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --hint: #8b5cf6;
+      --glass: rgba(255, 255, 255, 0.7);
+      --shadow: 0 20px 40px rgba(0,0,0,0.08);
+      --radius: 28px;
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --primary: #34d399;
+      --primary-light: #6ee7b7;
+      --glass: rgba(30, 41, 59, 0.6);
+      --shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+      transition: var(--transition);
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+      min-height: 180px;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 8px;
+      background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .logo svg {
+      width: 64px;
+      height: 64px;
+      fill: var(--primary);
+      flex-shrink: 0;
+    }
+    .logo h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      line-height: 1.2;
+    }
+    header p {
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 10;
+    }
+    .theme-toggle:hover { transform: scale(1.1); }
+
+    .setup-panel {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      transition: var(--transition);
+      min-height: 420px;
+    }
+    @media (max-width: 900px) {
+      header { padding: 32px 24px; min-height: 160px; }
+      .logo h1 { font-size: 2.4rem; }
+      .setup-panel { grid-template-columns: 1fr; padding: 32px 28px; gap: 28px; min-height: auto; }
+    }
+    @media (max-width: 480px) {
+      header { padding: 28px 20px; }
+      .logo { gap: 12px; }
+      .logo svg { width: 48px; height: 48px; }
+      .logo h1 { font-size: 2rem; }
+      header p { font-size: 1.1rem; }
+      .setup-panel { padding: 24px 20px; gap: 20px; }
+    }
+
+    .setup-card {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .setup-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(16, 185, 129, 0.15);
+    }
+    .setup-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 18px;
+      font-size: 1.2rem;
+    }
+    .setup-card h3 svg {
+      width: 26px;
+      height: 26px;
+      fill: var(--primary);
+    }
+
+    select, textarea {
+      width: 100%;
+      padding: 16px 18px;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      font-size: 1.1rem;
+      background: var(--card);
+      color: var(--text);
+      transition: var(--transition);
+    }
+    select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.2);
+    }
+
+    .radio-group {
+      display: grid;
+      gap: 14px;
+    }
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1.05rem;
+    }
+    .radio-item:hover {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: var(--primary);
+    }
+    .radio-item input {
+      accent-color: var(--primary);
+    }
+
+    .start-btn {
+      grid-column: 1 / -1;
+      margin-top: 20px;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      font-weight: 700;
+      font-size: 1.3rem;
+      border-radius: 18px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(16, 185, 129, 0.35);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+    .start-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(16, 185, 129, 0.45);
+    }
+
+    #practiceArea {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      transition: var(--transition);
+    }
+
+    .progress-container {
+      background: var(--glass);
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+    }
+    .progress-bar {
+      height: 18px;
+      background: var(--border);
+      border-radius: 9px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      width: 0;
+      border-radius: 9px;
+      transition: width 0.5s ease;
+    }
+
+    .segment-box {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 32px;
+      border-radius: 22px;
+      border: 2px dashed var(--primary);
+      font-size: 1.5rem;
+      line-height: 1.9;
+      text-align: center;
+      min-height: 140px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .segment-box.listening {
+      color: var(--text-muted);
+      font-style: italic;
+      border-style: dashed;
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .input-area {
+      position: relative;
+      margin: 24px 0;
+    }
+    #userInput {
+      width: 100%;
+      padding: 20px 70px 20px 24px;
+      font-size: 1.4rem;
+      border: 3px solid var(--border);
+      border-radius: 20px;
+      background: var(--card);
+      color: var(--text);
+      transition: var(--transition);
+    }
+    #userInput:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.25);
+    }
+    .hint-btn {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--hint);
+      color: white;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+      transition: var(--transition);
+    }
+    .hint-btn:hover { transform: translateY(-50%) scale(1.12); }
+
+    #liveFeedback {
+      margin-top: 18px;
+      padding: 18px;
+      background: var(--glass);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      font-family: 'Courier New', monospace;
+      font-size: 1.25rem;
+      min-height: 60px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .correct { color: var(--success); font-weight: 700; }
+    .wrong { color: var(--danger); text-decoration: line-through; }
+
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: center;
+      margin: 32px 0;
+    }
+    .action-btn {
+      padding: 16px 32px;
+      border: none;
+      border-radius: 18px;
+      font-weight: 600;
+      font-size: 1.15rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 150px;
+      justify-content: center;
+    }
+    .btn-replay { background: var(--warning); color: white; }
+    .btn-hint { background: var(--hint); color: white; }
+    .btn-next { background: var(--primary); color: white; }
+    .btn-reset { background: var(--danger); color: white; }
+    .action-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.22); }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .stat-card {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      padding: 22px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .stat-card h4 {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .stat-card .value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 32px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, #10b981, #34d399);
+      color: white;
+      margin: 24px auto;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+    }
+    .level-1 { background: linear-gradient(135deg, #94a3b8, #cbd5e1); }
+    .level-2 { background: linear-gradient(135deg, #fbbf24, #fde68a); }
+    .level-3 { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+    .level-4 { background: linear-gradient(135deg, #10b981, #34d399); }
+    .level-5 { background: linear-gradient(135deg, #8b5cf6, #c4b5fd); }
+
+    canvas {
+      margin-top: 28px;
+      border-radius: 20px;
+      background: var(--card);
+      padding: 22px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    .hidden { display: none !important; }
+
+    /* PWA: Hiển thị nút "Cài đặt" */
+    .install-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card);
+      padding: 16px 24px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      border: 1px solid var(--border);
+      max-width: 90%;
+    }
+    .install-banner button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <header>
+      <div class="logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 20 L30 40 L40 50 L30 60 L50 80 L70 60 L60 50 L70 40 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <path d="M25 45 Q20 50 25 55 M75 45 Q80 50 75 55" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <path d="M35 35 Q30 30 35 25 M65 35 Q70 30 65 25" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <rect x="38" y="48" width="24" height="3" rx="1.5" fill="currentColor"/>
+          <rect x="38" y="53" width="18" height="3" rx="1.5" fill="currentColor"/>
+          <rect x="38" y="58" width="20" height="3" rx="1.5" fill="currentColor"/>
+        </svg>
+        <h1>Xuân Hải</h1>
+      </div>
+      <p>Luyện Chính Tả - Học Viết Chuẩn Mỗi Ngày</p>
+      <button class="theme-toggle" id="themeToggle">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg>
+      </button>
+    </header>
+
+    <!-- PHẦN CÀI ĐẶT -->
+    <div class="setup-panel" id="setupPanel">
+      <div class="setup-card">
+        <h3><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg> Chọn ngôn ngữ</h3>
+        <select id="language">
+          <option value="vi-VN">Tiếng Việt</option>
+          <option value="en-US">Tiếng Anh (Mỹ)</option>
+          <option value="id-ID">Tiếng Indonesia</option>
+        </select>
+      </div>
+
+      <div class="setup-card">
+        <h3><svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/></svg> Chọn chế độ</h3>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="mode" value="read-write" checked> Đọc - Viết</label>
+          <label class="radio-item"><input type="radio" name="mode" value="listen-write"> Nghe - Viết</label>
+          <label class="radio-item"><input type="radio" name="mode" value="read-listen-write"> Đọc + Nghe</label>
+        </div>
+      </div>
+
+      <div class="setup-card" style="grid-column:1/-1;">
+        <h3><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Nhập đoạn văn mẫu</h3>
+        <textarea id="sampleText" rows="5" placeholder="Dán hoặc nhập đoạn văn cần luyện..."></textarea>
+        <button class="start-btn" id="startBtn">Bắt đầu luyện tập ngay</button>
+      </div>
+    </div>
+
+    <!-- KHU VỰC LUYỆN TẬP -->
+    <div id="practiceArea" class="hidden">
+      <div class="progress-container">
+        <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-weight:600; font-size:1.1rem;">
+          <span>Tiến độ</span>
+          <span id="progressText">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <div class="segment-box" id="currentSegment"></div>
+
+      <div class="input-area">
+        <input type="text" id="userInput" placeholder="Gõ lại đoạn văn ở đây..." />
+        <button class="hint-btn" id="hintBtn">?</button>
+      </div>
+      <div id="liveFeedback"><em>Nhập để bắt đầu...</em></div>
+
+      <div class="action-bar">
+        <button class="action-btn btn-replay" id="replayBtn">Nghe lại</button>
+        <button class="action-btn btn-hint" id="showHintBtn">Gợi ý</button>
+        <button class="action-btn btn-next" id="nextBtn">Tiếp theo</button>
+        <button class="action-btn btn-reset" id="resetBtn">Làm lại</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><h4>Thời gian</h4><div class="value" id="time">0s</div></div>
+        <div class="stat-card"><h4>Tốc độ (WPM)</h4><div class="value" id="wpm">0</div></div>
+        <div class="stat-card"><h4>Độ chính xác</h4><div class="value" id="accuracy">100%</div></div>
+        <div class="stat-card"><h4>Cấp độ</h4><div class="value" id="level">Mới bắt đầu</div></div>
+      </div>
+
+      <div style="text-align:center;">
+        <div class="level-badge level-1" id="levelBadge">Mới bắt đầu</div>
+        <div style="margin-top:14px; color:var(--text-muted); font-size:1.1rem;">
+          Điểm: <strong id="score" style="color:var(--primary); font-size:1.5rem;">0</strong>
+        </div>
+      </div>
+
+      <canvas id="progressChart"></canvas>
+    </div>
+  </div>
+
+  <!-- PWA: Nút Cài đặt -->
+  <div class="install-banner hidden" id="installBanner">
+    <span>Thêm vào màn hình chính để dùng như app!</span>
+    <button id="installBtn">Cài đặt</button>
+  </div>
+
+  <script>
+    // === PWA: Hiển thị nút cài đặt ===
+    let deferredPrompt;
+    const installBanner = document.getElementById('installBanner');
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBanner.classList.remove('hidden');
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        installBanner.classList.add('hidden');
+      }
+      deferredPrompt = null;
+    });
+
+    // === LOGIC CHÍNH (giữ nguyên) ===
+    let segments = [], currentIdx = 0, startTime, timer;
+    let typedWords = 0, correctWords = 0, hintsUsed = 0;
+    let history = JSON.parse(localStorage.getItem('xuanHaiDictation') || '[]');
+    let chart, utterance;
+
+    const langSelect = document.getElementById('language');
+    const sampleText = document.getElementById('sampleText');
+    const startBtn = document.getElementById('startBtn');
+    const setupPanel = document.getElementById('setupPanel');
+    const practiceArea = document.getElementById('practiceArea');
+    const currentSegment = document.getElementById('currentSegment');
+    const userInput = document.getElementById('userInput');
+    const liveFeedback = document.getElementById('liveFeedback');
+    const hintBtn = document.getElementById('hintBtn');
+    const showHintBtn = document.getElementById('showHintBtn');
+    const replayBtn = document.getElementById('replayBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const timeEl = document.getElementById('time');
+    const wpmEl = document.getElementById('wpm');
+    const accuracyEl = document.getElementById('accuracy');
+    const levelEl = document.getElementById('level');
+    const levelBadge = document.getElementById('levelBadge');
+    const scoreEl = document.getElementById('score');
+    const themeToggle = document.getElementById('themeToggle');
+
+    const LEVELS = [
+      { name: "Mới bắt đầu", min: 0, color: "level-1" },
+      { name: "Trung bình", min: 50, color: "level-2" },
+      { name: "Khá", min: 100, color: "level-3" },
+      { name: "Giỏi", min: 200, color: "level-4" },
+      { name: "Xuất sắc", min: 350, color: "level-5" }
+    ];
+
+    function getLevel(wpm) {
+      for (let i = LEVELS.length - 1; i >= 0; i--) if (wpm >= LEVELS[i].min) return LEVELS[i];
+      return LEVELS[0];
+    }
+
+    function getMode() { return document.querySelector('input[name="mode"]:checked').value; }
+    function getLang() { return langSelect.value; }
+
+    function splitText(text) {
+      return text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
+    }
+
+    function speak(text, lang = getLang()) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function cleanText(str) {
+      return str.replace(/[.,!?:;'"“”()[\]{}]/g, '').trim();
+    }
+
+    function normalize(str) {
+      return cleanText(str).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function updateLiveFeedback() {
+      const original = segments[currentIdx];
+      const input = userInput.value;
+      const wordsOrig = cleanText(original).split(/\s+/).filter(w => w);
+      const wordsIn = cleanText(input).split(/\s+/).filter(w => w);
+
+      let html = '', correct = 0;
+      wordsIn.forEach((word, i) => {
+        if (i >= wordsOrig.length) {
+          html += `<span class="wrong">${word}</span> `;
+        } else {
+          const match = normalize(word) === normalize(wordsOrig[i]);
+          if (match) correct++;
+          html += `<span class="${match ? 'correct' : 'wrong'}">${word}</span> `;
+        }
+      });
+      correctWords = correct;
+      liveFeedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
+    }
+
+    function showHint() {
+      const words = cleanText(segments[currentIdx]).split(/\s+/).filter(w => w);
+      const typed = cleanText(userInput.value).split(/\s+/).filter(w => w);
+      const nextIdx = typed.length;
+      if (nextIdx < words.length) {
+        const nextWord = words[nextIdx];
+        liveFeedback.innerHTML += ` <span style="color:var(--hint); font-weight:700;">→ ${nextWord}</span>`;
+        hintsUsed++;
+      }
+    }
+
+    function showCurrentSegment() {
+      const mode = getMode();
+      const text = segments[currentIdx];
+      currentSegment.textContent = mode === 'listen-write' ? 'Nghe và gõ lại...' : text;
+      currentSegment.classList.toggle('listening', mode === 'listen-write');
+      userInput.value = ''; liveFeedback.innerHTML = '<em>Bắt đầu gõ...</em>'; userInput.focus();
+      if (mode.includes('listen')) setTimeout(() => speak(text), 600);
+    }
+
+    function nextSegment() {
+      typedWords += cleanText(segments[currentIdx]).split(/\s+/).filter(w => w).length;
+      currentIdx++;
+      const progress = (currentIdx / segments.length) * 100;
+      progressFill.style.width = progress + '%';
+      progressText.textContent = Math.round(progress) + '%';
+      if (currentIdx >= segments.length) endPractice(); else showCurrentSegment();
+    }
+
+    function calculateScore(wpm, accuracy) {
+      return Math.max(0, Math.round(wpm * 2 + accuracy * 1.5 - hintsUsed * 5));
+    }
+
+    function endPractice() {
+      clearInterval(timer);
+      const elapsed = (Date.now() - startTime) / 1000 / 60;
+      const wpm = elapsed > 0 ? Math.round(typedWords / elapsed) : 0;
+      const accuracy = typedWords > 0 ? Math.round((correctWords / typedWords) * 100) : 100;
+      const score = calculateScore(wpm, accuracy);
+      const level = getLevel(wpm);
+
+      history.push({ date: new Date().toLocaleString('vi-VN'), lang: getLang(), mode: getMode(), wpm, accuracy, score, level: level.name, words: typedWords, hints: hintsUsed });
+      if (history.length > 100) history.shift();
+      localStorage.setItem('xuanHaiDictation', JSON.stringify(history));
+      updateChart();
+
+      levelEl.textContent = level.name;
+      levelBadge.textContent = level.name;
+      levelBadge.className = `level-badge ${level.color}`;
+      scoreEl.textContent = score;
+
+      alert(`Hoàn thành!\nTốc độ: ${wpm} WPM | Chính xác: ${accuracy}% | Điểm: ${score} | Cấp: ${level.name}`);
+    }
+
+    function updateStats() {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const mins = elapsed / 60;
+      const wpm = mins > 0 ? Math.round(typedWords / mins) : 0;
+      const acc = typedWords > 0 ? Math.round((correctWords / typedWords) * 100) : 100;
+      timeEl.textContent = `${elapsed}s`;
+      wpmEl.textContent = wpm;
+      accuracyEl.textContent = `${acc}%`;
+    }
+
+    function updateChart() {
+      const recent = history.slice(-10);
+      const labels = recent.map((_, i) => `Lần ${history.length - 10 + i + 1}`);
+      if (chart) chart.destroy();
+      chart = new Chart(document.getElementById('progressChart'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Tốc độ (WPM)', data: recent.map(h => h.wpm), borderColor: '#10b981', tension: 0.4 },
+            { label: 'Điểm', data: recent.map(h => h.score), borderColor: '#34d399', tension: 0.4 }
+          ]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    startBtn.addEventListener('click', () => {
+      const text = sampleText.value.trim();
+      if (!text) return alert('Vui lòng nhập đoạn văn mẫu!');
+      segments = splitText(text);
+      if (!segments.length) return alert('Không tìm thấy đoạn hợp lệ!');
+
+      currentIdx = 0; typedWords = 0; correctWords = 0; hintsUsed = 0;
+      startTime = Date.now(); timer = setInterval(updateStats, 500);
+
+      setupPanel.classList.add('hidden');
+      practiceArea.classList.remove('hidden');
+      showCurrentSegment();
+    });
+
+    userInput.addEventListener('input', updateLiveFeedback);
+    userInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); nextSegment(); } });
+    hintBtn.addEventListener('click', showHint);
+    showHintBtn.addEventListener('click', showHint);
+    replayBtn.addEventListener('click', () => speak(segments[currentIdx]));
+    nextBtn.addEventListener('click', nextSegment);
+    resetBtn.addEventListener('click', () => location.reload());
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      themeToggle.innerHTML = isDark
+        ? `<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg>`
+        : `<svg viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m8.66-14.66l-.7.7M4.34 19.34l-.7.7M21 12h-1M5 12H4m15.36-5.36l-.7-.7M6.34 17.66l-.7-.7"/></svg>`;
+    });
+
+    window.addEventListener('load', () => { updateChart(); });
+  </script>
+</body>
+</html>
