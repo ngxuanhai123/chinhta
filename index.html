@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Xuân Hải - Luyện Chính Tả AI</title>
-  <meta name="description" content="Luyện gõ chính tả siêu nhanh với AI GroqCloud, huy hiệu, xếp hạng toàn cầu.">
+  <meta name="description" content="Luyện gõ chính tả siêu nhanh với AI GroqCloud, huy hiệu cấp bậc, xếp hạng toàn cầu.">
   <meta name="theme-color" content="#10b981">
 
   <!-- PWA -->
@@ -115,7 +115,7 @@
     .correct { color: var(--success); font-weight: 700; }
     .wrong { color: var(--danger); text-decoration: line-through; }
     .action-bar { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin: 32px 0; }
-    .action-btn { padding:: 16px 32px; border: none; border-radius: 18px; font-weight: 600; font-size: 1.15rem; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 12px; min-width: 150px; justify-content: center; }
+    .action-btn { padding: 16px 32px; border: none; border-radius: 18px; font-weight: 600; font-size: 1.15rem; cursor: pointer; transition: var(--transition); DISPLAY: flex; align-items: center; gap: 12px; min-width: 150px; justify-content: center; }
     .btn-replay { background: var(--warning); color: white; }
     .btn-hint { background: var(--hint); color: white; }
     .btn-next { background: var(--primary); color: white; }
@@ -349,8 +349,9 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // === GROQCLOUD API KEY (SỬA LỖI 400) ===
+    // === GROQCLOUD API KEY + MODEL MỚI NHẤT ===
     const GROQ_API_KEY = "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";
+    const GROQ_MODEL = "llama-3.3-70b-versatile"; // Model mới nhất từ Groq (thay cho llama3-70b-8192)
 
     // === PWA ===
     let deferredPrompt;
@@ -383,7 +384,7 @@
       localStorage.setItem('playerName', playerName);
     });
 
-    // === AI MODAL (SỬA LỖI 400) ===
+    // === AI MODAL (SỬA MODEL) ===
     const aiModal = document.getElementById('aiModal');
     const openAiModal = document.getElementById('openAiModal');
     const closeAiModal = document.getElementById('closeAiModal');
@@ -416,7 +417,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "llama3-70b-8192",
+            model: GROQ_MODEL,
             messages: [{ role: "user", content: prompt }],
             max_tokens: 800,
             temperature: 0.7
@@ -451,7 +452,7 @@
       }
     };
 
-    // === HUY HIỆU, XẾP HẠNG, LUYỆN TẬP (GIỮ NGUYÊN) ===
+    // === HUY HIỆU, XẾP HẠNG, LUYỆN TẬP (HOÀN CHỈNH) ===
     const BADGES = [
       { name: "Mới bắt đầu", icon: "Seedling", class: "bronze", min: 0 },
       { name: "Trung bình", icon: "Leaf", class: "silver", min: 50 },
@@ -534,7 +535,7 @@
     });
     loadRanking();
 
-    // === LOGIC LUYỆN TẬP (GIỮ NGUYÊN) ===
+    // === LOGIC LUYỆN TẬP ===
     let segments = [], currentIdx = 0, startTime, timer;
     let typedWords = 0, correctWords = 0, hintsUsed = 0;
     let history = JSON.parse(localStorage.getItem('xuanHaiDictation') || '[]');
