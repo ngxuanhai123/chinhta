@@ -225,9 +225,7 @@
       font-size: 0.9rem; white-space: nowrap; z-index: 100; opacity: 0; pointer-events: none;
       transition: opacity 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border);
     }
-    .karaoke-word:hover .word-tooltip {
-      opacity: 1; pointer-events: auto;
-    }
+    .karaoke-word:hover .word-tooltip { opacity: 1; }
     .mic-box {
       text-align: center; margin: 20px 0;
     }
@@ -503,6 +501,7 @@
     let recognition = null;
     let isListening = false;
     let karaokeWords = [];
+    let wordTranslations = new Map(); // Cache dịch từ
 
     const els = {
       lang: document.getElementById('globalLang'),
@@ -540,7 +539,7 @@
       micBtn: document.getElementById('micBtn')
     };
 
-    // === GIỌNG ĐỌC ===
+    // === GIỌNG ĐỌC & TỐC ĐỘ ===
     function loadVoices() {
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(globalLang.split('-')[0]));
       els.aiVoice.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Không có giọng</option>';
@@ -552,12 +551,12 @@
       }
     }
 
-    function speak(text, rate = speechRate, onWord) {
+    function speak(text, onWord) {
       if (!selectedVoice || currentMode === 'read-only') return;
       speechSynthesis.cancel();
       currentUtterance = new SpeechSynthesisUtterance(text);
       currentUtterance.voice = selectedVoice;
-      currentUtterance.rate = rate;
+      currentUtterance.rate = speechRate;
       currentUtterance.lang = globalLang;
       if (onWord) {
         currentUtterance.onboundary = (e) => {
@@ -569,7 +568,7 @@
 
     els.previewVoice.addEventListener('click', () => {
       const test = globalLang === 'vi-VN' ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.';
-      speak(test, parseFloat(els.aiRateSelect.value));
+      speak(test);
     });
 
     speechSynthesis.onvoiceschanged = loadVoices;
@@ -584,7 +583,6 @@
 
       els.generateBtn.disabled = true;
       els.generateBtn.textContent = "Đang tạo...";
-      els.aiResult.style.display = 'none';
 
       try {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -617,36 +615,19 @@
       }
     });
 
-    // === KARAOKE + TOOLTIP DỊCH TỪ ===
-    function highlightKaraoke(charIndex, charLength) {
-      karaokeWords.forEach(w => w.classList.remove('karaoke-active'));
-      const word = karaokeWords.find(w => charIndex >= w.dataset.start && charIndex < w.dataset.end);
-      if (word) word.classList.add('karaoke-active');
+    // === DỊCH TỪ (CACHE) ===
+    async function getTranslation(word, src) {
+      if (wordTranslations.has(word)) return wordTranslations.get(word);
+      try {
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=${src}|vi`);
+        const data = await res.json();
+        const trans = data.responseData.translatedText || word;
+        wordTranslations.set(word, trans);
+        return trans;
+      } catch { return word; }
     }
 
-    async function addWordWithTranslation(word, index, fullText) {
-      const span = document.createElement('span');
-      span.className = 'karaoke-word';
-      span.textContent = word;
-      span.dataset.start = fullText.indexOf(word, index);
-      span.dataset.end = span.dataset.start + word.length;
-
-      if (globalLang !== 'vi-VN') {
-        try {
-          const src = globalLang === 'en-US' ? 'en' : 'id';
-          const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=${src}|vi`);
-          const data = await res.json();
-          const trans = data.responseData.translatedText || word;
-          const tooltip = document.createElement('div');
-          tooltip.className = 'word-tooltip';
-          tooltip.textContent = trans;
-          span.appendChild(tooltip);
-        } catch (e) { console.error(e); }
-      }
-      return span;
-    }
-
-    // === SHOW SEGMENT ===
+    // === SHOW SEGMENT + KARAOKE + TOOLTIP ===
     async function showSegment() {
       const text = segments[currentIdx];
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
@@ -654,37 +635,59 @@
       els.hint.style.display = currentMode === 'read-only' ? 'none' : 'block';
       els.segment.classList.toggle('reading-mode', currentMode === 'read-only');
 
-      const words = text.split(/(\s+|\b)/).filter(w => w.trim());
-      let charPos = 0;
+      const words = text.split(/(\s+|\b)/).filter(w => w.trim().length > 0);
+      let charIndex = 0;
       karaokeWords = [];
+      const fragment = document.createDocumentFragment();
 
-      els.segment.innerHTML = '';
       for (let word of words) {
         if (!word.trim()) {
-          els.segment.appendChild(document.createTextNode(word));
-          charPos += word.length;
+          fragment.appendChild(document.createTextNode(word));
+          charIndex += word.length;
           continue;
         }
-        const span = await addWordWithTranslation(word, charPos, text);
+        const span = document.createElement('span');
+        span.className = 'karaoke-word';
+        span.textContent = word;
+        span.dataset.start = charIndex;
+        span.dataset.end = charIndex + word.length;
+
+        if (globalLang !== 'vi-VN') {
+          const src = globalLang === 'en-US' ? 'en' : 'id';
+          const trans = await getTranslation(word, src);
+          const tooltip = document.createElement('div');
+          tooltip.className = 'word-tooltip';
+          tooltip.textContent = trans;
+          span.appendChild(tooltip);
+        }
+
         karaokeWords.push(span);
-        els.segment.appendChild(span);
-        charPos += word.length;
+        fragment.appendChild(span);
+        charIndex += word.length;
       }
+
+      els.segment.innerHTML = '';
+      els.segment.appendChild(fragment);
 
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>Nghe và gõ...</em>';
-      } else if (currentMode !== 'read-only') {
-        // Hiển thị đoạn văn bình thường
       }
 
       els.input.value = ''; els.input.focus();
+
       const src = globalLang === 'en-US' ? 'en' : 'id';
       const trans = await translate(text, src);
       els.fullTrans.textContent = trans;
 
       if (currentMode.includes('listen') && currentMode !== 'read-only') {
-        setTimeout(() => speak(text, speechRate, highlightKaraoke), 600);
+        setTimeout(() => speak(text, highlightKaraoke), 600);
       }
+    }
+
+    function highlightKaraoke(charIndex) {
+      karaokeWords.forEach(w => w.classList.remove('karaoke-active'));
+      const word = karaokeWords.find(w => charIndex >= w.dataset.start && charIndex < w.dataset.end);
+      if (word) word.classList.add('karaoke-active');
     }
 
     async function translate(text, src) {
@@ -696,7 +699,7 @@
       } catch { return text; }
     }
 
-    // === CÁC HÀM KHÁC (giữ nguyên, đã tối ưu) ===
+    // === CÁC HÀM KHÁC (TỐI ƯU) ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
@@ -790,6 +793,7 @@
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       currentIdx = 0; typedWords = 0; correctWords = 0; hintsUsed = 0;
       currentMode = document.querySelector('input[name="mode"]:checked').value;
+      speechRate = parseFloat(els.aiRateSelect.value);
       updateModeButtons();
       startTime = Date.now(); timer = setInterval(updateStats, 500);
       document.getElementById('setupPanel').classList.add('hidden');
@@ -808,7 +812,7 @@
         hintsUsed++;
       }
     });
-    els.replay.addEventListener('click', () => speak(segments[currentIdx], speechRate, highlightKaraoke));
+    els.replay.addEventListener('click', () => speak(segments[currentIdx], highlightKaraoke));
     els.next.addEventListener('click', next);
     els.reset.addEventListener('click', () => location.reload());
     els.theme.addEventListener('click', () => {
