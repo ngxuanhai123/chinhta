@@ -574,7 +574,7 @@
     speechSynthesis.onvoiceschanged = loadVoices;
     setTimeout(loadVoices, 100);
 
-    // === TẠO VĂN BẢN BẰNG AI (TỰ ĐỘNG ĐIỀN) ===
+    // === TẠO VĂN BẢN BẰNG AI ===
     els.generateBtn.addEventListener('click', async () => {
       const topic = els.aiTopic.value.trim() || "một chủ đề thú vị";
       const sentences = els.aiSentences.value;
@@ -615,19 +615,17 @@
       }
     });
 
-    // === DỊCH TỪ (CACHE) ===
-    async function getTranslation(word, src) {
-      if (wordTranslations.has(word)) return wordTranslations.get(word);
+    // === DỊCH TOÀN BỘ ĐOẠN (1 LẦN) ===
+    async function translateFull(text, src) {
+      if (!text.trim() || globalLang === 'vi-VN') return text;
       try {
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=${src}|vi`);
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${src}|vi`);
         const data = await res.json();
-        const trans = data.responseData.translatedText || word;
-        wordTranslations.set(word, trans);
-        return trans;
-      } catch { return word; }
+        return data.responseData.translatedText || text;
+      } catch { return text; }
     }
 
-    // === SHOW SEGMENT + KARAOKE + TOOLTIP ===
+    // === SHOW SEGMENT – TỐI ƯU TỐC ĐỘ ===
     async function showSegment() {
       const text = segments[currentIdx];
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
@@ -635,52 +633,72 @@
       els.hint.style.display = currentMode === 'read-only' ? 'none' : 'block';
       els.segment.classList.toggle('reading-mode', currentMode === 'read-only');
 
-      const words = text.split(/(\s+|\b)/).filter(w => w.trim().length > 0);
+      // Ẩn khi nghe
+      if (currentMode === 'listen-write') {
+        els.segment.innerHTML = '<em>Nghe và gõ...</em>';
+        els.input.value = ''; els.input.focus();
+        const src = globalLang === 'en-US' ? 'en' : 'id';
+        const trans = await translateFull(text, src);
+        els.fullTrans.textContent = trans;
+        setTimeout(() => speak(text, () => {}), 600);
+        return;
+      }
+
+      // Tạo DOM nhanh + dịch 1 lần
+      const fragment = document.createDocumentFragment();
+      const words = text.split(/(\s+|\b)/).filter(w => w.trim() || w === ' ');
       let charIndex = 0;
       karaokeWords = [];
-      const fragment = document.createDocumentFragment();
 
+      // Dịch toàn bộ trước
+      const src = globalLang === 'en-US' ? 'en' : 'id';
+      const fullTrans = await translateFull(text, src);
+      els.fullTrans.textContent = fullTrans;
+
+      // Tạo từ + tooltip
       for (let word of words) {
         if (!word.trim()) {
           fragment.appendChild(document.createTextNode(word));
           charIndex += word.length;
           continue;
         }
+
         const span = document.createElement('span');
         span.className = 'karaoke-word';
         span.textContent = word;
         span.dataset.start = charIndex;
         span.dataset.end = charIndex + word.length;
+        karaokeWords.push(span);
 
         if (globalLang !== 'vi-VN') {
-          const src = globalLang === 'en-US' ? 'en' : 'id';
-          const trans = await getTranslation(word, src);
           const tooltip = document.createElement('div');
           tooltip.className = 'word-tooltip';
-          tooltip.textContent = trans;
+          tooltip.textContent = word; // Sẽ cập nhật sau
           span.appendChild(tooltip);
         }
 
-        karaokeWords.push(span);
         fragment.appendChild(span);
         charIndex += word.length;
       }
 
       els.segment.innerHTML = '';
       els.segment.appendChild(fragment);
-
-      if (currentMode === 'listen-write') {
-        els.segment.innerHTML = '<em>Nghe và gõ...</em>';
-      }
-
       els.input.value = ''; els.input.focus();
 
-      const src = globalLang === 'en-US' ? 'en' : 'id';
-      const trans = await translate(text, src);
-      els.fullTrans.textContent = trans;
+      // Cập nhật tooltip sau khi render
+      if (globalLang !== 'vi-VN') {
+        const wordList = text.split(/\s+/).filter(w => w);
+        const transList = fullTrans.split(/\s+/).filter(w => w);
+        karaokeWords.forEach((span, i) => {
+          if (transList[i]) {
+            span.querySelector('.word-tooltip').textContent = transList[i];
+          }
+        });
+      }
 
+      // Phát âm thanh
       if (currentMode.includes('listen') && currentMode !== 'read-only') {
-        setTimeout(() => speak(text, highlightKaraoke), 600);
+        setTimeout(() => speak(text, highlightKaraoke), 300);
       }
     }
 
@@ -690,16 +708,7 @@
       if (word) word.classList.add('karaoke-active');
     }
 
-    async function translate(text, src) {
-      if (!text.trim() || globalLang === 'vi-VN') return text;
-      try {
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${src}|vi`);
-        const data = await res.json();
-        return data.responseData.translatedText || text;
-      } catch { return text; }
-    }
-
-    // === CÁC HÀM KHÁC (TỐI ƯU) ===
+    // === CÁC HÀM KHÁC (GIỮ NGUYÊN) ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
