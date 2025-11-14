@@ -3,29 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luyện Chính Tả</title>
-  <meta name="description" content="Luyện gõ chính tả.">
+  <title>Luyện Chính Tả - Xuân Hải</title>
+  <meta name="description" content="Luyện gõ chính tả, dịch tức thì, giọng đọc AI, xếp hạng toàn cầu.">
   <meta name="theme-color" content="#10b981">
-
   <!-- PWA -->
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="data:application/manifest+json,{
+    \"name\": \"Xuân Hải - Luyện Chính Tả\",
+    \"short_name\": \"Xuân Hải\",
+    \"start_url\": \".\",
+    \"display\": \"standalone\",
+    \"background_color\": \"#f8fafc\",
+    \"theme_color\": \"#10b981\",
+    \"icons\": [{
+      \"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAgMjAgTDMwIDQwIEw0MCA1MCBMMzAgNjAgTTUwIDgwIEw3MCA2MCBMNjAgNTAgTDcwIDQwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSI4Ii8+PC9zdmc+\",
+      \"sizes\": \"192x192\", \"type\": \"image/svg+xml\"
+    }]
+  }">
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAgMjAgTDMwIDQwIEw0MCA1MCBMMzAgNjAgTTUwIDgwIEw3MCA2MCBMNjAgNTAgTDcwIDQwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSI4Ii8+PC9zdmc+">
   <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAgMjAgTDMwIDQwIEw0MCA1MCBMMzAgNjAgTTUwIDgwIEw3MCA2MCBMNjAgNTAgTDcwIDQwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSI4Ii8+PC9zdmc+">
-
   <!-- Font & Chart.js -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
   <style>
     :root {
       --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --text-muted: #64748b; --border: #e2e8f0;
       --primary: #10b981; --primary-light: #34d399; --success: #10b981; --warning: #f59e0b;
       --danger: #ef4444; --hint: #8b5cf6; --translate: #3b82f6; --glass: rgba(255, 255, 255, 0.7);
       --shadow: 0 20px 40px rgba(0,0,0,0.08); --radius: 28px;
-      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     [data-theme="dark"] {
       --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --text-muted: #94a3b8; --border: #334155;
@@ -68,16 +76,11 @@
     .radio-item { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 14px; background: var(--glass); border: 1px solid var(--border); cursor: pointer; transition: var(--transition); font-size: 1.05rem; }
     .radio-item:hover { background: rgba(16, 185, 129, 0.1); border-color: var(--primary); }
     .radio-item input { accent-color: var(--primary); }
-    .start-btn { grid-column: 1 / -1; margin-top: 20px; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; font-weight: 700; font-size: 1.3rem; border-radius: 18px; border: none; cursor: pointer; box: 0 10px 24px rgba(16, 185, 129, 0.35); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 14px; }
+    .start-btn { grid-column: 1 / -1; margin-top: 20px; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; font-weight: 700; font-size: 1.3rem; border-radius: 18px; border: none; cursor: pointer; box-shadow: 0 10px 24px rgba(16, 185, 129, 0.35); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 14px; }
     .start-btn:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(16, 185, 129, 0.45); }
 
-    /* AI GENERATOR BUTTON */
-    .ai-generator {
-      background: linear-gradient(135deg, #7c3aed, #c4b5fd);
-      color: white; padding: 18px; border-radius: 18px; text-align: center;
-      cursor: pointer; font-weight: 700; margin-top: 16px; box-shadow: 0 8px 20px rgba(139,92,246,0.3);
-      transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 12px;
-    }
+    /* AI GENERATOR */
+    .ai-generator { background: linear-gradient(135deg, #7c3aed, #c4b5fd); color: white; padding: 18px; border-radius: 18px; text-align: center; cursor: pointer; font-weight: 700; margin-top: 16px; box-shadow: 0 8px 20px rgba(139,92,246,0.3); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 12px; }
     .ai-generator:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(139,92,246,0.4); }
     .ai-generator svg { width: 28px; height: 28px; fill: white; }
 
@@ -91,27 +94,18 @@
     .ai-input-group input, .ai-input-group select { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 14px; font-size: 1.1rem; }
     .ai-generate-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #7c3aed, #c4b5fd); color: white; border: none; border-radius: 16px; font-weight: 700; font-size: 1.2rem; cursor: pointer; margin-top: 16px; }
     .ai-generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    /* VOICE PREVIEW */
-    .voice-preview {
-      display: flex; align-items: center; gap: 8px; margin-top: 8px;
-      padding: 10px 14px; background: var(--glass); border-radius: 12px;
-      font-size: 0.95rem; cursor: pointer; transition: var(--transition);
-    }
+    .voice-preview { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 10px 14px; background: var(--glass); border-radius: 12px; font-size: 0.95rem; cursor: pointer; transition: var(--transition); }
     .voice-preview:hover { background: rgba(16, 185, 129, 0.15); }
     .voice-preview svg { width: 20px; height: 20px; fill: var(--primary); }
 
-    /* TRANSLATE BUTTONS */
-    .translate-btns {
-      display: flex; gap: 8px; margin-top: 12px; justify-content: center;
+    /* TRANSLATE LIVE */
+    .translate-live {
+      margin-top: 8px; padding: 10px 14px; background: var(--glass); border-radius: 12px; font-size: 0.95rem;
+      color: var(--translate); font-style: italic; min-height: 36px; display: flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border);
     }
-    .translate-btn {
-      background: var(--translate); color: white; border: none; padding: 10px 16px;
-      border-radius: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 600;
-      display: flex; align-items: center; gap: 6px; transition: var(--transition);
-    }
-    .translate-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(59,130,246,0.3); }
-    .translate-btn svg { width: 18px; height: 18px; fill: white; }
+    .translate-live svg { width: 16px; height: 16px; fill: var(--translate); animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     /* PRACTICE AREA */
     #practiceArea { background: var(--card); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); border: 1px solid var(--border); flex: 1; display: flex; flex-direction: column; gap: 28px; }
@@ -128,6 +122,7 @@
     #liveFeedback { margin-top: 18px; padding: 18px; background: var(--glass); border-radius: 18px; border: 1px solid var(--border); font-family: 'Courier New', monospace; font-size: 1.25rem; min-height: 60px; white-space: pre-wrap; word-break: break-word; }
     .correct { color: var(--success); font-weight: 700; }
     .wrong { color: var(--danger); text-decoration: line-through; }
+
     .action-bar { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin: 32px 0; }
     .action-btn { padding: 16px 32px; border: none; border-radius: 18px; font-weight: 600; font-size: 1.15rem; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 12px; min-width: 150px; justify-content: center; }
     .btn-replay { background: var(--warning); color: white; }
@@ -135,6 +130,7 @@
     .btn-next { background: var(--primary); color: white; }
     .btn-reset { background: var(--danger); color: white; }
     .action-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.22); }
+
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; margin-top: 24px; }
     .stat-card { background: var(--glass); backdrop-filter: blur(10px); padding: 22px; border-radius: 20px; text-align: center; border: 1px solid var(--border); }
     .stat-card h4 { font-size: 1rem; color: var(--text-muted); margin-bottom: 10px; }
@@ -156,21 +152,6 @@
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     @keyframes shine { 0% { box-shadow: 0 0 10px #fff; } 50% { box-shadow: 0 0 20px #fff, 0 0 30px #8b5cf6; } 100% { box-shadow: 0 0 10px #fff; } }
 
-    .final-badge { display: flex; flex-direction: column; align-items: center; margin: 20px 0; animation: bounceIn 1s ease-out; }
-    @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.1); } 70% { transform: scale(0.9); } 100% { transform: scale(1); opacity: 1; } }
-
-    .ranking-panel { background: var(--card); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .ranking-tabs { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; justify-content: center; }
-    .ranking-tab { padding: 10px 20px; background: var(--glass); border-radius: 12px; font-weight: 600; cursor: pointer; transition: var(--transition); }
-    .ranking-tab.active { background: var(--primary); color: white; }
-    .ranking-list { display: grid; gap: 16px; }
-    .rank-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--glass); border-radius: 16px; border: 1px solid var(--border); }
-    .rank-position { font-size: 1.5rem; font-weight: 700; color: var(--primary); width: 50px; text-align: center; }
-    .rank-medal { font-size: 1.8rem; }
-    .rank-info { flex: 1; display: flex; align-items: center; gap: 8px; }
-    .rank-name { font-weight: 600; font-size: 1.1rem; }
-    .rank-score { color: var(--primary); font-weight: 700; }
-
     .hidden { display: none !important; }
     .install-banner { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--card); padding: 16px 24px; border-radius: 16px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px; z-index: 1000; border: 1px solid var(--border); max-width: 90%; font-size: 1rem; }
     .install-banner button { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; }
@@ -191,7 +172,7 @@
         </svg>
         <h1>Xuân Hải</h1>
       </div>
-      <p>Luyện Chính Tả – Dịch Ngữ Cảm, Giọng Đọc Tùy Chỉnh</p>
+      <p>Luyện Chính Tả – Dịch Tức Thì, Giọng Đọc Tùy Chỉnh</p>
       <button class="theme-toggle" id="themeToggle">
         <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg>
       </button>
@@ -218,7 +199,6 @@
           <option value="id-ID">Tiếng Indonesia</option>
         </select>
       </div>
-
       <div class="setup-card">
         <h3>Chọn chế độ</h3>
         <div class="radio-group">
@@ -227,13 +207,12 @@
           <label class="radio-item"><input type="radio" name="mode" value="read-listen-write"> Đọc + Nghe</label>
         </div>
       </div>
-
       <div class="setup-card" style="grid-column:1/-1;">
         <h3>Đoạn văn luyện tập</h3>
         <textarea id="sampleText" rows="5" placeholder="Dán hoặc nhập đoạn văn cần luyện..."></textarea>
         <div class="ai-generator" id="openAiModal">
           <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 17h2v-2h-2v2zm2-4h-2V7h2v8z"/></svg>
-          Tạo đoạn văn
+          Tạo đoạn văn bằng AI
         </div>
         <button class="start-btn" id="startBtn">Bắt đầu luyện tập ngay</button>
       </div>
@@ -243,7 +222,7 @@
     <div class="ai-modal" id="aiModal">
       <div class="ai-modal-content">
         <button class="ai-close" id="closeAiModal">×</button>
-        <h3 style="text-align:center; margin-bottom:24px; color:var(--primary);">Tạo Đoạn Văn</h3>
+        <h3 style="text-align:center; margin-bottom:24px; color:var(--primary);">Tạo Đoạn Văn Bằng AI</h3>
         <div class="ai-input-group">
           <label>Chủ đề</label>
           <input type="text" id="aiTopic" placeholder="Ví dụ: Môi trường, Công nghệ, Gia đình..." />
@@ -288,27 +267,25 @@
         </div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
       </div>
-
       <div class="segment-box" id="currentSegment"></div>
 
       <div class="input-area">
-        <input type="text" id="userInput" placeholder="Gõ lại đoạn văn ở đây..." />
+        <input type="text" id="userInput" placeholder="Gõ lại đoạn văn ở đây..." autocomplete="off" />
         <button class="hint-btn" id="hintBtn">?</button>
       </div>
 
-      <!-- TRANSLATE BUTTONS -->
-      <div class="translate-btns">
-        <button class="translate-btn" id="translateInput">
-          <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 8H17V6h-7V2H8v4H1v2h7.07a15.67 15.67 0 0 1-3.27 4.06 16.14 16.14 0 0 1-2.61-2.13H0l1.27 3.1a17.88 17.88 0 0 0 4.58 5.9l-.2.2L7 19l2-2 1.5 1.5 1.37-4.43zM13 18h2v-2h-2v2z"/></svg>
-          Dịch từ vừa gõ
-        </button>
-        <button class="translate-btn" id="translateCorrect">
-          <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 8H17V6h-7V2H8v4H1v2h7.07a15.67 15.67 0 0 1-3.27 4.06 16.14 16.14 0 0 1-2.61-2.13H0l1.27 3.1a17.88 17.88 0 0 0 4.58 5.9l-.2.2L7 19l2-2 1.5 1.5 1.37-4.43zM13 18h2v-2h-2v2z"/></svg>
-          Dịch từ đã đúng
-        </button>
+      <!-- DỊCH TỨC THÌ: Từ đang gõ -->
+      <div class="translate-live" id="translateInputLive">
+        <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 8H17V6h-7V2H8v4H1v2h7.07a15.67 15.67 0 0 1-3.27 4.06 16.14 16.14 0 0 1-2.61-2.13H0l1.27 3.1a17.88 17.88 0 0 0 4.58 5.9l-.2.2L7 19l2-2 1.5 1.5 1.37-4.43zM13 18h2v-2h-2v2z"/></svg>
+        <span id="inputTranslation">Dịch sẽ hiện ở đây...</span>
       </div>
 
+      <!-- FEEDBACK + DỊCH TỪ ĐÚNG -->
       <div id="liveFeedback"><em>Nhập để bắt đầu...</em></div>
+      <div class="translate-live" id="translateCorrectLive" style="margin-top:8px;">
+        <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 8H17V6h-7V2H8v4H1v2h7.07a15.67 15.67 0 0 1-3.27 4.06 16.14 16.14 0 0 1-2.61-2.13H0l1.27 3.1a17.88 17.88 0 0 0 4.58 5.9l-.2.2L7 19l2-2 1.5 1.5 1.37-4.43zM13 18h2v-2h-2v2z"/></svg>
+        <span id="correctTranslation">Từ đúng sẽ được dịch ở đây...</span>
+      </div>
 
       <div class="action-bar">
         <button class="action-btn btn-replay" id="replayBtn">Nghe lại</button>
@@ -330,7 +307,6 @@
           Điểm: <strong id="score" style="color:var(--primary); font-size:1.5rem;">0</strong>
         </div>
       </div>
-
       <canvas id="progressChart"></canvas>
     </div>
 
@@ -370,7 +346,7 @@
     const GROQ_API_KEY = "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";
     const GROQ_MODEL = "llama-3.3-70b-versatile";
 
-    // === NGÔN NGỮ TOÀN CỤC ===
+    // === NGÔN NGỮ & GIỌNG ĐỌC ===
     const globalLangSelect = document.getElementById('globalLanguage');
     let globalLang = localStorage.getItem('globalLang') || 'vi-VN';
     globalLangSelect.value = globalLang;
@@ -380,7 +356,6 @@
       loadVoices();
     });
 
-    // === GIỌNG ĐỌC & TỐC ĐỘ ===
     let voices = [], selectedVoice = null, speechRate = 1;
     const voiceSelect = document.getElementById('aiVoice');
     const rateSelect = document.getElementById('aiRate');
@@ -421,34 +396,41 @@
       }
     }
 
-    // === DỊCH NGỮ CẢM (MyMemory API - MIỄN PHÍ) ===
-    async function translateText(text, target = 'vi') {
-      if (!text.trim() || text.length < 2) return '';
+    // === DỊCH TỨC THÌ ===
+    let translateTimeout;
+    async function translateLive(text, target = 'vi', elementId) {
+      if (!text.trim()) {
+        document.getElementById(elementId).textContent = elementId === 'inputTranslation' ? 'Dịch sẽ hiện ở đây...' : 'Từ đúng sẽ được dịch ở đây...';
+        return;
+      }
+      document.getElementById(elementId).innerHTML = '<svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 8H17V6h-7V2H8v4H1v2h7.07a15.67 15.67 0 0 1-3.27 4.06 16.14 16.14 0 0 1-2.61-2.13H0l1.27 3.1a17.88 17.88 0 0 0 4.58 5.9l-.2.2L7 19l2-2 1.5 1.5 1.37-4.43zM13 18h2v-2h-2v2z"/></svg> Đang dịch...';
       try {
         const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=auto|${target}`);
         const data = await res.json();
-        return data.responseData.translatedText || text;
-      } catch (e) {
-        return text;
+        const translated = data.responseData.translatedText || text;
+        document.getElementById(elementId).textContent = translated;
+      } catch {
+        document.getElementById(elementId).textContent = text;
       }
     }
 
-    document.getElementById('translateInput').addEventListener('click', async () => {
-      const input = document.getElementById('userInput').value.trim();
-      if (!input) return alert('Không có từ để dịch!');
-      const translated = await translateText(input);
-      alert(`Dịch: "${input}" → "${translated}"`);
+    document.getElementById('userInput').addEventListener('input', function() {
+      clearTimeout(translateTimeout);
+      translateTimeout = setTimeout(() => {
+        const text = this.value.trim();
+        const target = globalLang === 'vi-VN' ? 'vi' : 'en';
+        translateLive(text, target, 'inputTranslation');
+      }, 600);
     });
 
-    document.getElementById('translateCorrect').addEventListener('click', async () => {
-      const correctWords = Array.from(document.querySelectorAll('#liveFeedback .correct'))
-        .map(span => span.textContent).join(' ').trim();
-      if (!correctWords) return alert('Chưa có từ nào đúng!');
-      const translated = await translateText(correctWords);
-      alert(`Dịch từ đúng: "${correctWords}" → "${translated}"`);
-    });
+    function updateCorrectTranslation() {
+      const correctText = Array.from(document.querySelectorAll('#liveFeedback .correct'))
+        .map(s => s.textContent).join(' ');
+      const target = globalLang === 'vi-VN' ? 'vi' : 'en';
+      translateLive(correctText, target, 'correctTranslation');
+    }
 
-    // === AI MODAL + TỰ ĐỘNG ĐIỀN ===
+    // === AI MODAL ===
     const aiModal = document.getElementById('aiModal');
     const openAiModal = document.getElementById('openAiModal');
     const closeAiModal = document.getElementById('closeAiModal');
@@ -465,22 +447,18 @@
       const sentences = document.getElementById('aiSentences').value;
       const langName = globalLang === 'vi-VN' ? 'Tiếng Việt' : globalLang === 'en-US' ? 'Tiếng Anh' : 'Tiếng Indonesia';
       const prompt = `Viết một đoạn văn ngắn ${langName} khoảng ${sentences} câu về chủ đề: "${topic}". Chỉ trả về đoạn văn, không giải thích.`;
-
       generateAiBtn.disabled = true;
       generateAiBtn.textContent = "Đang tạo...";
       aiResult.style.display = 'none';
-
       try {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
           body: JSON.stringify({ model: GROQ_MODEL, messages: [{ role: "user", content: prompt }], max_tokens: 800, temperature: 0.7 })
         });
-
         if (!res.ok) throw new Error(`Lỗi ${res.status}`);
         const data = await res.json();
         const text = data.choices?.[0]?.message?.content?.trim() || "Không tạo được nội dung.";
-
         sampleText.value = text;
         aiResult.textContent = text;
         aiResult.style.display = 'block';
@@ -526,7 +504,7 @@
       });
     });
 
-    // === HUY HIỆU, XẾP HẠN, LUYỆN TẬP ===
+    // === HUY HIỆU & XẾP HẠNG ===
     const BADGES = [
       { name: "Mới bắt đầu", icon: "Seedling", class: "bronze", min: 0 },
       { name: "Trung bình", icon: "Leaf", class: "silver", min: 50 },
@@ -534,12 +512,10 @@
       { name: "Giỏi", icon: "Gem", class: "emerald", min: 200 },
       { name: "Xuất sắc", icon: "Crown", class: "diamond", min: 350 }
     ];
-
     function getBadge(wpm) {
       for (let i = BADGES.length - 1; i >= 0; i--) if (wpm >= BADGES[i].min) return BADGES[i];
       return BADGES[0];
     }
-
     function createBadgeElement(badge) {
       const el = document.createElement('div');
       el.className = `rank-badge ${badge.class}`;
@@ -547,14 +523,12 @@
       el.title = badge.name;
       return el;
     }
-
     function uploadScore(score, wpm) {
       if (!playerName) playerName = 'Người chơi ẩn danh';
       const now = new Date();
       const record = { name: playerName, score, wpm, timestamp: now.toISOString(), week: `${now.getFullYear()}-W${String(Math.ceil((now.getDate() + now.getDay()) / 7)).padStart(2, '0')}`, month: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}` };
       db.ref('scores').push(record);
     }
-
     function loadRanking(type = 'all') {
       const list = document.getElementById('rankingList');
       list.innerHTML = '<p>Đang tải...</p>';
@@ -568,7 +542,6 @@
         const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
         query = db.ref('scores').orderByChild('month').equalTo(month).orderByChild('score').limitToLast(10);
       }
-
       query.once('value', snapshot => {
         const data = snapshot.val();
         const entries = data ? Object.values(data).reverse() : [];
@@ -590,7 +563,6 @@
         });
       });
     }
-
     document.querySelectorAll('.ranking-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.ranking-tab').forEach(t => t.classList.remove('active'));
@@ -605,7 +577,6 @@
     let typedWords = 0, correctWords = 0, hintsUsed = 0;
     let history = JSON.parse(localStorage.getItem('xuanHaiDictation') || '[]');
     let chart;
-
     const startBtn = document.getElementById('startBtn');
     const setupPanel = document.getElementById('setupPanel');
     const practiceArea = document.getElementById('practiceArea');
@@ -628,11 +599,9 @@
     const themeToggle = document.getElementById('themeToggle');
 
     function getMode() { return document.querySelector('input[name="mode"]:checked').value; }
-
     function splitText(text) {
       return text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
     }
-
     function cleanText(str) { return str.replace(/[.,!?:;'"“”()[\]{}]/g, '').trim(); }
     function normalize(str) { return cleanText(str).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 
@@ -641,7 +610,6 @@
       const input = userInput.value;
       const wordsOrig = cleanText(original).split(/\s+/).filter(w => w);
       const wordsIn = cleanText(input).split(/\s+/).filter(w => w);
-
       let html = '', correct = 0;
       wordsIn.forEach((word, i) => {
         if (i >= wordsOrig.length) html += `<span class="wrong">${word}</span> `;
@@ -653,6 +621,7 @@
       });
       correctWords = correct;
       liveFeedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
+      updateCorrectTranslation();
     }
 
     function showHint() {
@@ -694,26 +663,21 @@
       const accuracy = typedWords > 0 ? Math.round((correctWords / typedWords) * 100) : 100;
       const score = calculateScore(wpm, accuracy);
       const badge = getBadge(wpm);
-
       history.push({ date: new Date().toLocaleString('vi-VN'), wpm, accuracy, score, badge: badge.name });
       if (history.length > 100) history.shift();
       localStorage.setItem('xuanHaiDictation', JSON.stringify(history));
       updateChart();
-
       levelEl.textContent = badge.name;
       levelBadge.textContent = badge.name;
       levelBadge.className = `level-badge ${badge.class === 'bronze' ? 'level-1' : badge.class === 'silver' ? 'level-2' : badge.class === 'gold' ? 'level-3' : badge.class === 'emerald' ? 'level-4' : 'level-5'}`;
       scoreEl.textContent = score;
-
       document.getElementById('finalLevel').textContent = badge.name;
       document.getElementById('finalScore').textContent = score;
       const badgeEl = document.getElementById('finalBadge');
       badgeEl.className = `rank-badge ${badge.class}`;
       badgeEl.textContent = badge.icon;
       document.getElementById('finalResult').classList.remove('hidden');
-
       uploadScore(score, wpm);
-
       alert(`Chúc mừng!\nCấp bậc: ${badge.name} ${badge.icon}\nTốc độ: ${wpm} WPM\nĐộ chính xác: ${accuracy}%\nĐiểm: ${score}\nĐã gửi lên bảng xếp hạng!`);
     }
 
@@ -746,10 +710,8 @@
       if (!text) return alert('Vui lòng nhập đoạn văn mẫu!');
       segments = splitText(text);
       if (!segments.length) return alert('Không tìm thấy đoạn hợp lệ!');
-
       currentIdx = 0; typedWords = 0; correctWords = 0; hintsUsed = 0;
       startTime = Date.now(); timer = setInterval(updateStats, 500);
-
       setupPanel.classList.add('hidden');
       practiceArea.classList.remove('hidden');
       showCurrentSegment();
@@ -771,7 +733,7 @@
         : `<svg viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m8.66-14.66l-.7.7M4.34 19.34l-.7.7M21 12h-1M5 12H4m15.36-5.36l-.7-.7M6.34 17.66l-.7-.7"/></svg>`;
     });
 
-    window.addEventListener('load', () => { updateChart(); });
+    window.addEventById('load', () => { updateChart(); });
   </script>
 </body>
 </html>
