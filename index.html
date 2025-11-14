@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Xuân Hải - Luyện Chính Tả</title>
-  <meta name="description" content="Luyện gõ chính tả với giọng đọc tùy chỉnh, nghe thử trước, AI tự động, xếp hạng toàn cầu.">
+  <title>Luyện Chính Tả</title>
+  <meta name="description" content="Luyện gõ chính tả.">
   <meta name="theme-color" content="#10b981">
 
   <!-- PWA -->
@@ -15,7 +15,7 @@
   <!-- Font & Chart.js -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <!-- Firebase SDK -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -23,7 +23,7 @@
     :root {
       --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --text-muted: #64748b; --border: #e2e8f0;
       --primary: #10b981; --primary-light: #34d399; --success: #10b981; --warning: #f59e0b;
-      --danger: #ef4444; --hint: #8b5cf6; --glass: rgba(255, 255, 255, 0.7);
+      --danger: #ef4444; --hint: #8b5cf6; --translate: #3b82f6; --glass: rgba(255, 255, 255, 0.7);
       --shadow: 0 20px 40px rgba(0,0,0,0.08); --radius: 28px;
       --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -68,7 +68,7 @@
     .radio-item { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 14px; background: var(--glass); border: 1px solid var(--border); cursor: pointer; transition: var(--transition); font-size: 1.05rem; }
     .radio-item:hover { background: rgba(16, 185, 129, 0.1); border-color: var(--primary); }
     .radio-item input { accent-color: var(--primary); }
-    .start-btn { grid-column: 1 / -1; margin-top: 20px; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; font-weight: 700; font-size: 1.3rem; border-radius: 18px; border: none; cursor: pointer; box-shadow: 0 10px 24px rgba(16, 185, 129, 0.35); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 14px; }
+    .start-btn { grid-column: 1 / -1; margin-top: 20px; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; font-weight: 700; font-size: 1.3rem; border-radius: 18px; border: none; cursor: pointer; box: 0 10px 24px rgba(16, 185, 129, 0.35); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 14px; }
     .start-btn:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(16, 185, 129, 0.45); }
 
     /* AI GENERATOR BUTTON */
@@ -92,7 +92,7 @@
     .ai-generate-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #7c3aed, #c4b5fd); color: white; border: none; border-radius: 16px; font-weight: 700; font-size: 1.2rem; cursor: pointer; margin-top: 16px; }
     .ai-generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* VOICE PREVIEW BUTTON */
+    /* VOICE PREVIEW */
     .voice-preview {
       display: flex; align-items: center; gap: 8px; margin-top: 8px;
       padding: 10px 14px; background: var(--glass); border-radius: 12px;
@@ -100,6 +100,18 @@
     }
     .voice-preview:hover { background: rgba(16, 185, 129, 0.15); }
     .voice-preview svg { width: 20px; height: 20px; fill: var(--primary); }
+
+    /* TRANSLATE BUTTONS */
+    .translate-btns {
+      display: flex; gap: 8px; margin-top: 12px; justify-content: center;
+    }
+    .translate-btn {
+      background: var(--translate); color: white; border: none; padding: 10px 16px;
+      border-radius: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 600;
+      display: flex; align-items: center; gap: 6px; transition: var(--transition);
+    }
+    .translate-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(59,130,246,0.3); }
+    .translate-btn svg { width: 18px; height: 18px; fill: white; }
 
     /* PRACTICE AREA */
     #practiceArea { background: var(--card); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); border: 1px solid var(--border); flex: 1; display: flex; flex-direction: column; gap: 28px; }
@@ -177,9 +189,9 @@
           <rect x="38" y="53" width="18" height="3" rx="1.5" fill="currentColor"/>
           <rect x="38" y="58" width="20" height="3" rx="1.5" fill="currentColor"/>
         </svg>
-        <h1>CHÍNH TẢ VUI của Xuân Hải</h1>
+        <h1>Xuân Hải</h1>
       </div>
-      <p>Luyện Chính Tả - Đúng chữ đúng lời, viết nên tương lai.</p>
+      <p>Luyện Chính Tả – Dịch Ngữ Cảm, Giọng Đọc Tùy Chỉnh</p>
       <button class="theme-toggle" id="themeToggle">
         <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg>
       </button>
@@ -221,7 +233,7 @@
         <textarea id="sampleText" rows="5" placeholder="Dán hoặc nhập đoạn văn cần luyện..."></textarea>
         <div class="ai-generator" id="openAiModal">
           <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 17h2v-2h-2v2zm2-4h-2V7h2v8z"/></svg>
-          Tạo đoạn văn tự động bằng AI
+          Tạo đoạn văn
         </div>
         <button class="start-btn" id="startBtn">Bắt đầu luyện tập ngay</button>
       </div>
@@ -283,6 +295,19 @@
         <input type="text" id="userInput" placeholder="Gõ lại đoạn văn ở đây..." />
         <button class="hint-btn" id="hintBtn">?</button>
       </div>
+
+      <!-- TRANSLATE BUTTONS -->
+      <div class="translate-btns">
+        <button class="translate-btn" id="translateInput">
+          <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 8H17V6h-7V2H8v4H1v2h7.07a15.67 15.67 0 0 1-3.27 4.06 16.14 16.14 0 0 1-2.61-2.13H0l1.27 3.1a17.88 17.88 0 0 0 4.58 5.9l-.2.2L7 19l2-2 1.5 1.5 1.37-4.43zM13 18h2v-2h-2v2z"/></svg>
+          Dịch từ vừa gõ
+        </button>
+        <button class="translate-btn" id="translateCorrect">
+          <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 8H17V6h-7V2H8v4H1v2h7.07a15.67 15.67 0 0 1-3.27 4.06 16.14 16.14 0 0 1-2.61-2.13H0l1.27 3.1a17.88 17.88 0 0 0 4.58 5.9l-.2.2L7 19l2-2 1.5 1.5 1.37-4.43zM13 18h2v-2h-2v2z"/></svg>
+          Dịch từ đã đúng
+        </button>
+      </div>
+
       <div id="liveFeedback"><em>Nhập để bắt đầu...</em></div>
 
       <div class="action-bar">
@@ -396,6 +421,33 @@
       }
     }
 
+    // === DỊCH NGỮ CẢM (MyMemory API - MIỄN PHÍ) ===
+    async function translateText(text, target = 'vi') {
+      if (!text.trim() || text.length < 2) return '';
+      try {
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=auto|${target}`);
+        const data = await res.json();
+        return data.responseData.translatedText || text;
+      } catch (e) {
+        return text;
+      }
+    }
+
+    document.getElementById('translateInput').addEventListener('click', async () => {
+      const input = document.getElementById('userInput').value.trim();
+      if (!input) return alert('Không có từ để dịch!');
+      const translated = await translateText(input);
+      alert(`Dịch: "${input}" → "${translated}"`);
+    });
+
+    document.getElementById('translateCorrect').addEventListener('click', async () => {
+      const correctWords = Array.from(document.querySelectorAll('#liveFeedback .correct'))
+        .map(span => span.textContent).join(' ').trim();
+      if (!correctWords) return alert('Chưa có từ nào đúng!');
+      const translated = await translateText(correctWords);
+      alert(`Dịch từ đúng: "${correctWords}" → "${translated}"`);
+    });
+
     // === AI MODAL + TỰ ĐỘNG ĐIỀN ===
     const aiModal = document.getElementById('aiModal');
     const openAiModal = document.getElementById('openAiModal');
@@ -474,7 +526,7 @@
       });
     });
 
-    // === HUY HIỆU, XẾP HẠNG, LUYỆN TẬP (HOÀN CHỈNH) ===
+    // === HUY HIỆU, XẾP HẠN, LUYỆN TẬP ===
     const BADGES = [
       { name: "Mới bắt đầu", icon: "Seedling", class: "bronze", min: 0 },
       { name: "Trung bình", icon: "Leaf", class: "silver", min: 50 },
@@ -721,11 +773,5 @@
 
     window.addEventListener('load', () => { updateChart(); });
   </script>
-<p>---  Đúng chữ đúng lời, viết nên tương lai.
-  Chuyện là Hải đang học tiếng mà lò mò mãi không thấy đâu ưng ý, nên đành lọ mọ lên mạng code trang này cho vui thôi hén, kỉ niệm 13/10/2015----</p>
-  
-</html>
-
 </body>
 </html>
-
