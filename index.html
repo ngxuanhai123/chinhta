@@ -49,7 +49,7 @@
       background: linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a, #fbbf24, #f59e0b);
     }
     .logo {
-      display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: center 16px; flex-wrap: wrap;
     }
     .logo svg { width: 64px; height: 64px; fill: var(--primary); animation: float 3s ease-in-out infinite; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
@@ -61,15 +61,14 @@
     .tagline { color: var(--muted); font-size: 1.2rem; margin-top: 8px; }
     .tip { position: relative; cursor: help; }
     .tip .tiptext {
-      visibility: hidden; background: var(--card); color: var(--text); padding: 10px 14px;
-      border-radius: 14px; font-size: 0.9rem; position: absolute; bottom: 130%; left: 50%;
-      transform: translateX(-50%); width: max-content; max-width: 300px; z-index: 100;
-      opacity: 0; transition: 0.3s; box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-      border: 1px solid var(--border); white-space: normal;
+      visibility: hidden; background: var(--card); color: var(--text); padding: 8px 12px;
+      border-radius: 10px; font-size: 0.85rem; position: absolute; z-index: 100;
+      opacity: 0; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border: 1px solid var(--border); white-space: nowrap;
     }
     .tip:hover .tiptext { visibility: visible; opacity: 1; }
 
-    /* NÚT TỐI/SÁNG – CỐ ĐỊNH GÓC PHẢI TRÊN, CÁCH 3cm, TOOLTIP GẦN NÚT */
+    /* NÚT TỐI/SÁNG – TOOLTIP SÁT BIỂU TƯỢNG */
     .theme-toggle {
       position: fixed; top: 60px; right: 20px; z-index: 9999;
       background: var(--primary); color: white; border: 3px solid white;
@@ -84,9 +83,8 @@
     }
     .theme-toggle .icon { width: 28px; height: 28px; fill: white; }
     .theme-toggle .tiptext {
-      right: 65px; left: auto; top: 50%; transform: translateY(-50%);
-      margin-top: 0; white-space: nowrap; font-size: 0.85rem;
-      padding: 6px 10px; border-radius: 10px;
+      right: 65px; top: 50%; transform: translateY(-50%);
+      font-weight: 600;
     }
 
     .tabs {
@@ -367,7 +365,7 @@
 </head>
 <body>
   <div class="container">
-    <!-- NÚT TỐI/SÁNG – CỐ ĐỊNH GÓC PHẢI TRÊN, CÁCH 3cm, TOOLTIP GẦN NÚT -->
+    <!-- NÚT TỐI/SÁNG – TOOLTIP SÁT BIỂU TƯỢNG -->
     <div class="tip">
       <button class="theme-toggle" id="themeBtn">
         <svg class="icon" viewBox="0 0 24 24" id="sunIcon"><path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm8-7a1 1 0 0 1 0 2h-2a1 1 0 1 1 0-2h2zm-16 0a1 1 0 0 1 0 2H2a1 1 0 1 1 0-2h2zM5.64 5.64a1 1 0 0 1 1.42 0l1.41 1.41a1 1 0 1 1-1.42 1.42L5.64 6.06a1 1 0 0 1 0-1.42zm12.72 0a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.42l1.41-1.41a1 1 0 0 1 1.42 0zM5.64 18.36a1 1 0 0 1 0-1.42l1.41-1.41a1 1 0 1 1 1.42 1.42l-1.41 1.41a1 1 0 0 1-1.42 0zm12.72 0a1 1 0 0 1-1.42 0l-1.41-1.41a1 1 0 1 1 1.42-1.42l1.41 1.41a1 1 0 0 1 0 1.42zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>
@@ -379,7 +377,6 @@
     <!-- HEADER -->
     <header>
       <div class="logo">
-        <!-- LOGO BÀN PHÍM + BÚT CHÌ -->
         <svg viewBox="0 0 100 100">
           <rect x="20" y="30" width="60" height="40" rx="5" fill="currentColor" />
           <path d="M25 40 h10 v20 h-10 z M40 40 h10 v20 h-10 z M55 40 h10 v20 h-10 z" fill="#fff" />
@@ -415,8 +412,8 @@
           </h3>
           <select id="globalLang">
             <option value="vi-VN">Tiếng Việt (không dịch)</option>
-            <option value="en-US">Tiếng Anh → Việt</option>
-            <option value="id-ID">Tiếng Indonesia → Việt</option>
+            <option value="en-US">Tiếng Anh to Việt</option>
+            <option value="id-ID">Tiếng Indonesia to Việt</option>
           </select>
         </div>
         <!-- CHẾ ĐỘ LUYỆN -->
@@ -543,6 +540,7 @@
       <div id="liveFeedback"><em>Nhập hoặc đọc để bắt đầu...</em></div>
       <div class="action-row">
         <button class="action-btn btn-replay" id="replayBtn">Nghe lại</button>
+        <button class="action-btn btn-hint" id="showHintBtn">Gợi ý</button>
         <button class="action-btn btn-next" id="nextBtn">Tiếp theo</button>
         <button class="action-btn btn-reset" id="resetBtn">Làm lại</button>
       </div>
@@ -653,7 +651,7 @@
       });
     });
 
-    // === BẢNG XẾP HẠNG ===
+    // === BẢNG XẾP HẠNG – ĐỒNG BỘ TỰ ĐỘNG ===
     function renderRankTable(filter = 'all') {
       const now = new Date();
       const filtered = history.filter(h => {
@@ -910,7 +908,7 @@
       els.levelBadge.textContent = badge;
       els.score.textContent = score;
       updateChart();
-      renderRankTable();
+      renderRankTable(); // ĐỒNG BỘ TỰ ĐỘNG
       alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
     }
 
@@ -955,7 +953,7 @@
       currentIdx = 0; typedWords = 0; correctWords = 0; hintsUsed = 0;
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.aiRateSelect.value);
-      playerName = els.playerName.value.trim(); // LẤY TÊN NGƯỜI CHƠI
+      playerName = els.playerName.value.trim();
       updateModeButtons();
       startTime = Date.now(); timer = setInterval(updateStats, 500);
       document.getElementById('setupPanel').classList.add('hidden');
@@ -967,7 +965,7 @@
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); next(); } });
 
-    // SỬA LỖI GỢI Ý
+    // GỢI Ý – HIỂN THỊ TRONG Ô GỢI Ý
     els.hint.addEventListener('click', () => {
       const words = segments[currentIdx].split(/\s+/).filter(w => w);
       const typed = els.input.value.trim().split(/\s+/).filter(w => w);
