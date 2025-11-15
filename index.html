@@ -14,9 +14,9 @@
     \"display\": \"standalone\",
     \"background_color\": \"#fff7ed\",
     \"theme_color\": \"#f59e0b\",
-    \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iI2Y1OWUwYiIvPjxwYXRoIGQ9Ik00MCAzMEg2MG0tMjAgMjB2MjBtNCAwdi0yMG0tNCAwbC0yLTIiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
+    \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
   }">
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iI2Y1OWUwYiIvPjxwYXRoIGQ9Ik00MCAzMUg2MG0tMjAgMjB2MjBtNCAwdi0yMG0tNCAwbC0yLTIiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=">
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
   <!-- Font & Chart.js -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -69,9 +69,9 @@
     }
     .tip:hover .tiptext { visibility: visible; opacity: 1; }
 
-    /* NÚT TỐI/SÁNG – CỐ ĐỊNH GÓC PHẢI TRÊN, ĐẨY XUỐNG 3CM */
+    /* NÚT TỐI/SÁNG – CỐ ĐỊNH GÓC PHẢI TRÊN, CÁCH 3cm, TOOLTIP GẦN NÚT */
     .theme-toggle {
-      position: fixed; top: 50px; right: 20px; z-index: 9999;
+      position: fixed; top: 60px; right: 20px; z-index: 9999;
       background: var(--primary); color: white; border: 3px solid white;
       width: 56px; height: 56px; border-radius: 50%; display: flex;
       align-items: center; justify-content: center; cursor: pointer;
@@ -84,8 +84,9 @@
     }
     .theme-toggle .icon { width: 28px; height: 28px; fill: white; }
     .theme-toggle .tiptext {
-      right: 0; left: auto; transform: translateX(0); bottom: auto; top: 100%;
-      margin-top: 8px; white-space: nowrap;
+      right: 65px; left: auto; top: 50%; transform: translateY(-50%);
+      margin-top: 0; white-space: nowrap; font-size: 0.85rem;
+      padding: 6px 10px; border-radius: 10px;
     }
 
     .tabs {
@@ -366,21 +367,23 @@
 </head>
 <body>
   <div class="container">
-    <!-- NÚT TỐI/SÁNG – CỐ ĐỊNH GÓC PHẢI TRÊN, ĐẨY XUỐNG 3CM -->
+    <!-- NÚT TỐI/SÁNG – CỐ ĐỊNH GÓC PHẢI TRÊN, CÁCH 3cm, TOOLTIP GẦN NÚT -->
     <div class="tip">
       <button class="theme-toggle" id="themeBtn">
         <svg class="icon" viewBox="0 0 24 24" id="sunIcon"><path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm8-7a1 1 0 0 1 0 2h-2a1 1 0 1 1 0-2h2zm-16 0a1 1 0 0 1 0 2H2a1 1 0 1 1 0-2h2zM5.64 5.64a1 1 0 0 1 1.42 0l1.41 1.41a1 1 0 1 1-1.42 1.42L5.64 6.06a1 1 0 0 1 0-1.42zm12.72 0a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.42l1.41-1.41a1 1 0 0 1 1.42 0zM5.64 18.36a1 1 0 0 1 0-1.42l1.41-1.41a1 1 0 1 1 1.42 1.42l-1.41 1.41a1 1 0 0 1-1.42 0zm12.72 0a1 1 0 0 1-1.42 0l-1.41-1.41a1 1 0 1 1 1.42-1.42l1.41 1.41a1 1 0 0 1 0 1.42zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>
         <svg class="icon hidden" viewBox="0 0 24 24" id="moonIcon"><path d="M12 3a9 9 0 1 0 9 9c0-.23-.01-.46-.03-.69a1 1 0 0 0-1.26-.97 5.5 5.5 0 1 1-6.9-6.9 1 1 0 0 0-.97-1.26A8.96 8.96 0 0 0 12 3z"/></svg>
       </button>
-      <span class="tiptext">Chuyển chế độ sáng/tối</span>
+      <span class="tiptext">Chuyển sáng/tối</span>
     </div>
 
     <!-- HEADER -->
     <header>
       <div class="logo">
-        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="currentColor"/>
-          <path d="M30 70H70M30 30H70M40 40H60V60H40Z" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
-          <path d="M80 40L90 30L80 20" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+        <!-- LOGO BÀN PHÍM + BÚT CHÌ -->
+        <svg viewBox="0 0 100 100">
+          <rect x="20" y="30" width="60" height="40" rx="5" fill="currentColor" />
+          <path d="M25 40 h10 v20 h-10 z M40 40 h10 v20 h-10 z M55 40 h10 v20 h-10 z" fill="#fff" />
+          <path d="M85 20 L90 70 L95 20" stroke="#fff" stroke-width="5" stroke-linecap="round" />
         </svg>
         <h1>HiHi</h1>
       </div>
@@ -456,6 +459,7 @@
         <thead>
           <tr>
             <th>STT</th>
+            <th>Tên</th>
             <th>Ngày</th>
             <th>WPM</th>
             <th>Chính xác</th>
@@ -464,7 +468,7 @@
           </tr>
         </thead>
         <tbody id="rankBody">
-          <tr><td colspan="6" class="no-data">Chưa có dữ liệu</td></tr>
+          <tr><td colspan="7" class="no-data">Chưa có dữ liệu</td></tr>
         </tbody>
       </table>
     </div>
@@ -539,7 +543,6 @@
       <div id="liveFeedback"><em>Nhập hoặc đọc để bắt đầu...</em></div>
       <div class="action-row">
         <button class="action-btn btn-replay" id="replayBtn">Nghe lại</button>
-        <button class="action-btn btn-hint" id="showHintBtn">Gợi ý</button>
         <button class="action-btn btn-next" id="nextBtn">Tiếp theo</button>
         <button class="action-btn btn-reset" id="resetBtn">Làm lại</button>
       </div>
@@ -579,7 +582,7 @@
     let recognition = null;
     let isListening = false;
     let karaokeWords = [];
-    let wordTranslations = new Map();
+    let playerName = '';
 
     const els = {
       lang: document.getElementById('globalLang'),
@@ -618,7 +621,8 @@
       micBox: document.getElementById('micBox'),
       micBtn: document.getElementById('micBtn'),
       rankBody: document.getElementById('rankBody'),
-      filterBtns: () => document.querySelectorAll('.filter-btn')
+      filterBtns: () => document.querySelectorAll('.filter-btn'),
+      playerName: document.getElementById('playerName')
     };
 
     // === CHỦ ĐỀ TỐI/SÁNG ===
@@ -669,13 +673,14 @@
       els.rankBody.innerHTML = filtered.length ? filtered.map((h, i) => `
         <tr>
           <td>${i + 1}</td>
+          <td>${h.name || 'Ẩn danh'}</td>
           <td>${h.date}</td>
           <td>${h.wpm}</td>
           <td>${h.acc}%</td>
           <td><strong>${h.score}</strong></td>
           <td><span style="color:#f59e0b; font-weight:700;">${h.badge}</span></td>
         </tr>
-      `).join('') : '<tr><td colspan="6" class="no-data">Chưa có dữ liệu</td></tr>';
+      `).join('') : '<tr><td colspan="7" class="no-data">Chưa có dữ liệu</td></tr>';
 
       els.filterBtns().forEach(btn => {
         btn.classList.toggle('active', btn.dataset.filter === filter);
@@ -866,7 +871,10 @@
     }
 
     function next() {
-      if (currentMode !== 'read-only') typedWords += segments[currentIdx].split(/\s+/).filter(w => w).length;
+      if (currentMode !== 'read-only') {
+        const wordsInSegment = segments[currentIdx].split(/\s+/).filter(w => w).length;
+        typedWords += wordsInSegment;
+      }
       currentIdx++;
       const p = (currentIdx / segments.length) * 100;
       els.progressFill.style.width = p + '%';
@@ -892,15 +900,18 @@
       const acc = typedWords > 0 ? Math.round((correctWords / typedWords) * 100) : 100;
       const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
       const badge = wpm < 50 ? "Mới" : wpm < 100 ? "Khá" : wpm < 200 ? "Giỏi" : "Xuất sắc";
-      history.push({ date: new Date().toLocaleString('vi'), wpm, acc, score, badge });
+
+      const name = playerName.trim() || 'Ẩn danh';
+      history.push({ name, date: new Date().toLocaleString('vi'), wpm, acc, score, badge });
       if (history.length > 50) history.shift();
       localStorage.setItem('hihiDict', JSON.stringify(history));
+
       els.level.textContent = badge;
       els.levelBadge.textContent = badge;
       els.score.textContent = score;
       updateChart();
       renderRankTable();
-      alert(`Hoàn thành!\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
+      alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
     }
 
     function updateChart() {
@@ -944,6 +955,7 @@
       currentIdx = 0; typedWords = 0; correctWords = 0; hintsUsed = 0;
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.aiRateSelect.value);
+      playerName = els.playerName.value.trim(); // LẤY TÊN NGƯỜI CHƠI
       updateModeButtons();
       startTime = Date.now(); timer = setInterval(updateStats, 500);
       document.getElementById('setupPanel').classList.add('hidden');
@@ -954,14 +966,18 @@
 
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); next(); } });
+
+    // SỬA LỖI GỢI Ý
     els.hint.addEventListener('click', () => {
-      const words = segments[currentIdx].split(/\s+/);
-      const typed = els.input.value.split(/\s+/);
+      const words = segments[currentIdx].split(/\s+/).filter(w => w);
+      const typed = els.input.value.trim().split(/\s+/).filter(w => w);
       if (typed.length < words.length) {
-        els.feedback.innerHTML += ` <span style="color:#8b5cf6; font-weight:700;">→ ${words[typed.length]}</span>`;
+        const nextWord = words[typed.length];
+        els.feedback.innerHTML += ` <span style="color:#8b5cf6; font-weight:700;">→ ${nextWord}</span>`;
         hintsUsed++;
       }
     });
+
     els.replay.addEventListener('click', () => speak(segments[currentIdx], highlightKaraoke));
     els.next.addEventListener('click', next);
     els.reset.addEventListener('click', () => location.reload());
