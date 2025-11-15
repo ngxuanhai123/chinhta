@@ -318,6 +318,40 @@
       border: 1px solid var(--border); box-shadow: 0 6px 16px rgba(0,0,0,0.1);
     }
     .intro-box strong { color: var(--primary); font-size: 1.2rem; }
+    /* Bảng xếp hạng */
+    #rankPanel {
+      background: var(--card); border-radius: var(--radius); padding: 32px;
+      box-shadow: var(--shadow); border: 2px solid var(--border); display: flex;
+      flex-direction: column; gap: var(--gap);
+    }
+    .rank-switcher {
+      display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;
+    }
+    .rank-btn {
+      padding: 8px 16px; background: var(--glass); border: 1px solid var(--border);
+      border-radius: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 600;
+      transition: 0.3s;
+    }
+    .rank-btn.active {
+      background: var(--primary); color: white; border-color: transparent;
+    }
+    .rank-table {
+      width: 100%; border-collapse: collapse; background: var(--glass);
+      border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+    }
+    .rank-table th, .rank-table td {
+      padding: 12px; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    .rank-table th {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white; font-weight: 700;
+    }
+    .rank-table tr:hover {
+      background: rgba(245,158,11,0.1);
+    }
+    .rank-table .rank-gold { color: #FFD700; font-weight: 700; }
+    .rank-table .rank-silver { color: #C0C0C0; font-weight: 700; }
+    .rank-table .rank-bronze { color: #CD7F32; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -388,9 +422,7 @@
           <button class="ai-btn" id="openAiModal">Tạo bằng AI</button>
           <button class="start-btn" id="startBtn">Bắt đầu luyện tập</button>
         </div>
-      </div>
     </div>
-
     <!-- AI MODAL -->
     <div class="modal" id="aiModal">
       <div class="modal-content">
@@ -478,6 +510,30 @@
       <canvas id="chart"></canvas>
     </div>
 
+    <!-- RANK -->
+    <div id="rankPanel" class="tab-content hidden">
+      <div class="rank-switcher">
+        <button class="rank-btn active" data-period="day">Ngày</button>
+        <button class="rank-btn" data-period="week">Tuần</button>
+        <button class="rank-btn" data-period="month">Tháng</button>
+        <button class="rank-btn" data-period="year">Năm</button>
+      </div>
+      <table class="rank-table">
+        <thead>
+          <tr>
+            <th>Thứ hạng</th>
+            <th>Tên</th>
+            <th>Điểm</th>
+            <th>WPM</th>
+            <th>Chính xác</th>
+            <th>Cấp độ</th>
+            <th>Thời gian</th>
+          </tr>
+        </thead>
+        <tbody id="rankTableBody"></tbody>
+      </table>
+    </div>
+
     <!-- FOOTER -->
     <footer>
       <div class="intro-box">
@@ -536,7 +592,13 @@
       aiRateSelect: document.getElementById('aiRateSelect'),
       modeBtns: () => document.querySelectorAll('.mode-btn'),
       micBox: document.getElementById('micBox'),
-      micBtn: document.getElementById('micBtn')
+      micBtn: document.getElementById('micBtn'),
+      tabs: () => document.querySelectorAll('.tab'),
+      setupPanel: document.getElementById('setupPanel'),
+      practiceArea: document.getElementById('practiceArea'),
+      rankPanel: document.getElementById('rankPanel'),
+      rankTableBody: document.getElementById('rankTableBody'),
+      rankBtns: () => document.querySelectorAll('.rank-btn')
     };
 
     // === GIỌNG ĐỌC & TỐC ĐỘ ===
@@ -615,7 +677,7 @@
       }
     });
 
-    // === DỊCH TOÀN BỘ ĐOẠN (1 LẦN) ===
+    // === DỊCH TOÀN BỘ ĐOẠN ===
     async function translateFull(text, src) {
       if (!text.trim() || globalLang === 'vi-VN') return text;
       try {
@@ -625,7 +687,7 @@
       } catch { return text; }
     }
 
-    // === SHOW SEGMENT – TỐI ƯU TỐC ĐỘ ===
+    // === SHOW SEGMENT ===
     async function showSegment() {
       const text = segments[currentIdx];
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
@@ -633,7 +695,6 @@
       els.hint.style.display = currentMode === 'read-only' ? 'none' : 'block';
       els.segment.classList.toggle('reading-mode', currentMode === 'read-only');
 
-      // Ẩn khi nghe
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>Nghe và gõ...</em>';
         els.input.value = ''; els.input.focus();
@@ -644,18 +705,15 @@
         return;
       }
 
-      // Tạo DOM nhanh + dịch 1 lần
       const fragment = document.createDocumentFragment();
       const words = text.split(/(\s+|\b)/).filter(w => w.trim() || w === ' ');
       let charIndex = 0;
       karaokeWords = [];
 
-      // Dịch toàn bộ trước
       const src = globalLang === 'en-US' ? 'en' : 'id';
       const fullTrans = await translateFull(text, src);
       els.fullTrans.textContent = fullTrans;
 
-      // Tạo từ + tooltip
       for (let word of words) {
         if (!word.trim()) {
           fragment.appendChild(document.createTextNode(word));
@@ -673,7 +731,7 @@
         if (globalLang !== 'vi-VN') {
           const tooltip = document.createElement('div');
           tooltip.className = 'word-tooltip';
-          tooltip.textContent = word; // Sẽ cập nhật sau
+          tooltip.textContent = word;
           span.appendChild(tooltip);
         }
 
@@ -685,7 +743,6 @@
       els.segment.appendChild(fragment);
       els.input.value = ''; els.input.focus();
 
-      // Cập nhật tooltip sau khi render
       if (globalLang !== 'vi-VN') {
         const wordList = text.split(/\s+/).filter(w => w);
         const transList = fullTrans.split(/\s+/).filter(w => w);
@@ -696,7 +753,6 @@
         });
       }
 
-      // Phát âm thanh
       if (currentMode.includes('listen') && currentMode !== 'read-only') {
         setTimeout(() => speak(text, highlightKaraoke), 300);
       }
@@ -708,7 +764,45 @@
       if (word) word.classList.add('karaoke-active');
     }
 
-    // === CÁC HÀM KHÁC (GIỮ NGUYÊN) ===
+    // === BẢNG XẾP HẠNG ===
+    function showRankings(period = 'day') {
+      const now = new Date();
+      let filtered = [];
+
+      if (period === 'day') {
+        const today = now.toLocaleDateString('vi');
+        filtered = history.filter(h => h.date.startsWith(today));
+      } else if (period === 'week') {
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay());
+        filtered = history.filter(h => new Date(h.date) >= startOfWeek);
+      } else if (period === 'month') {
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        filtered = history.filter(h => new Date(h.date) >= startOfMonth);
+      } else if (period === 'year') {
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        filtered = history.filter(h => new Date(h.date) >= startOfYear);
+      }
+
+      filtered.sort((a, b) => b.score - a.score);
+      const playerName = els.playerName.value.trim() || 'Ẩn danh';
+
+      const html = filtered.map((h, i) => `
+        <tr>
+          <td class="${i === 0 ? 'rank-gold' : i === 1 ? 'rank-silver' : i === 2 ? 'rank-bronze' : ''}">${i + 1}</td>
+          <td>${playerName}</td>
+          <td>${h.score}</td>
+          <td>${h.wpm}</td>
+          <td>${h.acc}%</td>
+          <td>${h.badge}</td>
+          <td>${h.date}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="7" style="text-align:center;">Chưa có dữ liệu</td></tr>';
+
+      els.rankTableBody.innerHTML = html;
+    }
+
+    // === CÁC HÀM KHÁC ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
@@ -788,8 +882,7 @@
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
       localStorage.setItem('lang', globalLang);
-      loadVoices();
-      if (recognition) recognition.lang = globalLang;
+      location.reload(); // Reload khi chọn ngôn ngữ
     });
 
     globalLang = localStorage.getItem('lang') || 'vi-VN';
@@ -805,8 +898,9 @@
       speechRate = parseFloat(els.aiRateSelect.value);
       updateModeButtons();
       startTime = Date.now(); timer = setInterval(updateStats, 500);
-      document.getElementById('setupPanel').classList.add('hidden');
-      document.getElementById('practiceArea').classList.remove('hidden');
+      els.setupPanel.classList.add('hidden');
+      els.practiceArea.classList.remove('hidden');
+      els.rankPanel.classList.add('hidden');
       initSpeechRecognition();
       showSegment();
     });
@@ -841,6 +935,28 @@
         currentMode = btn.dataset.mode;
         updateModeButtons();
         showSegment();
+      });
+    });
+
+    // Xử lý tabs
+    els.tabs().forEach(tab => {
+      tab.addEventListener('click', () => {
+        els.tabs().forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const tabId = tab.dataset.tab;
+        els.setupPanel.classList.toggle('hidden', tabId !== 'setup');
+        els.practiceArea.classList.toggle('hidden', tabId !== 'setup');
+        els.rankPanel.classList.toggle('hidden', tabId !== 'rank');
+        if (tabId === 'rank') showRankings('day');
+      });
+    });
+
+    // Xử lý bảng xếp hạng
+    els.rankBtns().forEach(btn => {
+      btn.addEventListener('click', () => {
+        els.rankBtns().forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showRankings(btn.dataset.period);
       });
     });
 
