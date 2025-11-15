@@ -6,12 +6,16 @@
   <title>HiHi - Luyện Chính Tả Thông Minh</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke, tạo đoạn văn bằng AI.">
   <meta name="theme-color" content="#f59e0b">
-  
-  <link rel="manifest" href="data:application/manifest+json,{'name': 'HiHi - Luyện Chính Tả', 'short_name': 'HiHi', 'start_url': '.', 'display': 'standalone', 'background_color': '#fff7ed', 'theme_color': '#f59e0b', 'icons': [{'src': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+','sizes': '192x192', 'type': 'image/svg+xml'}]}">
-  
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1Boolean" stroke="#fff" stroke-width="5" stroke-linecap="round" />
-</svg>
-">
+  <link rel="manifest" href="data:application/manifest+json,{
+    \"name\": \"HiHi - Luyện Chính Tả\",
+    \"short_name\": \"HiHi\",
+    \"start_url\": \".\",
+    \"display\": \"standalone\",
+    \"background_color\": \"#fff7ed\",
+    \"theme_color\": \"#f59e0b\",
+    \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
+  }">
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
@@ -54,7 +58,7 @@
     }
     .tagline { color: var(--muted); font-size: 1.2rem; margin-top: 8px; }
 
-    /* NÚT SÁNG/TỐI – TỐI ƯU: GẦN HEADER, GÓC PHẢI, CÓ TOOLTIP */
+    /* NÚT SÁNG/TỐI */
     .theme-toggle-wrapper {
       position: absolute; top: 16px; right: 16px; z-index: 100;
     }
@@ -79,31 +83,27 @@
     }
     .tip:hover .tiptext { visibility: visible; opacity: 1; }
 
+    /* TABS CHÍNH */
     .tabs {
       display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
     }
     .tab {
-      padding: 12px 24px; background: var(--glass); border: 2px solid var(--border);
-      border-radius: 18px; font-weight: 600; cursor: pointer; font-size: 1.1rem;
+      padding: 14px 28px; background: var(--glass); border: 2px solid var(--border);
+      border-radius: 18px; font-weight: 600; cursor: pointer; font-size: 1.2rem; /* Tăng font-size */
       display: flex; align-items: center; gap: 8px; transition: 0.4s;
     }
     .tab.active {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: white; border-color: transparent; box-shadow: 0 8px 20px rgba(245,158,11,0.3);
     }
-    
-    /* SẮP XẾP LẠI: Bỏ margin bên ngoài */
     .name-box {
-      text-align: center;
-      /* margin: var(--gap) 0;  (Đã xóa) */
+      text-align: center; margin: var(--gap) 0;
     }
     .name-box input {
-      padding: 12px 18px; width: 100%; /* Sửa thành 100% để vừa grid */
-      border: 2px solid var(--border); border-radius: 16px;
+      padding: 12px 18px; width: 260px; border: 2px solid var(--border); border-radius: 16px;
       font-size: 1.1rem; text-align: center; background: var(--card);
     }
     .name-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 5px rgba(245,158,11,0.2); }
-    
     .setup-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap);
       background: var(--card); border-radius: var(--radius); padding: 32px;
@@ -194,14 +194,11 @@
       margin-top: 16px; padding: 14px; background: var(--glass); border-radius: 14px;
       border: 1px solid var(--border); min-height: 60px; display: none; white-space: pre-wrap;
     }
-    
-    /* Áp dụng chung cho các panel nội dung tab */
-    #practiceArea, #rankPanel, #statsPanel {
+    #practiceArea, #rankPanel {
       background: var(--card); border-radius: var(--radius); padding: 32px;
       box-shadow: var(--shadow); border: 2px solid var(--border); display: flex;
       flex-direction: column; gap: var(--gap);
     }
-
     .progress-box {
       background: var(--glass); padding: 16px; border-radius: 18px; border: 1px solid var(--border);
     }
@@ -236,9 +233,7 @@
       position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
       background: var(--card); color: var(--text); padding: 6px 10px; border-radius: 8px;
       font-size: 0.9rem; white-space: nowrap; z-index: 100; opacity: 0; pointer-events: none;
-      /* SỬA LỖI: Bỏ chữ "sauvegarde" */
-      transition: opacity 0.2s; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border);
+      transition: opacity 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border);
     }
     .karaoke-word:hover .word-tooltip { opacity: 1; }
     .mic-box {
@@ -272,6 +267,7 @@
     #userInput {
       width: 100%; padding: 18px 70px 18px 20px; font-size: 1.4rem;
       border: 3px solid var(--border); border-radius: 20px; background: var(--card);
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
     #userInput:focus { border-color: var(--primary); box-shadow: 0 0 0 7px rgba(245,158,11,0.25); }
     .hint-btn {
@@ -293,7 +289,10 @@
     .action-btn {
       padding: 14px 28px; border: none; border-radius: 16px; font-weight: 600;
       font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 10px;
-      min-width: 140px; justify-content: center;
+      min-width: 140px; justify-content: center; transition: 0.3s;
+    }
+    .action-btn:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none !important;
     }
     .btn-replay { background: #f97316; color: white; }
     .btn-hint { background: var(--hint); color: white; }
@@ -335,7 +334,18 @@
     }
     .intro-box strong { color: var(--primary); font-size: 1.2rem; }
 
-    /* BẢNG XẾP HẠNG */
+    /* BẢNG XẾP HẠNG & TAB THỐNG KÊ */
+    .sub-tabs {
+      display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;
+      border-bottom: 2px solid var(--border); padding-bottom: 16px;
+    }
+    .sub-tab-btn {
+      padding: 10px 20px; background: var(--glass); border: 1px solid var(--border);
+      border-radius: 14px; font-size: 1.05rem; cursor: pointer; font-weight: 600;
+    }
+    .sub-tab-btn.active {
+      background: var(--primary); color: white; border-color: transparent;
+    }
     .rank-filter {
       display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;
     }
@@ -367,22 +377,6 @@
     .online-status {
       font-size: 0.9rem; color: var(--success); text-align: center; margin-top: 8px;
     }
-
-    /* CSS CHO TAB CÁ NHÂN */
-    .personal-intro {
-      text-align: center;
-      font-size: 1.1rem;
-      color: var(--muted);
-      padding: 10px;
-      background: var(--glass);
-      border-radius: 16px;
-      border: 1px solid var(--border);
-    }
-    .personal-intro strong {
-      color: var(--primary);
-      font-size: 1.3rem;
-    }
-
   </style>
 </head>
 <body>
@@ -410,9 +404,15 @@
     </header>
 
     <div class="tabs">
-      <button class="tab active" data-tab="setup">Luyện Tập</button>
-      <button class="tab" data-tab="rank">Xếp Hạng</button>
-      <button class="tab" data-tab="stats">Tiến Bộ Cá Nhân</button>
+      <button class="tab active" data-tab="setupPanel">Luyện Tập</button>
+      <button class="tab" data-tab="rankPanel">Xếp Hạng</button>
+    </div>
+
+    <div class="name-box">
+      <div class="tip">
+        <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" />
+        <span class="tiptext">Tên sẽ hiển thị trên bảng xếp hạng. Không nhập = "Ẩn danh"</span>
+      </div>
     </div>
 
     <div id="setupPanel" class="tab-content">
@@ -440,16 +440,6 @@
             <label class="radio-label"><input type="radio" name="mode" value="read-only"> Luyện đọc (mic)</label>
           </div>
         </div>
-        
-        <div style="grid-column: 1/-1;">
-          <div class="name-box">
-            <div class="tip">
-              <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" />
-              <span class="tiptext">Tên sẽ hiển thị trên bảng xếp hạng và thống kê cá nhân.</span>
-            </div>
-          </div>
-        </div>
-
         <div class="setup-item" style="grid-column:1/-1;">
           <h3 class="tip">
             <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
@@ -463,63 +453,57 @@
     </div>
 
     <div id="rankPanel" class="tab-content hidden">
-      <h2 style="text-align:center; color:var(--primary); margin-bottom:0;">Bảng Xếp Hạng</h2>
-      <div class="online-status" id="onlineStatus">Đang tải bảng xếp hạng online...</div>
-      <div class="rank-filter">
-        <button class="filter-btn active" data-filter="all">Tất cả</button>
-        <button class="filter-btn" data-filter="day">Hôm nay</button>
-        <button class="filter-btn" data-filter="week">Tuần này</button>
-        <button class="filter-btn" data-filter="month">Tháng này</button>
-        <button class="filter-btn" data-filter="year">Năm nay</button>
+      <h2 style="text-align:center; color:var(--primary); margin-bottom:10px;">Bảng Xếp Hạng & Thống Kê</h2>
+      
+      <div class="sub-tabs">
+        <button class="sub-tab-btn active" data-subtab="globalRank">🌍 Xếp Hạng Chung</button>
+        <button class="sub-tab-btn" data-subtab="personalStats">👤 Thống Kê Cá Nhân</button>
       </div>
-      <table class="rank-table" id="rankTable">
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Tên</th>
-            <th>Ngày</th>
-            <th>WPM</th>
-            <th>Chính xác</th>
-            <th>Điểm</th>
-            <th>Cấp độ</th>
-          </tr>
-        </thead>
-        <tbody id="rankBody">
-          <tr><td colspan="7" class="no-data">Đang tải...</td></tr>
-        </tbody>
-      </table>
-    </div>
 
-    <div id="statsPanel" class="tab-content hidden">
-      <h2 style="text-align:center; color:var(--primary); margin-bottom:0;">Tiến Bộ Cá Nhân</h2>
-      <p class="personal-intro">Thống kê của: <strong id="statsPlayerName">...</strong></p>
-      
-      <div class="stats-row" style="margin-bottom: 12px;">
-        <div class="stat-item"><h4>Tổng số lần</h4><div class="val" id="statsTotalSessions">0</div></div>
-        <div class="stat-item"><h4>WPM Cao Nhất</h4><div class="val" id="statsBestWPM">0</div></div>
-        <div class="stat-item"><h4>Điểm Cao Nhất</h4><div class="val" id="statsBestScore">0</div></div>
-        <div class="stat-item"><h4>Cấp độ</h4><div class="val" id="statsCurrentBadge">-</div></div>
+      <div id="globalRank" class="sub-tab-content">
+        <div class="rank-filter">
+          <button class="filter-btn active" data-filter="all">Tất cả</button>
+          <button class="filter-btn" data-filter="day">Hôm nay</button>
+          <button class="filter-btn" data-filter="week">Tuần này</button>
+          <button class="filter-btn" data-filter="month">Tháng này</button>
+          <button class="filter-btn" data-filter="year">Năm nay</button>
+        </div>
+        <div class="online-status" id="onlineStatus">Đang tải bảng xếp hạng online...</div>
+        <table class="rank-table" id="rankTable">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Tên</th>
+              <th>Ngày</th>
+              <th>WPM</th>
+              <th>Chính xác</th>
+              <th>Điểm</th>
+              <th>Cấp độ</th>
+            </tr>
+          </thead>
+          <tbody id="rankBody">
+            <tr><td colspan="7" class="no-data">Đang tải...</td></tr>
+          </tbody>
+        </table>
       </div>
-      
-      <canvas id="personalChart"></canvas>
-      
-      <h3 style="text-align:center; margin-top:20px;">Lịch sử Luyện tập</h3>
-      <table class="rank-table" id="personalRankTable">
-        <thead>
-          <tr>
-            <th>Ngày</th>
-            <th>WPM</th>
-            <th>Chính xác</th>
-            <th>Điểm</th>
-            <th>Cấp độ</th>
-          </tr>
-        </thead>
-        <tbody id="personalRankBody">
-          <tr><td colspan="5" class="no-data">Không tìm thấy dữ liệu. Hãy luyện tập!</td></tr>
-        </tbody>
-      </table>
-    </div>
 
+      <div id="personalStats" class="sub-tab-content hidden">
+        <h3 style="text-align:center;">Thành Tích Tốt Nhất Của Bạn</h3>
+        <p style="text-align:center; color:var(--muted); margin-bottom:24px;">
+          Dựa trên điểm số cao nhất (lưu trên trình duyệt này).
+        </p>
+        <div class="stats-row" id="personalStatsRow">
+          <div class="stat-item"><h4>WPM Cao Nhất</h4><div class="val" id="personalWPM">0</div></div>
+          <div class="stat-item"><h4>Chính xác</h4><div class="val" id="personalAcc">0%</div></div>
+          <div class="stat-item"><h4>Điểm Cao Nhất</h4><div class="val" id="personalScore">0</div></div>
+          <div class="stat-item"><h4>Cấp độ</h4><div class="val" id="personalBadge">Mới</div></div>
+        </div>
+        
+        <h3 style="text-align:center; margin-top: 40px;">Lịch Sử 10 Lần Gần Nhất</h3>
+        <canvas id="personalChart"></canvas>
+      </div>
+
+    </div>
 
     <div class="modal" id="aiModal">
       <div class="modal-content">
@@ -589,7 +573,7 @@
       <div id="liveFeedback"><em>Nhập hoặc đọc để bắt đầu...</em></div>
       <div class="action-row">
         <button class="action-btn btn-replay" id="replayBtn">Nghe lại</button>
-        <button class="action-btn btn-next" id="nextBtn">Tiếp theo</button>
+        <button class="action-btn btn-next" id="nextBtn" disabled>Tiếp theo</button>
         <button class="action-btn btn-reset" id="resetBtn">Làm lại</button>
       </div>
       <div class="stats-row">
@@ -602,7 +586,7 @@
         <div class="level-badge" id="levelBadge">Mới bắt đầu</div>
         <div style="margin-top:12px; color:var(--muted);">Điểm: <strong id="score" style="color:var(--primary); font-size:1.6rem;">0</strong></div>
       </div>
-      <canvas id="chart"></canvas>
+      <canvas id="mainChart"></canvas>
     </div>
 
     <footer>
@@ -617,12 +601,22 @@
     // === CẤU HÌNH ===
     const GROQ_KEY = "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";
     const ONLINE_RANK_URL = "https://script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
+    
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
     let segments = [], currentIdx = 0, startTime, timer;
-    let typedWords = 0, correctWords = 0, hintsUsed = 0;
+    
+    // Biến thống kê (SỬA LỖI LOGIC)
+    let typedWords = 0; // Tổng số từ mục tiêu (đã gõ/đọc xong)
+    let correctWords = 0; // Số từ đúng cho ĐOẠN HIỆN TẠI
+    let totalCorrectWords = 0; // Tổng số từ đúng (toàn bộ session)
+    let hintsUsed = 0;
+    
+    // Biến xếp hạng & lịch sử (NÂNG CẤP)
     let onlineHistory = [];
-    let chart;
-    let personalChart = null; // TÍNH NĂNG MỚI: Biến cho chart cá nhân
+    let personalHistory = JSON.parse(localStorage.getItem('personalHistory')) || [];
+    let bestStats = JSON.parse(localStorage.getItem('bestStats')) || null;
+    let mainChart, personalChart;
+    
     let speechRate = 1.0;
     let currentUtterance = null;
     let currentMode = 'read-write';
@@ -670,35 +664,20 @@
       rankBody: document.getElementById('rankBody'),
       filterBtns: () => document.querySelectorAll('.filter-btn'),
       playerName: document.getElementById('playerName'),
-      onlineStatus: document.getElementById('onlineStatus')
+      onlineStatus: document.getElementById('onlineStatus'),
+      mainTabs: () => document.querySelectorAll('.tab'),
+      tabContents: () => document.querySelectorAll('.tab-content'),
+      // NÂNG CẤP: Thêm elements cho tab cá nhân
+      subTabBtns: () => document.querySelectorAll('.sub-tab-btn'),
+      subTabContents: () => document.querySelectorAll('.sub-tab-content'),
+      personalStatsRow: document.getElementById('personalStatsRow'),
+      personalWPM: document.getElementById('personalWPM'),
+      personalAcc: document.getElementById('personalAcc'),
+      personalScore: document.getElementById('personalScore'),
+      personalBadge: document.getElementById('personalBadge'),
+      mainChart: document.getElementById('mainChart'), // Sửa tên ID canvas gốc từ 'chart'
+      personalChart: document.getElementById('personalChart')
     };
-    
-    // === TÍNH NĂNG MỚI: TAB CHUYỂN ĐỔI ===
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const targetTab = tab.dataset.tab;
-        
-        // Cập nhật nút tab
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-
-        // Ẩn/hiện nội dung
-        tabContents.forEach(content => {
-          content.classList.toggle('hidden', content.id !== `${targetTab}Panel`);
-        });
-
-        // Tải/Render dữ liệu khi cần
-        if (targetTab === 'rank') {
-          renderRankTable(); // Render lại bảng xếp hạng với filter hiện tại
-        }
-        if (targetTab === 'stats') {
-          renderPersonalStats(); // Render lại thống kê cá nhân
-        }
-      });
-    });
 
     // === CHỦ ĐỀ TỐI/SÁNG ===
     function updateThemeIcon() {
@@ -716,6 +695,38 @@
     document.body.setAttribute('data-theme', savedTheme);
     updateThemeIcon();
 
+    // === CHUYỂN TAB (CHÍNH & PHỤ) - NÂNG CẤP ===
+    els.mainTabs().forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.tab;
+        els.mainTabs().forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        els.tabContents().forEach(c => {
+          c.classList.toggle('hidden', c.id !== targetId);
+        });
+        if (targetId === 'rankPanel') {
+          // Khi chuyển sang tab xếp hạng, tự động render tab con đang active
+          const activeSubTab = document.querySelector('.sub-tab-btn.active').dataset.subtab;
+          if (activeSubTab === 'globalRank') renderRankTable();
+          else renderPersonalStats();
+        }
+      });
+    });
+
+    els.subTabBtns().forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.subtab;
+        els.subTabBtns().forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        els.subTabContents().forEach(c => {
+          c.classList.toggle('hidden', c.id !== targetId);
+        });
+        // Render nội dung tương ứng khi click
+        if (targetId === 'globalRank') renderRankTable();
+        else renderPersonalStats();
+      });
+    });
+
     // === ĐỒNG BỘ BẢNG XẾP HẠNG ONLINE ===
     async function loadOnlineRank() {
       try {
@@ -723,12 +734,7 @@
         const data = await res.json();
         onlineHistory = data || [];
         els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
-        
-        // Tự động render tab đang active (nếu là rank hoặc stats)
-        const activeTab = document.querySelector('.tab.active').dataset.tab;
-        if (activeTab === 'rank') renderRankTable();
-        if (activeTab === 'stats') renderPersonalStats();
-
+        renderRankTable(); // Render bảng xếp hạng online
       } catch (e) {
         els.onlineStatus.textContent = "Không kết nối được server online";
         onlineHistory = [];
@@ -745,33 +751,21 @@
       } catch (e) { console.log("Lỗi lưu online:", e); }
     }
 
-    // === BẢNG XẾP HẠNG ===
+    // === BẢNG XẾP HẠNG (ONLINE) ===
     function renderRankTable(filter = 'all') {
-      // Lấy filter đang active nếu không được cung cấp
-      if (filter === 'all') {
-        const activeFilterBtn = document.querySelector('.filter-btn.active');
-        if (activeFilterBtn) filter = activeFilterBtn.dataset.filter;
-      }
-
       const now = new Date();
       const filtered = onlineHistory.filter(h => {
-        if (!h.date) return false; // Bỏ qua nếu không có ngày
         const d = new Date(h.date);
-        if (isNaN(d)) return false; // Bỏ qua nếu ngày không hợp lệ
-
+        if (isNaN(d)) return true;
         if (filter === 'day') return d.toDateString() === now.toDateString();
         if (filter === 'week') {
-          const weekStart = new Date(now); 
-          weekStart.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1)); // Tuần bắt đầu T2
-          weekStart.setHours(0,0,0,0);
-          const weekEnd = new Date(weekStart); 
-          weekEnd.setDate(weekStart.getDate() + 6);
-          weekEnd.setHours(23,59,59,999);
+          const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
+          const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
           return d >= weekStart && d <= weekEnd;
         }
         if (filter === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
         if (filter === 'year') return d.getFullYear() === now.getFullYear();
-        return true; // 'all'
+        return true;
       }).sort((a, b) => b.score - a.score);
 
       els.rankBody.innerHTML = filtered.length ? filtered.map((h, i) => `
@@ -784,7 +778,7 @@
           <td><strong>${h.score}</strong></td>
           <td><span style="color:#f59e0b; font-weight:700;">${h.badge}</span></td>
         </tr>
-      `).join('') : '<tr><td colspan="7" class="no-data">Chưa có dữ liệu cho bộ lọc này</td></tr>';
+      `).join('') : '<tr><td colspan="7" class="no-data">Chưa có dữ liệu</td></tr>';
 
       els.filterBtns().forEach(btn => {
         btn.classList.toggle('active', btn.dataset.filter === filter);
@@ -794,69 +788,58 @@
     els.filterBtns().forEach(btn => {
       btn.addEventListener('click', () => renderRankTable(btn.dataset.filter));
     });
-    
-    // === TÍNH NĂNG MỚI: THỐNG KÊ CÁ NHÂN ===
+
+    // === NÂNG CẤP: THỐNG KÊ CÁ NHÂN (LOCAL) ===
     function renderPersonalStats() {
-      const name = els.playerName.value.trim() || 'Ẩn danh';
-      document.getElementById('statsPlayerName').textContent = name;
-
-      // Lọc lịch sử của cá nhân và sắp xếp theo ngày TĂNG DẦN (cho biểu đồ)
-      const myHistory = onlineHistory.filter(h => (h.name || 'Ẩn danh').toLowerCase() === name.toLowerCase())
-                                     .sort((a, b) => new Date(a.date) - new Date(b.date)); 
-
-      const statsTotal = document.getElementById('statsTotalSessions');
-      const statsBestWPM = document.getElementById('statsBestWPM');
-      const statsBestScore = document.getElementById('statsBestScore');
-      const statsCurrentBadge = document.getElementById('statsCurrentBadge');
-      const personalRankBody = document.getElementById('personalRankBody');
-      const ctx = document.getElementById('personalChart').getContext('2d');
+      // 1. Hiển thị thành tích tốt nhất
+      if (bestStats) {
+        els.personalWPM.textContent = bestStats.wpm;
+        els.personalAcc.textContent = bestStats.acc + '%';
+        els.personalScore.textContent = bestStats.score;
+        els.personalBadge.textContent = bestStats.badge;
+      } else {
+        els.personalWPM.textContent = '0';
+        els.personalAcc.textContent = '0%';
+        els.personalScore.textContent = '0';
+        els.personalBadge.textContent = 'Mới';
+      }
       
-      // Xóa chart cũ trước
+      // 2. Vẽ biểu đồ 10 lần gần nhất
+      const ctx = els.personalChart.getContext('2d');
       if (personalChart) personalChart.destroy();
       
-      if (myHistory.length === 0) {
-        statsTotal.textContent = 0;
-        statsBestWPM.textContent = 0;
-        statsBestScore.textContent = 0;
-        statsCurrentBadge.textContent = '-';
-        personalRankBody.innerHTML = '<tr><td colspan="5" class="no-data">Không tìm thấy dữ liệu. Hãy luyện tập!</td></tr>';
-        personalChart = null; 
-        return;
-      }
-
-      // Cập nhật thẻ thống kê
-      statsTotal.textContent = myHistory.length;
-      statsBestWPM.textContent = Math.max(...myHistory.map(h => h.wpm));
-      statsBestScore.textContent = Math.max(...myHistory.map(h => h.score));
-      statsCurrentBadge.textContent = myHistory[myHistory.length - 1].badge; // Cấp độ lần cuối
-
-      // Cập nhật bảng lịch sử cá nhân (sắp xếp MỚI NHẤT lên đầu cho bảng)
-      personalRankBody.innerHTML = myHistory.slice().reverse().map(h => `
-        <tr>
-          <td>${new Date(h.date).toLocaleString('vi')}</td>
-          <td>${h.wpm}</td>
-          <td>${h.acc}%</td>
-          <td><strong>${h.score}</strong></td>
-          <td><span style="color:#f59e0b; font-weight:700;">${h.badge}</span></td>
-        </tr>
-      `).join('');
-
-      // Cập nhật chart (dùng mảng đã sắp xếp TĂNG DẦN)
+      const recentHistory = [...personalHistory].reverse(); // Đảo ngược để hiển thị từ cũ đến mới
+      
       personalChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: myHistory.map((h, i) => `Lần ${i + 1}`),
+          labels: recentHistory.map((_,i) => `Lần ${i+1}`),
           datasets: [
-            { label: 'WPM', data: myHistory.map(h => h.wpm), borderColor: '#f59e0b', tension: 0.4 },
-            { label: 'Điểm', data: myHistory.map(h => h.score), borderColor: '#10b981', tension: 0.4 }
+            { label: 'WPM', data: recentHistory.map(h=>h.wpm), borderColor: '#f59e0b', tension: 0.4, fill: false },
+            { label: 'Điểm', data: recentHistory.map(h=>h.score), borderColor: '#10b981', tension: 0.4, fill: false },
+            { label: 'Chính xác', data: recentHistory.map(h=>h.acc), borderColor: '#8b5cf6', tension: 0.4, fill: false, yAxisID: 'y1' }
           ]
         },
         options: { 
           responsive: true, 
-          plugins: { 
-            legend: { position: 'top' },
-            title: { display: true, text: 'Biểu đồ tiến bộ' }
-          } 
+          plugins: { legend: { position: 'top' } },
+          scales: {
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              title: { display: true, text: 'WPM / Điểm' }
+            },
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              min: 0,
+              max: 100,
+              title: { display: true, text: 'Chính xác (%)' },
+              grid: { drawOnChartArea: false } // Chỉ hiển thị trục, không hiển thị lưới
+            }
+          }
         }
       });
     }
@@ -914,8 +897,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            // SỬA LỖI: Đổi sang model llama3-8b-8192
-            model: "llama3-8b-8192",
+            model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             max_tokens: 500,
             temperature: 0.7
@@ -948,17 +930,30 @@
       } catch { return text; }
     }
 
-    // === SHOW SEGMENT ===
+    // === HIỂN THỊ ĐOẠN VĂN MỚI (NÂNG CẤP) ===
     async function showSegment() {
       const text = segments[currentIdx];
+      
+      // Reset trạng thái (QUY TẮC MỚI)
+      els.next.disabled = true;
+      els.input.style.borderColor = 'var(--border)';
+      els.input.style.boxShadow = '';
+      els.input.value = '';
+      els.input.focus();
+      correctWords = 0; // Reset số từ đúng cho đoạn này
+      
+      // Cập nhật UI theo chế độ
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
-      els.input.style.display = currentMode === 'read-only' ? 'none' : 'block';
-      els.hint.style.display = currentMode === 'read-only' ? 'none' : 'block';
-      els.segment.classList.toggle('reading-mode', currentMode === 'read-only');
+      const isReadOnly = currentMode === 'read-only';
+      els.input.style.display = isReadOnly ? 'none' : 'block';
+      els.hint.style.display = isReadOnly ? 'none' : 'block';
+      els.feedback.style.display = isReadOnly ? 'block' : 'block'; // Luôn hiển thị feedback
+      els.segment.classList.toggle('reading-mode', isReadOnly);
+      els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
 
+      // Chế độ Nghe-Viết
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>Nghe và gõ...</em>';
-        els.input.value = ''; els.input.focus();
         const src = globalLang === 'en-US' ? 'en' : 'id';
         const trans = await translateFull(text, src);
         els.fullTrans.textContent = 'Tạm dịch là: ' + trans;
@@ -966,6 +961,7 @@
         return;
       }
 
+      // Chế độ Chép & Đọc (Karaoke)
       const fragment = document.createDocumentFragment();
       const words = text.split(/(\s+|\b)/).filter(w => w.trim() || w === ' ');
       let charIndex = 0;
@@ -1002,7 +998,6 @@
 
       els.segment.innerHTML = '';
       els.segment.appendChild(fragment);
-      els.input.value = ''; els.input.focus();
 
       if (globalLang !== 'vi-VN') {
         const wordList = text.split(/\s+/).filter(w => w);
@@ -1025,7 +1020,12 @@
       if (word) word.classList.add('karaoke-active');
     }
 
-    // === CÁC HÀM KHÁC ===
+    // Helper chuẩn hóa text để so sánh (QUY TẮC MỚI)
+    function normalizeText(text) {
+        return text.trim().replace(/\s+/g, ' ').toLowerCase();
+    }
+
+    // === CẬP NHẬT PHẢN HỒI GÕ (NÂNG CẤP) ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
@@ -1037,80 +1037,117 @@
         else if (w.toLowerCase() === oWords[i].toLowerCase()) { correct++; html += `<span class="correct">${w}</span> `; }
         else html += `<span class="wrong">${w}</span> `;
       });
-      correctWords = correct;
+      correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
+      
+      // QUY TẮC MỚI: Phải gõ đúng 100% mới cho qua
+      const isMatch = normalizeText(input) === normalizeText(orig);
+      els.next.disabled = !isMatch;
+      // Thêm visual feedback khi gõ đúng
+      els.input.style.borderColor = isMatch ? 'var(--success)' : 'var(--border)';
+      els.input.style.boxShadow = isMatch ? '0 0 0 7px rgba(16,185,129,0.25)' : '';
     }
 
+    // === HÀM CHUYỂN TIẾP (SỬA LỖI LOGIC) ===
     function next() {
-      if (currentMode !== 'read-only') {
-        const wordsInSegment = segments[currentIdx].split(/\s+/).filter(w => w).length;
-        typedWords += wordsInSegment;
-      }
+      const wordsInSegment = segments[currentIdx].split(/\s+/).filter(w => w).length;
+      typedWords += wordsInSegment; // Tăng tổng số từ mục tiêu đã hoàn thành
+      totalCorrectWords += correctWords; // Tăng tổng số từ đúng
+      
       currentIdx++;
       const p = (currentIdx / segments.length) * 100;
       els.progressFill.style.width = p + '%';
       els.progressText.textContent = Math.round(p) + '%';
-      if (currentIdx >= segments.length) end(); else showSegment();
+      
+      if (currentIdx >= segments.length) {
+        end(); 
+      } else {
+        showSegment();
+      }
     }
 
+    // === HÀM CẬP NHẬT THỐNG KÊ (SỬA LỖI LOGIC) ===
     function updateStats() {
       const s = Math.floor((Date.now() - startTime) / 1000);
       const m = s / 60;
-      const wpm = m > 0 ? Math.round(typedWords / m) : 0;
-      const acc = typedWords > 0 ? Math.round((correctWords / typedWords) * 100) : 100;
+      // WPM và ACC sẽ dựa trên tổng số liệu, không tính theo thời gian thực mỗi giây
+      // để tránh nhầm lẫn. Chỉ cập nhật thời gian.
       els.time.textContent = s + 's';
+      
+      // WPM và ACC sẽ được tính toán lại ở cuối (hàm end())
+      // Hoặc có thể tính WPM/ACC tạm thời dựa trên 'totalCorrectWords' và 'typedWords'
+      const wpm = m > 0 ? Math.round(typedWords / m) : 0;
+      const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       els.wpm.textContent = wpm;
       els.acc.textContent = acc + '%';
     }
 
+    // === HÀM KẾT THÚC (NÂNG CẤP & SỬA LỖI) ===
     function end() {
       clearInterval(timer);
       if (isListening) recognition?.stop();
-      const s = Math.floor((Date.now() - startTime) / 1000) / 60;
+      
+      const s = (Date.now() - startTime) / 1000 / 60; // phút
+      
+      // SỬA LỖI: Tính WPM và ACC dựa trên TỔNG SỐ LIỆU
       const wpm = s > 0 ? Math.round(typedWords / s) : 0;
-      const acc = typedWords > 0 ? Math.round((correctWords / typedWords) * 100) : 100;
+      const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
+      
       const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
       const badge = wpm < 50 ? "Mới" : wpm < 100 ? "Khá" : wpm < 200 ? "Giỏi" : "Xuất sắc";
 
       const name = playerName.trim() || 'Ẩn danh';
       const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge };
-      saveOnlineScore(entry); // Lưu online
-      onlineHistory.push(entry); // Thêm vào lịch sử local
-      onlineHistory.sort((a,b) => b.score - a.score); // Sắp xếp lại cho BXH
+      
+      // 1. Lưu Online
+      saveOnlineScore(entry);
+      
+      // 2. Cập nhật lịch sử online (tạm thời)
+      onlineHistory.push(entry);
+      onlineHistory.sort((a,b) => b.score - a.score);
       if (onlineHistory.length > 100) onlineHistory.pop();
+      
+      // 3. NÂNG CẤP: Lưu Local (Cá nhân)
+      personalHistory.push(entry);
+      if (personalHistory.length > 10) personalHistory.shift(); // Giữ 10 lần gần nhất
+      localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
+      
+      // 4. NÂNG CẤP: Lưu điểm cao nhất
+      if (!bestStats || entry.score > bestStats.score) {
+          bestStats = entry;
+          localStorage.setItem('bestStats', JSON.stringify(bestStats));
+      }
 
+      // Cập nhật UI
       els.level.textContent = badge;
       els.levelBadge.textContent = badge;
       els.score.textContent = score;
-      updateChart();
+      els.wpm.textContent = wpm; // Cập nhật WPM/ACC cuối cùng
+      els.acc.textContent = acc + '%';
       
-      // TỐI ƯU: Cập nhật cả 2 bảng (chung và cá nhân)
-      renderRankTable();
-      renderPersonalStats();
-
+      updateMainChart(); // Cập nhật biểu đồ ở trang luyện tập
+      renderRankTable(); // Render lại bảng xếp hạng online
+      
       alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
     }
 
-    function updateChart() {
-      // Lấy 10 lần gần nhất CỦA TẤT CẢ MỌI NGƯỜI
-      const recent = onlineHistory.sort((a,b) => new Date(a.date) - new Date(b.date)).slice(-10);
-      const ctx = document.getElementById('chart').getContext('2d');
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: 'line',
+    // Biểu đồ ở trang luyện tập (dựa trên 10 lần gần nhất TỪ LỊCH SỬ ONLINE)
+    function updateMainChart() {
+      const recent = onlineHistory.slice(0, 10).reverse(); // 10 người điểm cao nhất
+      const ctx = els.mainChart.getContext('2d');
+      if (mainChart) mainChart.destroy();
+      mainChart = new Chart(ctx, {
+        type: 'bar',
         data: {
-          labels: recent.map((h,i) => `${h.name.substring(0,5)}... ${i+1}`),
+          labels: recent.map(h => h.name.substring(0, 10)),
           datasets: [
-            { label: 'WPM', data: recent.map(h=>h.wpm), borderColor: '#f59e0b', tension: 0.4 },
-            { label: 'Điểm', data: recent.map(h=>h.score), borderColor: '#10b981', tension: 0.4 }
+            { label: 'WPM', data: recent.map(h=>h.wpm), backgroundColor: '#f59e0b' },
+            { label: 'Điểm', data: recent.map(h=>h.score), backgroundColor: '#10b981' }
           ]
         },
         options: { 
-          responsive: true, 
-          plugins: { 
-            legend: { position: 'top' },
-            title: { display: true, text: '10 Lần Luyện Gần Nhất (Chung)' }
-          } 
+            responsive: true, 
+            plugins: { legend: { position: 'top' }, title: { display: true, text: 'Top 10 Online' } } 
         }
       });
     }
@@ -1136,18 +1173,23 @@
       if (!text) return alert('Nhập đoạn văn!');
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
-      currentIdx = 0; typedWords = 0; correctWords = 0; hintsUsed = 0;
+      
+      // Reset toàn bộ
+      currentIdx = 0; 
+      typedWords = 0; 
+      correctWords = 0; 
+      totalCorrectWords = 0;
+      hintsUsed = 0;
+      
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.aiRateSelect.value);
       playerName = els.playerName.value.trim(); // LẤY TÊN
       
-      // TỐI ƯU: Lưu tên vào localStorage
-      localStorage.setItem('playerName', playerName);
-
       updateModeButtons();
-      startTime = Date.now(); timer = setInterval(updateStats, 500);
+      startTime = Date.now(); 
+      if (timer) clearInterval(timer);
+      timer = setInterval(updateStats, 1000);
       
-      // Chuyển tab
       document.getElementById('setupPanel').classList.add('hidden');
       document.getElementById('practiceArea').classList.remove('hidden');
       
@@ -1155,13 +1197,16 @@
       showSegment();
     });
 
-    // TỐI ƯU: Lấy tên đã lưu khi tải trang
-    els.playerName.value = localStorage.getItem('playerName') || '';
-
     els.input.addEventListener('input', updateFeedback);
-    els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); next(); } });
+    els.input.addEventListener('keydown', e => { 
+        if (e.key === 'Enter') { 
+            e.preventDefault(); 
+            if (!els.next.disabled) { // Chỉ cho Enter khi đã gõ đúng
+                next(); 
+            }
+        } 
+    });
 
-    // GỢI Ý CHUẨN + TITLE
     els.hint.addEventListener('click', () => {
       const words = segments[currentIdx].split(/\s+/).filter(w => w);
       const typed = els.input.value.trim().split(/\s+/).filter(w => w);
@@ -1191,32 +1236,52 @@
       });
     });
 
+    // === NHẬN DIỆN GIỌNG NÓI (NÂNG CẤP) ===
     function initSpeechRecognition() {
+      if (recognition) { // Nếu đã khởi tạo, chỉ cần đảm bảo nó dừng
+         recognition.onend = null; // Xóa listener cũ
+         recognition.stop();
+      }
+      
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) return false;
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+      
       recognition = new SpeechRecognition();
       recognition.lang = globalLang;
-      recognition.continuous = false;
-      recognition.interimResults = true;
+      recognition.continuous = false; // Chỉ nhận diện 1 lần
+      recognition.interimResults = false; // Chỉ trả về kết quả cuối cùng
+      
       recognition.onresult = (e) => {
-        const transcript = Array.from(e.results).map(r => r[0].transcript).join('').trim().toLowerCase();
+        const transcript = e.results[0][0].transcript.trim().toLowerCase();
         const target = segments[currentIdx].toLowerCase();
-        const wordsTarget = target.split(/\s+/);
-        const wordsSaid = transcript.split(/\s+/);
+        
+        const wordsTarget = target.split(/\s+/).filter(w => w);
+        const wordsSaid = transcript.split(/\s+/).filter(w => w);
+        
         let correct = 0;
         const feedback = wordsSaid.map((w, i) => {
           if (i >= wordsTarget.length) return `<span class="wrong">${w}</span>`;
           if (w === wordsTarget[i]) { correct++; return `<span class="correct">${w}</span>`; }
           return `<span class="wrong">${w}</span>`;
         }).join(' ');
-        correctWords = correct;
+        
+        correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
         els.feedback.innerHTML = feedback || '<em>Đang nghe...</em>';
+        
+        // QUY TẮC MỚI: Phải đọc đúng 100%
+        const isMatch = correct === wordsTarget.length && wordsSaid.length === wordsTarget.length;
+        els.next.disabled = !isMatch;
+        if(isMatch) {
+            els.feedback.innerHTML += "<br><em>(Tuyệt vời! Nhấn 'Tiếp theo')</em>";
+        }
       };
+      
       recognition.onerror = () => {
         els.feedback.innerHTML = `<em>Lỗi mic. Nhấn lại.</em>`;
         els.micBtn.classList.remove('listening');
         isListening = false;
       };
+      
       recognition.onend = () => {
         els.micBtn.classList.remove('listening');
         isListening = false;
@@ -1236,9 +1301,11 @@
       }
     });
 
-    // TẢI BẢNG XẾP HẠNG KHI MỞ TRANG (TỐI ƯU: Bỏ setInterval)
+    // === TẢI DỮ LIỆU KHI MỞ TRANG ===
     window.addEventListener('load', () => {
-      loadOnlineRank();
+      loadOnlineRank(); // Tải BXH online
+      renderPersonalStats(); // Render thống kê cá nhân (từ localStorage)
+      setInterval(loadOnlineRank, 60000); // Cập nhật BXH mỗi 60s
     });
   </script>
 </body>
