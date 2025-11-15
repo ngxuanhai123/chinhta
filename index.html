@@ -6,18 +6,12 @@
   <title>HiHi - Luyện Chính Tả Thông Minh</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke, tạo đoạn văn bằng AI.">
   <meta name="theme-color" content="#f59e0b">
-  <!-- PWA -->
-  <link rel="manifest" href="data:application/manifest+json,{
-    \"name\": \"HiHi - Luyện Chính Tả\",
-    \"short_name\": \"HiHi\",
-    \"start_url\": \".\",
-    \"display\": \"standalone\",
-    \"background_color\": \"#fff7ed\",
-    \"theme_color\": \"#f59e0b\",
-    \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
-  }">
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
-  <!-- Font & Chart.js -->
+  
+  <link rel="manifest" href="data:application/manifest+json,{'name': 'HiHi - Luyện Chính Tả', 'short_name': 'HiHi', 'start_url': '.', 'display': 'standalone', 'background_color': '#fff7ed', 'theme_color': '#f59e0b', 'icons': [{'src': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+','sizes': '192x192', 'type': 'image/svg+xml'}]}">
+  
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1Boolean" stroke="#fff" stroke-width="5" stroke-linecap="round" />
+</svg>
+">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
@@ -97,14 +91,19 @@
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: white; border-color: transparent; box-shadow: 0 8px 20px rgba(245,158,11,0.3);
     }
+    
+    /* SẮP XẾP LẠI: Bỏ margin bên ngoài */
     .name-box {
-      text-align: center; margin: var(--gap) 0;
+      text-align: center;
+      /* margin: var(--gap) 0;  (Đã xóa) */
     }
     .name-box input {
-      padding: 12px 18px; width: 260px; border: 2px solid var(--border); border-radius: 16px;
+      padding: 12px 18px; width: 100%; /* Sửa thành 100% để vừa grid */
+      border: 2px solid var(--border); border-radius: 16px;
       font-size: 1.1rem; text-align: center; background: var(--card);
     }
     .name-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 5px rgba(245,158,11,0.2); }
+    
     .setup-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap);
       background: var(--card); border-radius: var(--radius); padding: 32px;
@@ -195,11 +194,14 @@
       margin-top: 16px; padding: 14px; background: var(--glass); border-radius: 14px;
       border: 1px solid var(--border); min-height: 60px; display: none; white-space: pre-wrap;
     }
-    #practiceArea, #rankPanel {
+    
+    /* Áp dụng chung cho các panel nội dung tab */
+    #practiceArea, #rankPanel, #statsPanel {
       background: var(--card); border-radius: var(--radius); padding: 32px;
       box-shadow: var(--shadow); border: 2px solid var(--border); display: flex;
       flex-direction: column; gap: var(--gap);
     }
+
     .progress-box {
       background: var(--glass); padding: 16px; border-radius: 18px; border: 1px solid var(--border);
     }
@@ -234,7 +236,9 @@
       position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
       background: var(--card); color: var(--text); padding: 6px 10px; border-radius: 8px;
       font-size: 0.9rem; white-space: nowrap; z-index: 100; opacity: 0; pointer-events: none;
-      transition: opacity 0 sauvegarde.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border);
+      /* SỬA LỖI: Bỏ chữ "sauvegarde" */
+      transition: opacity 0.2s; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border);
     }
     .karaoke-word:hover .word-tooltip { opacity: 1; }
     .mic-box {
@@ -363,11 +367,26 @@
     .online-status {
       font-size: 0.9rem; color: var(--success); text-align: center; margin-top: 8px;
     }
+
+    /* CSS CHO TAB CÁ NHÂN */
+    .personal-intro {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--muted);
+      padding: 10px;
+      background: var(--glass);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+    .personal-intro strong {
+      color: var(--primary);
+      font-size: 1.3rem;
+    }
+
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- HEADER + NÚT SÁNG/TỐI TỐI ƯU -->
     <header>
       <div class="logo">
         <svg viewBox="0 0 100 100">
@@ -379,7 +398,6 @@
       </div>
       <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói – Tạo đoạn văn bằng AI!</p>
 
-      <!-- NÚT SÁNG/TỐI TỐI ƯU -->
       <div class="theme-toggle-wrapper">
         <div class="tip">
           <button class="theme-toggle" id="themeBtn">
@@ -391,24 +409,14 @@
       </div>
     </header>
 
-    <!-- TABS -->
     <div class="tabs">
       <button class="tab active" data-tab="setup">Luyện Tập</button>
       <button class="tab" data-tab="rank">Xếp Hạng</button>
+      <button class="tab" data-tab="stats">Tiến Bộ Cá Nhân</button>
     </div>
 
-    <!-- NAME -->
-    <div class="name-box">
-      <div class="tip">
-        <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" />
-        <span class="tiptext">Tên sẽ hiển thị trên bảng xếp hạng. Không nhập = "Ẩn danh"</span>
-      </div>
-    </div>
-
-    <!-- SETUP PANEL -->
     <div id="setupPanel" class="tab-content">
       <div class="setup-grid">
-        <!-- NGÔN NGỮ -->
         <div class="setup-item">
           <h3 class="tip">
             <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
@@ -420,7 +428,6 @@
             <option value="id-ID">Tiếng Indonesia → Việt</option>
           </select>
         </div>
-        <!-- CHẾ ĐỘ LUYỆN -->
         <div class="setup-item">
           <h3 class="tip">
             <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -433,7 +440,16 @@
             <label class="radio-label"><input type="radio" name="mode" value="read-only"> Luyện đọc (mic)</label>
           </div>
         </div>
-        <!-- ĐOẠN VĂN -->
+        
+        <div style="grid-column: 1/-1;">
+          <div class="name-box">
+            <div class="tip">
+              <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" />
+              <span class="tiptext">Tên sẽ hiển thị trên bảng xếp hạng và thống kê cá nhân.</span>
+            </div>
+          </div>
+        </div>
+
         <div class="setup-item" style="grid-column:1/-1;">
           <h3 class="tip">
             <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
@@ -446,9 +462,9 @@
       </div>
     </div>
 
-    <!-- RANK PANEL -->
     <div id="rankPanel" class="tab-content hidden">
-      <h2 style="text-align:center; color:var(--primary); margin-bottom:20px;">Bảng Xếp Hạng</h2>
+      <h2 style="text-align:center; color:var(--primary); margin-bottom:0;">Bảng Xếp Hạng</h2>
+      <div class="online-status" id="onlineStatus">Đang tải bảng xếp hạng online...</div>
       <div class="rank-filter">
         <button class="filter-btn active" data-filter="all">Tất cả</button>
         <button class="filter-btn" data-filter="day">Hôm nay</button>
@@ -456,7 +472,6 @@
         <button class="filter-btn" data-filter="month">Tháng này</button>
         <button class="filter-btn" data-filter="year">Năm nay</button>
       </div>
-      <div class="online-status" id="onlineStatus">Đang tải bảng xếp hạng online...</div>
       <table class="rank-table" id="rankTable">
         <thead>
           <tr>
@@ -475,7 +490,37 @@
       </table>
     </div>
 
-    <!-- AI MODAL -->
+    <div id="statsPanel" class="tab-content hidden">
+      <h2 style="text-align:center; color:var(--primary); margin-bottom:0;">Tiến Bộ Cá Nhân</h2>
+      <p class="personal-intro">Thống kê của: <strong id="statsPlayerName">...</strong></p>
+      
+      <div class="stats-row" style="margin-bottom: 12px;">
+        <div class="stat-item"><h4>Tổng số lần</h4><div class="val" id="statsTotalSessions">0</div></div>
+        <div class="stat-item"><h4>WPM Cao Nhất</h4><div class="val" id="statsBestWPM">0</div></div>
+        <div class="stat-item"><h4>Điểm Cao Nhất</h4><div class="val" id="statsBestScore">0</div></div>
+        <div class="stat-item"><h4>Cấp độ</h4><div class="val" id="statsCurrentBadge">-</div></div>
+      </div>
+      
+      <canvas id="personalChart"></canvas>
+      
+      <h3 style="text-align:center; margin-top:20px;">Lịch sử Luyện tập</h3>
+      <table class="rank-table" id="personalRankTable">
+        <thead>
+          <tr>
+            <th>Ngày</th>
+            <th>WPM</th>
+            <th>Chính xác</th>
+            <th>Điểm</th>
+            <th>Cấp độ</th>
+          </tr>
+        </thead>
+        <tbody id="personalRankBody">
+          <tr><td colspan="5" class="no-data">Không tìm thấy dữ liệu. Hãy luyện tập!</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+
     <div class="modal" id="aiModal">
       <div class="modal-content">
         <button class="modal-close" id="closeAiModal">×</button>
@@ -515,7 +560,6 @@
       </div>
     </div>
 
-    <!-- PRACTICE -->
     <div id="practiceArea" class="tab-content hidden">
       <div class="mode-switcher">
         <button class="mode-btn active" data-mode="read-write">Chép</button>
@@ -561,7 +605,6 @@
       <canvas id="chart"></canvas>
     </div>
 
-    <!-- FOOTER -->
     <footer>
       <div class="intro-box">
         <p><strong>HiHi là ai?</strong> – Người bạn nhỏ giúp bạn luyện chính tả mỗi ngày!</p>
@@ -579,6 +622,7 @@
     let typedWords = 0, correctWords = 0, hintsUsed = 0;
     let onlineHistory = [];
     let chart;
+    let personalChart = null; // TÍNH NĂNG MỚI: Biến cho chart cá nhân
     let speechRate = 1.0;
     let currentUtterance = null;
     let currentMode = 'read-write';
@@ -628,6 +672,33 @@
       playerName: document.getElementById('playerName'),
       onlineStatus: document.getElementById('onlineStatus')
     };
+    
+    // === TÍNH NĂNG MỚI: TAB CHUYỂN ĐỔI ===
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetTab = tab.dataset.tab;
+        
+        // Cập nhật nút tab
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Ẩn/hiện nội dung
+        tabContents.forEach(content => {
+          content.classList.toggle('hidden', content.id !== `${targetTab}Panel`);
+        });
+
+        // Tải/Render dữ liệu khi cần
+        if (targetTab === 'rank') {
+          renderRankTable(); // Render lại bảng xếp hạng với filter hiện tại
+        }
+        if (targetTab === 'stats') {
+          renderPersonalStats(); // Render lại thống kê cá nhân
+        }
+      });
+    });
 
     // === CHỦ ĐỀ TỐI/SÁNG ===
     function updateThemeIcon() {
@@ -652,7 +723,12 @@
         const data = await res.json();
         onlineHistory = data || [];
         els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
-        renderRankTable();
+        
+        // Tự động render tab đang active (nếu là rank hoặc stats)
+        const activeTab = document.querySelector('.tab.active').dataset.tab;
+        if (activeTab === 'rank') renderRankTable();
+        if (activeTab === 'stats') renderPersonalStats();
+
       } catch (e) {
         els.onlineStatus.textContent = "Không kết nối được server online";
         onlineHistory = [];
@@ -671,19 +747,31 @@
 
     // === BẢNG XẾP HẠNG ===
     function renderRankTable(filter = 'all') {
+      // Lấy filter đang active nếu không được cung cấp
+      if (filter === 'all') {
+        const activeFilterBtn = document.querySelector('.filter-btn.active');
+        if (activeFilterBtn) filter = activeFilterBtn.dataset.filter;
+      }
+
       const now = new Date();
       const filtered = onlineHistory.filter(h => {
+        if (!h.date) return false; // Bỏ qua nếu không có ngày
         const d = new Date(h.date);
-        if (isNaN(d)) return true;
+        if (isNaN(d)) return false; // Bỏ qua nếu ngày không hợp lệ
+
         if (filter === 'day') return d.toDateString() === now.toDateString();
         if (filter === 'week') {
-          const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
-          const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
+          const weekStart = new Date(now); 
+          weekStart.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1)); // Tuần bắt đầu T2
+          weekStart.setHours(0,0,0,0);
+          const weekEnd = new Date(weekStart); 
+          weekEnd.setDate(weekStart.getDate() + 6);
+          weekEnd.setHours(23,59,59,999);
           return d >= weekStart && d <= weekEnd;
         }
         if (filter === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
         if (filter === 'year') return d.getFullYear() === now.getFullYear();
-        return true;
+        return true; // 'all'
       }).sort((a, b) => b.score - a.score);
 
       els.rankBody.innerHTML = filtered.length ? filtered.map((h, i) => `
@@ -696,7 +784,7 @@
           <td><strong>${h.score}</strong></td>
           <td><span style="color:#f59e0b; font-weight:700;">${h.badge}</span></td>
         </tr>
-      `).join('') : '<tr><td colspan="7" class="no-data">Chưa có dữ liệu</td></tr>';
+      `).join('') : '<tr><td colspan="7" class="no-data">Chưa có dữ liệu cho bộ lọc này</td></tr>';
 
       els.filterBtns().forEach(btn => {
         btn.classList.toggle('active', btn.dataset.filter === filter);
@@ -706,6 +794,72 @@
     els.filterBtns().forEach(btn => {
       btn.addEventListener('click', () => renderRankTable(btn.dataset.filter));
     });
+    
+    // === TÍNH NĂNG MỚI: THỐNG KÊ CÁ NHÂN ===
+    function renderPersonalStats() {
+      const name = els.playerName.value.trim() || 'Ẩn danh';
+      document.getElementById('statsPlayerName').textContent = name;
+
+      // Lọc lịch sử của cá nhân và sắp xếp theo ngày TĂNG DẦN (cho biểu đồ)
+      const myHistory = onlineHistory.filter(h => (h.name || 'Ẩn danh').toLowerCase() === name.toLowerCase())
+                                     .sort((a, b) => new Date(a.date) - new Date(b.date)); 
+
+      const statsTotal = document.getElementById('statsTotalSessions');
+      const statsBestWPM = document.getElementById('statsBestWPM');
+      const statsBestScore = document.getElementById('statsBestScore');
+      const statsCurrentBadge = document.getElementById('statsCurrentBadge');
+      const personalRankBody = document.getElementById('personalRankBody');
+      const ctx = document.getElementById('personalChart').getContext('2d');
+      
+      // Xóa chart cũ trước
+      if (personalChart) personalChart.destroy();
+      
+      if (myHistory.length === 0) {
+        statsTotal.textContent = 0;
+        statsBestWPM.textContent = 0;
+        statsBestScore.textContent = 0;
+        statsCurrentBadge.textContent = '-';
+        personalRankBody.innerHTML = '<tr><td colspan="5" class="no-data">Không tìm thấy dữ liệu. Hãy luyện tập!</td></tr>';
+        personalChart = null; 
+        return;
+      }
+
+      // Cập nhật thẻ thống kê
+      statsTotal.textContent = myHistory.length;
+      statsBestWPM.textContent = Math.max(...myHistory.map(h => h.wpm));
+      statsBestScore.textContent = Math.max(...myHistory.map(h => h.score));
+      statsCurrentBadge.textContent = myHistory[myHistory.length - 1].badge; // Cấp độ lần cuối
+
+      // Cập nhật bảng lịch sử cá nhân (sắp xếp MỚI NHẤT lên đầu cho bảng)
+      personalRankBody.innerHTML = myHistory.slice().reverse().map(h => `
+        <tr>
+          <td>${new Date(h.date).toLocaleString('vi')}</td>
+          <td>${h.wpm}</td>
+          <td>${h.acc}%</td>
+          <td><strong>${h.score}</strong></td>
+          <td><span style="color:#f59e0b; font-weight:700;">${h.badge}</span></td>
+        </tr>
+      `).join('');
+
+      // Cập nhật chart (dùng mảng đã sắp xếp TĂNG DẦN)
+      personalChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: myHistory.map((h, i) => `Lần ${i + 1}`),
+          datasets: [
+            { label: 'WPM', data: myHistory.map(h => h.wpm), borderColor: '#f59e0b', tension: 0.4 },
+            { label: 'Điểm', data: myHistory.map(h => h.score), borderColor: '#10b981', tension: 0.4 }
+          ]
+        },
+        options: { 
+          responsive: true, 
+          plugins: { 
+            legend: { position: 'top' },
+            title: { display: true, text: 'Biểu đồ tiến bộ' }
+          } 
+        }
+      });
+    }
 
     // === GIỌNG ĐỌC & TỐC ĐỘ ===
     function loadVoices() {
@@ -760,7 +914,8 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
+            // SỬA LỖI: Đổi sang model llama3-8b-8192
+            model: "llama3-8b-8192",
             messages: [{ role: "user", content: prompt }],
             max_tokens: 500,
             temperature: 0.7
@@ -920,32 +1075,43 @@
       const name = playerName.trim() || 'Ẩn danh';
       const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge };
       saveOnlineScore(entry); // Lưu online
-      onlineHistory.push(entry);
-      onlineHistory.sort((a,b) => b.score - a.score);
+      onlineHistory.push(entry); // Thêm vào lịch sử local
+      onlineHistory.sort((a,b) => b.score - a.score); // Sắp xếp lại cho BXH
       if (onlineHistory.length > 100) onlineHistory.pop();
 
       els.level.textContent = badge;
       els.levelBadge.textContent = badge;
       els.score.textContent = score;
       updateChart();
+      
+      // TỐI ƯU: Cập nhật cả 2 bảng (chung và cá nhân)
       renderRankTable();
+      renderPersonalStats();
+
       alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
     }
 
     function updateChart() {
-      const recent = onlineHistory.slice(-10);
+      // Lấy 10 lần gần nhất CỦA TẤT CẢ MỌI NGƯỜI
+      const recent = onlineHistory.sort((a,b) => new Date(a.date) - new Date(b.date)).slice(-10);
       const ctx = document.getElementById('chart').getContext('2d');
       if (chart) chart.destroy();
       chart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: recent.map((_,i) => `Lần ${onlineHistory.length-10+i+1}`),
+          labels: recent.map((h,i) => `${h.name.substring(0,5)}... ${i+1}`),
           datasets: [
             { label: 'WPM', data: recent.map(h=>h.wpm), borderColor: '#f59e0b', tension: 0.4 },
             { label: 'Điểm', data: recent.map(h=>h.score), borderColor: '#10b981', tension: 0.4 }
           ]
         },
-        options: { responsive: true, plugins: { legend: { position: 'top' } } }
+        options: { 
+          responsive: true, 
+          plugins: { 
+            legend: { position: 'top' },
+            title: { display: true, text: '10 Lần Luyện Gần Nhất (Chung)' }
+          } 
+        }
       });
     }
 
@@ -974,13 +1140,23 @@
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.aiRateSelect.value);
       playerName = els.playerName.value.trim(); // LẤY TÊN
+      
+      // TỐI ƯU: Lưu tên vào localStorage
+      localStorage.setItem('playerName', playerName);
+
       updateModeButtons();
       startTime = Date.now(); timer = setInterval(updateStats, 500);
+      
+      // Chuyển tab
       document.getElementById('setupPanel').classList.add('hidden');
       document.getElementById('practiceArea').classList.remove('hidden');
+      
       initSpeechRecognition();
       showSegment();
     });
+
+    // TỐI ƯU: Lấy tên đã lưu khi tải trang
+    els.playerName.value = localStorage.getItem('playerName') || '';
 
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); next(); } });
@@ -1060,10 +1236,9 @@
       }
     });
 
-    // TẢI BẢNG XẾP HẠNG KHI MỞ TRANG
+    // TẢI BẢNG XẾP HẠNG KHI MỞ TRANG (TỐI ƯU: Bỏ setInterval)
     window.addEventListener('load', () => {
       loadOnlineRank();
-      setInterval(loadOnlineRank, 30000); // Cập nhật mỗi 30s
     });
   </script>
 </body>
