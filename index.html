@@ -49,7 +49,7 @@
       background: linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a, #fbbf24, #f59e0b);
     }
     .logo {
-      display: flex; align-items: center; justify-content: center 16px; flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
     }
     .logo svg { width: 64px; height: 64px; fill: var(--primary); animation: float 3s ease-in-out infinite; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
@@ -59,33 +59,31 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .tagline { color: var(--muted); font-size: 1.2rem; margin-top: 8px; }
-    .tip { position: relative; cursor: help; }
-    .tip .tiptext {
-      visibility: hidden; background: var(--card); color: var(--text); padding: 8px 12px;
-      border-radius: 10px; font-size: 0.85rem; position: absolute; z-index: 100;
-      opacity: 0; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      border: 1px solid var(--border); white-space: nowrap;
-    }
-    .tip:hover .tiptext { visibility: visible; opacity: 1; }
 
-    /* NÚT TỐI/SÁNG – TOOLTIP SÁT BIỂU TƯỢNG */
+    /* NÚT SÁNG/TỐI – TỐI ƯU: GẦN HEADER, GÓC PHẢI, CÓ TOOLTIP */
+    .theme-toggle-wrapper {
+      position: absolute; top: 16px; right: 16px; z-index: 100;
+    }
     .theme-toggle {
-      position: fixed; top: 60px; right: 20px; z-index: 9999;
       background: var(--primary); color: white; border: 3px solid white;
-      width: 56px; height: 56px; border-radius: 50%; display: flex;
+      width: 50px; height: 50px; border-radius: 50%; display: flex;
       align-items: center; justify-content: center; cursor: pointer;
-      box-shadow: 0 8px 20px rgba(245,158,11,0.5); transition: all 0.4s ease;
-      font-size: 1.5rem;
+      box-shadow: 0 6px 16px rgba(245,158,11,0.4); transition: all 0.3s ease;
+      font-size: 1.3rem;
     }
     .theme-toggle:hover {
       transform: scale(1.1) rotate(180deg);
-      box-shadow: 0 12px 28px rgba(245,158,11,0.6);
+      box-shadow: 0 10px 24px rgba(245,158,11,0.5);
     }
-    .theme-toggle .icon { width: 28px; height: 28px; fill: white; }
-    .theme-toggle .tiptext {
-      right: 65px; top: 50%; transform: translateY(-50%);
-      font-weight: 600;
+    .theme-toggle .icon { width: 26px; height: 26px; fill: white; }
+    .tip { position: relative; display: inline-block; }
+    .tip .tiptext {
+      visibility: hidden; background: var(--card); color: var(--text); padding: 8px 12px;
+      border-radius: 12px; font-size: 0.85rem; position: absolute; bottom: 120%; left: 50%;
+      transform: translateX(-50%); width: max-content; z-index: 100; opacity: 0; transition: 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border); white-space: nowrap;
     }
+    .tip:hover .tiptext { visibility: visible; opacity: 1; }
 
     .tabs {
       display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
@@ -236,7 +234,7 @@
       position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
       background: var(--card); color: var(--text); padding: 6px 10px; border-radius: 8px;
       font-size: 0.9rem; white-space: nowrap; z-index: 100; opacity: 0; pointer-events: none;
-      transition: opacity 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border);
+      transition: opacity 0 sauvegarde.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border);
     }
     .karaoke-word:hover .word-tooltip { opacity: 1; }
     .mic-box {
@@ -276,6 +274,7 @@
       position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
       background: var(--hint); color: white; width: 50px; height: 50px; border-radius: 50%;
       border: none; font-size: 1.4rem; cursor: pointer; box-shadow: 0 6px 16px rgba(139,92,246,0.4);
+      display: flex; align-items: center; justify-content: center;
     }
     #liveFeedback {
       margin-top: 16px; padding: 18px; background: var(--glass); border-radius: 16px;
@@ -361,20 +360,14 @@
     .no-data {
       text-align: center; padding: 40px; color: var(--muted); font-style: italic;
     }
+    .online-status {
+      font-size: 0.9rem; color: var(--success); text-align: center; margin-top: 8px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- NÚT TỐI/SÁNG – TOOLTIP SÁT BIỂU TƯỢNG -->
-    <div class="tip">
-      <button class="theme-toggle" id="themeBtn">
-        <svg class="icon" viewBox="0 0 24 24" id="sunIcon"><path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm8-7a1 1 0 0 1 0 2h-2a1 1 0 1 1 0-2h2zm-16 0a1 1 0 0 1 0 2H2a1 1 0 1 1 0-2h2zM5.64 5.64a1 1 0 0 1 1.42 0l1.41 1.41a1 1 0 1 1-1.42 1.42L5.64 6.06a1 1 0 0 1 0-1.42zm12.72 0a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.42l1.41-1.41a1 1 0 0 1 1.42 0zM5.64 18.36a1 1 0 0 1 0-1.42l1.41-1.41a1 1 0 1 1 1.42 1.42l-1.41 1.41a1 1 0 0 1-1.42 0zm12.72 0a1 1 0 0 1-1.42 0l-1.41-1.41a1 1 0 1 1 1.42-1.42l1.41 1.41a1 1 0 0 1 0 1.42zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>
-        <svg class="icon hidden" viewBox="0 0 24 24" id="moonIcon"><path d="M12 3a9 9 0 1 0 9 9c0-.23-.01-.46-.03-.69a1 1 0 0 0-1.26-.97 5.5 5.5 0 1 1-6.9-6.9 1 1 0 0 0-.97-1.26A8.96 8.96 0 0 0 12 3z"/></svg>
-      </button>
-      <span class="tiptext">Chuyển sáng/tối</span>
-    </div>
-
-    <!-- HEADER -->
+    <!-- HEADER + NÚT SÁNG/TỐI TỐI ƯU -->
     <header>
       <div class="logo">
         <svg viewBox="0 0 100 100">
@@ -385,6 +378,17 @@
         <h1>HiHi</h1>
       </div>
       <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói – Tạo đoạn văn bằng AI!</p>
+
+      <!-- NÚT SÁNG/TỐI TỐI ƯU -->
+      <div class="theme-toggle-wrapper">
+        <div class="tip">
+          <button class="theme-toggle" id="themeBtn">
+            <svg class="icon" viewBox="0 0 24 24" id="sunIcon"><path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm8-7a1 1 0 0 1 0 2h-2a1 1 0 1 1 0-2h2zm-16 0a1 1 0 0 1 0 2H2a1 1 0 1 1 0-2h2zM5.64 5.64a1 1 0 0 1 1.42 0l1.41 1.41a1 1 0 1 1-1.42 1.42L5.64 6.06a1 1 0 0 1 0-1.42zm12.72 0a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.42l1.41-1.41a1 1 0 0 1 1.42 0zM5.64 18.36a1 1 0 0 1 0-1.42l1.41-1.41a1 1 0 1 1 1.42 1.42l-1.41 1.41a1 1 0 0 1-1.42 0zm12.72 0a1 1 0 0 1-1.42 0l-1.41-1.41a1 1 0 1 1 1.42-1.42l1.41 1.41a1 1 0 0 1 0 1.42zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>
+            <svg class="icon hidden" viewBox="0 0 24 24" id="moonIcon"><path d="M12 3a9 9 0 1 0 9 9c0-.23-.01-.46-.03-.69a1 1 0 0 0-1.26-.97 5.5 5.5 0 1 1-6.9-6.9 1 1 0 0 0-.97-1.26A8.96 8.96 0 0 0 12 3z"/></svg>
+          </button>
+          <span class="tiptext">Chuyển sáng/tối</span>
+        </div>
+      </div>
     </header>
 
     <!-- TABS -->
@@ -412,8 +416,8 @@
           </h3>
           <select id="globalLang">
             <option value="vi-VN">Tiếng Việt (không dịch)</option>
-            <option value="en-US">Tiếng Anh to Việt</option>
-            <option value="id-ID">Tiếng Indonesia to Việt</option>
+            <option value="en-US">Tiếng Anh → Việt</option>
+            <option value="id-ID">Tiếng Indonesia → Việt</option>
           </select>
         </div>
         <!-- CHẾ ĐỘ LUYỆN -->
@@ -452,6 +456,7 @@
         <button class="filter-btn" data-filter="month">Tháng này</button>
         <button class="filter-btn" data-filter="year">Năm nay</button>
       </div>
+      <div class="online-status" id="onlineStatus">Đang tải bảng xếp hạng online...</div>
       <table class="rank-table" id="rankTable">
         <thead>
           <tr>
@@ -465,7 +470,7 @@
           </tr>
         </thead>
         <tbody id="rankBody">
-          <tr><td colspan="7" class="no-data">Chưa có dữ liệu</td></tr>
+          <tr><td colspan="7" class="no-data">Đang tải...</td></tr>
         </tbody>
       </table>
     </div>
@@ -535,12 +540,11 @@
       </div>
       <div class="input-box">
         <input type="text" id="userInput" placeholder="Gõ lại đoạn văn..." autocomplete="off" />
-        <button class="hint-btn" id="hintBtn">?</button>
+        <button class="hint-btn" id="hintBtn" title="Gợi ý ở đây vào ô gợi ý ?">?</button>
       </div>
       <div id="liveFeedback"><em>Nhập hoặc đọc để bắt đầu...</em></div>
       <div class="action-row">
         <button class="action-btn btn-replay" id="replayBtn">Nghe lại</button>
-        <button class="action-btn btn-hint" id="showHintBtn">Gợi ý</button>
         <button class="action-btn btn-next" id="nextBtn">Tiếp theo</button>
         <button class="action-btn btn-reset" id="resetBtn">Làm lại</button>
       </div>
@@ -569,10 +573,11 @@
   <script>
     // === CẤU HÌNH ===
     const GROQ_KEY = "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";
+    const ONLINE_RANK_URL = "https://script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
     let segments = [], currentIdx = 0, startTime, timer;
     let typedWords = 0, correctWords = 0, hintsUsed = 0;
-    let history = JSON.parse(localStorage.getItem('hihiDict') || '[]');
+    let onlineHistory = [];
     let chart;
     let speechRate = 1.0;
     let currentUtterance = null;
@@ -620,7 +625,8 @@
       micBtn: document.getElementById('micBtn'),
       rankBody: document.getElementById('rankBody'),
       filterBtns: () => document.querySelectorAll('.filter-btn'),
-      playerName: document.getElementById('playerName')
+      playerName: document.getElementById('playerName'),
+      onlineStatus: document.getElementById('onlineStatus')
     };
 
     // === CHỦ ĐỀ TỐI/SÁNG ===
@@ -639,23 +645,35 @@
     document.body.setAttribute('data-theme', savedTheme);
     updateThemeIcon();
 
-    // === TABS ===
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-        tab.classList.add('active');
-        const panel = document.getElementById(tab.dataset.tab + 'Panel') || document.getElementById(tab.dataset.tab + 'Area');
-        if (panel) panel.classList.remove('hidden');
-        if (tab.dataset.tab === 'rank') renderRankTable();
-      });
-    });
+    // === ĐỒNG BỘ BẢNG XẾP HẠNG ONLINE ===
+    async function loadOnlineRank() {
+      try {
+        const res = await fetch(ONLINE_RANK_URL + '?t=' + Date.now());
+        const data = await res.json();
+        onlineHistory = data || [];
+        els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
+        renderRankTable();
+      } catch (e) {
+        els.onlineStatus.textContent = "Không kết nối được server online";
+        onlineHistory = [];
+      }
+    }
 
-    // === BẢNG XẾP HẠNG – ĐỒNG BỘ TỰ ĐỘNG ===
+    async function saveOnlineScore(entry) {
+      try {
+        await fetch(ONLINE_RANK_URL, {
+          method: "POST",
+          body: JSON.stringify(entry),
+          headers: { "Content-Type": "application/json" }
+        });
+      } catch (e) { console.log("Lỗi lưu online:", e); }
+    }
+
+    // === BẢNG XẾP HẠNG ===
     function renderRankTable(filter = 'all') {
       const now = new Date();
-      const filtered = history.filter(h => {
-        const d = new Date(h.date.replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2})/, '$3-$2-$1T$4:$5'));
+      const filtered = onlineHistory.filter(h => {
+        const d = new Date(h.date);
         if (isNaN(d)) return true;
         if (filter === 'day') return d.toDateString() === now.toDateString();
         if (filter === 'week') {
@@ -672,7 +690,7 @@
         <tr>
           <td>${i + 1}</td>
           <td>${h.name || 'Ẩn danh'}</td>
-          <td>${h.date}</td>
+          <td>${new Date(h.date).toLocaleString('vi')}</td>
           <td>${h.wpm}</td>
           <td>${h.acc}%</td>
           <td><strong>${h.score}</strong></td>
@@ -900,26 +918,28 @@
       const badge = wpm < 50 ? "Mới" : wpm < 100 ? "Khá" : wpm < 200 ? "Giỏi" : "Xuất sắc";
 
       const name = playerName.trim() || 'Ẩn danh';
-      history.push({ name, date: new Date().toLocaleString('vi'), wpm, acc, score, badge });
-      if (history.length > 50) history.shift();
-      localStorage.setItem('hihiDict', JSON.stringify(history));
+      const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge };
+      saveOnlineScore(entry); // Lưu online
+      onlineHistory.push(entry);
+      onlineHistory.sort((a,b) => b.score - a.score);
+      if (onlineHistory.length > 100) onlineHistory.pop();
 
       els.level.textContent = badge;
       els.levelBadge.textContent = badge;
       els.score.textContent = score;
       updateChart();
-      renderRankTable(); // ĐỒNG BỘ TỰ ĐỘNG
+      renderRankTable();
       alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
     }
 
     function updateChart() {
-      const recent = history.slice(-10);
+      const recent = onlineHistory.slice(-10);
       const ctx = document.getElementById('chart').getContext('2d');
       if (chart) chart.destroy();
       chart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: recent.map((_,i) => `Lần ${history.length-10+i+1}`),
+          labels: recent.map((_,i) => `Lần ${onlineHistory.length-10+i+1}`),
           datasets: [
             { label: 'WPM', data: recent.map(h=>h.wpm), borderColor: '#f59e0b', tension: 0.4 },
             { label: 'Điểm', data: recent.map(h=>h.score), borderColor: '#10b981', tension: 0.4 }
@@ -953,7 +973,7 @@
       currentIdx = 0; typedWords = 0; correctWords = 0; hintsUsed = 0;
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.aiRateSelect.value);
-      playerName = els.playerName.value.trim();
+      playerName = els.playerName.value.trim(); // LẤY TÊN
       updateModeButtons();
       startTime = Date.now(); timer = setInterval(updateStats, 500);
       document.getElementById('setupPanel').classList.add('hidden');
@@ -965,7 +985,7 @@
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); next(); } });
 
-    // GỢI Ý – HIỂN THỊ TRONG Ô GỢI Ý
+    // GỢI Ý CHUẨN + TITLE
     els.hint.addEventListener('click', () => {
       const words = segments[currentIdx].split(/\s+/).filter(w => w);
       const typed = els.input.value.trim().split(/\s+/).filter(w => w);
@@ -1040,9 +1060,10 @@
       }
     });
 
+    // TẢI BẢNG XẾP HẠNG KHI MỞ TRANG
     window.addEventListener('load', () => {
-      updateChart();
-      renderRankTable();
+      loadOnlineRank();
+      setInterval(loadOnlineRank, 30000); // Cập nhật mỗi 30s
     });
   </script>
 </body>
