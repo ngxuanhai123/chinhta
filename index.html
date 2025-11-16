@@ -57,7 +57,6 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .tagline { color: var(--muted); font-size: 1.2rem; margin-top: 8px; }
-
     /* NÚT SÁNG/TỐI */
     .theme-toggle-wrapper {
       position: absolute; top: 16px; right: 16px; z-index: 100;
@@ -82,7 +81,6 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border); white-space: nowrap;
     }
     .tip:hover .tiptext { visibility: visible; opacity: 1; }
-
     /* TABS CHÍNH */
     .tabs {
       display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
@@ -333,7 +331,6 @@
       border: 1px solid var(--border); box-shadow: 0 6px 16px rgba(0,0,0,0.1);
     }
     .intro-box strong { color: var(--primary); font-size: 1.2rem; }
-
     /* BẢNG XẾP HẠNG & TAB THỐNG KÊ */
     .sub-tabs {
       display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;
@@ -391,7 +388,6 @@
         <h1>HiHi</h1>
       </div>
       <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói – Tạo đoạn văn bằng AI!</p>
-
       <div class="theme-toggle-wrapper">
         <div class="tip">
           <button class="theme-toggle" id="themeBtn">
@@ -402,19 +398,10 @@
         </div>
       </div>
     </header>
-
     <div class="tabs">
       <button class="tab active" data-tab="setupPanel">Luyện Tập</button>
-      <button class="tab" data-tab="rankPanel">Xếp Hạng</button>
+      <button class="tab" data-tab="rankPanel">Thống Kê Cá Nhân</button>
     </div>
-
-    <div class="name-box">
-      <div class="tip">
-        <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" />
-        <span class="tiptext">Tên sẽ hiển thị trên bảng xếp hạng. Không nhập = "Ẩn danh"</span>
-      </div>
-    </div>
-
     <div id="setupPanel" class="tab-content">
       <div class="setup-grid">
         <div class="setup-item">
@@ -451,43 +438,10 @@
         </div>
       </div>
     </div>
-
     <div id="rankPanel" class="tab-content hidden">
-      <h2 style="text-align:center; color:var(--primary); margin-bottom:10px;">Bảng Xếp Hạng & Thống Kê</h2>
-      
-      <div class="sub-tabs">
-        <button class="sub-tab-btn active" data-subtab="globalRank">🌍 Xếp Hạng Chung</button>
-        <button class="sub-tab-btn" data-subtab="personalStats">👤 Thống Kê Cá Nhân</button>
-      </div>
-
-      <div id="globalRank" class="sub-tab-content">
-        <div class="rank-filter">
-          <button class="filter-btn active" data-filter="all">Tất cả</button>
-          <button class="filter-btn" data-filter="day">Hôm nay</button>
-          <button class="filter-btn" data-filter="week">Tuần này</button>
-          <button class="filter-btn" data-filter="month">Tháng này</button>
-          <button class="filter-btn" data-filter="year">Năm nay</button>
-        </div>
-        <div class="online-status" id="onlineStatus">Đang tải bảng xếp hạng online...</div>
-        <table class="rank-table" id="rankTable">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Tên</th>
-              <th>Ngày</th>
-              <th>WPM</th>
-              <th>Chính xác</th>
-              <th>Điểm</th>
-              <th>Cấp độ</th>
-            </tr>
-          </thead>
-          <tbody id="rankBody">
-            <tr><td colspan="7" class="no-data">Đang tải...</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div id="personalStats" class="sub-tab-content hidden">
+      <h2 style="text-align:center; color:var(--primary); margin-bottom:10px;">Thống Kê Cá Nhân</h2>
+     
+      <div id="personalStats" class="sub-tab-content">
         <h3 style="text-align:center;">Thành Tích Tốt Nhất Của Bạn</h3>
         <p style="text-align:center; color:var(--muted); margin-bottom:24px;">
           Dựa trên điểm số cao nhất (lưu trên trình duyệt này).
@@ -498,13 +452,11 @@
           <div class="stat-item"><h4>Điểm Cao Nhất</h4><div class="val" id="personalScore">0</div></div>
           <div class="stat-item"><h4>Cấp độ</h4><div class="val" id="personalBadge">Mới</div></div>
         </div>
-        
+       
         <h3 style="text-align:center; margin-top: 40px;">Lịch Sử 10 Lần Gần Nhất</h3>
         <canvas id="personalChart"></canvas>
       </div>
-
     </div>
-
     <div class="modal" id="aiModal">
       <div class="modal-content">
         <button class="modal-close" id="closeAiModal">×</button>
@@ -512,6 +464,10 @@
         <div class="modal-input">
           <label>Chủ đề</label>
           <input type="text" id="aiTopic" placeholder="Ví dụ: Môi trường, Gia đình, Công nghệ..." />
+        </div>
+        <div class="modal-input">
+          <label>Từ khóa (cách nhau bằng dấu phẩy)</label>
+          <input type="text" id="aiKeywords" placeholder="Ví dụ: cây xanh, ô nhiễm, bảo vệ..." />
         </div>
         <div class="modal-input">
           <label>Số câu</label>
@@ -543,7 +499,6 @@
         <div id="aiResult"></div>
       </div>
     </div>
-
     <div id="practiceArea" class="tab-content hidden">
       <div class="mode-switcher">
         <button class="mode-btn active" data-mode="read-write">Chép</button>
@@ -588,7 +543,6 @@
       </div>
       <canvas id="mainChart"></canvas>
     </div>
-
     <footer>
       <div class="intro-box">
         <p><strong>HiHi là ai?</strong> – Người bạn nhỏ giúp bạn luyện chính tả mỗi ngày!</p>
@@ -596,35 +550,30 @@
       </div>
     </footer>
   </div>
-
   <script>
     // === CẤU HÌNH ===
     const GROQ_KEY = "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";
-    const ONLINE_RANK_URL = "https://script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
-    
+   
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
     let segments = [], currentIdx = 0, startTime, timer;
-    
+   
     // Biến thống kê (SỬA LỖI LOGIC)
     let typedWords = 0; // Tổng số từ mục tiêu (đã gõ/đọc xong)
     let correctWords = 0; // Số từ đúng cho ĐOẠN HIỆN TẠI
     let totalCorrectWords = 0; // Tổng số từ đúng (toàn bộ session)
     let hintsUsed = 0;
-    
-    // Biến xếp hạng & lịch sử (NÂNG CẤP)
-    let onlineHistory = [];
+   
+    // Biến lịch sử (NÂNG CẤP)
     let personalHistory = JSON.parse(localStorage.getItem('personalHistory')) || [];
     let bestStats = JSON.parse(localStorage.getItem('bestStats')) || null;
     let mainChart, personalChart;
-    
+   
     let speechRate = 1.0;
     let currentUtterance = null;
     let currentMode = 'read-write';
     let recognition = null;
     let isListening = false;
     let karaokeWords = [];
-    let playerName = '';
-
     const els = {
       lang: document.getElementById('globalLang'),
       text: document.getElementById('sampleText'),
@@ -652,6 +601,7 @@
       openAi: document.getElementById('openAiModal'),
       closeAi: document.getElementById('closeAiModal'),
       aiTopic: document.getElementById('aiTopic'),
+      aiKeywords: document.getElementById('aiKeywords'),
       aiSentences: document.getElementById('aiSentences'),
       aiVoice: document.getElementById('aiVoice'),
       previewVoice: document.getElementById('previewVoice'),
@@ -661,15 +611,9 @@
       modeBtns: () => document.querySelectorAll('.mode-btn'),
       micBox: document.getElementById('micBox'),
       micBtn: document.getElementById('micBtn'),
-      rankBody: document.getElementById('rankBody'),
-      filterBtns: () => document.querySelectorAll('.filter-btn'),
-      playerName: document.getElementById('playerName'),
-      onlineStatus: document.getElementById('onlineStatus'),
       mainTabs: () => document.querySelectorAll('.tab'),
       tabContents: () => document.querySelectorAll('.tab-content'),
       // NÂNG CẤP: Thêm elements cho tab cá nhân
-      subTabBtns: () => document.querySelectorAll('.sub-tab-btn'),
-      subTabContents: () => document.querySelectorAll('.sub-tab-content'),
       personalStatsRow: document.getElementById('personalStatsRow'),
       personalWPM: document.getElementById('personalWPM'),
       personalAcc: document.getElementById('personalAcc'),
@@ -678,7 +622,6 @@
       mainChart: document.getElementById('mainChart'), // Sửa tên ID canvas gốc từ 'chart'
       personalChart: document.getElementById('personalChart')
     };
-
     // === CHỦ ĐỀ TỐI/SÁNG ===
     function updateThemeIcon() {
       const isDark = document.body.getAttribute('data-theme') === 'dark';
@@ -694,8 +637,7 @@
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.body.setAttribute('data-theme', savedTheme);
     updateThemeIcon();
-
-    // === CHUYỂN TAB (CHÍNH & PHỤ) - NÂNG CẤP ===
+    // === CHUYỂN TAB (CHÍNH) - NÂNG CẤP ===
     els.mainTabs().forEach(btn => {
       btn.addEventListener('click', () => {
         const targetId = btn.dataset.tab;
@@ -705,90 +647,10 @@
           c.classList.toggle('hidden', c.id !== targetId);
         });
         if (targetId === 'rankPanel') {
-          // Khi chuyển sang tab xếp hạng, tự động render tab con đang active
-          const activeSubTab = document.querySelector('.sub-tab-btn.active').dataset.subtab;
-          if (activeSubTab === 'globalRank') renderRankTable();
-          else renderPersonalStats();
+          renderPersonalStats();
         }
       });
     });
-
-    els.subTabBtns().forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetId = btn.dataset.subtab;
-        els.subTabBtns().forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        els.subTabContents().forEach(c => {
-          c.classList.toggle('hidden', c.id !== targetId);
-        });
-        // Render nội dung tương ứng khi click
-        if (targetId === 'globalRank') renderRankTable();
-        else renderPersonalStats();
-      });
-    });
-
-    // === ĐỒNG BỘ BẢNG XẾP HẠNG ONLINE ===
-    async function loadOnlineRank() {
-      try {
-        const res = await fetch(ONLINE_RANK_URL + '?t=' + Date.now());
-        const data = await res.json();
-        onlineHistory = data || [];
-        els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
-        renderRankTable(); // Render bảng xếp hạng online
-      } catch (e) {
-        els.onlineStatus.textContent = "Không kết nối được server online";
-        onlineHistory = [];
-      }
-    }
-
-    async function saveOnlineScore(entry) {
-      try {
-        await fetch(ONLINE_RANK_URL, {
-          method: "POST",
-          body: JSON.stringify(entry),
-          headers: { "Content-Type": "application/json" }
-        });
-      } catch (e) { console.log("Lỗi lưu online:", e); }
-    }
-
-    // === BẢNG XẾP HẠNG (ONLINE) ===
-    function renderRankTable(filter = 'all') {
-      const now = new Date();
-      const filtered = onlineHistory.filter(h => {
-        const d = new Date(h.date);
-        if (isNaN(d)) return true;
-        if (filter === 'day') return d.toDateString() === now.toDateString();
-        if (filter === 'week') {
-          const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
-          const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
-          return d >= weekStart && d <= weekEnd;
-        }
-        if (filter === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-        if (filter === 'year') return d.getFullYear() === now.getFullYear();
-        return true;
-      }).sort((a, b) => b.score - a.score);
-
-      els.rankBody.innerHTML = filtered.length ? filtered.map((h, i) => `
-        <tr>
-          <td>${i + 1}</td>
-          <td>${h.name || 'Ẩn danh'}</td>
-          <td>${new Date(h.date).toLocaleString('vi')}</td>
-          <td>${h.wpm}</td>
-          <td>${h.acc}%</td>
-          <td><strong>${h.score}</strong></td>
-          <td><span style="color:#f59e0b; font-weight:700;">${h.badge}</span></td>
-        </tr>
-      `).join('') : '<tr><td colspan="7" class="no-data">Chưa có dữ liệu</td></tr>';
-
-      els.filterBtns().forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.filter === filter);
-      });
-    }
-
-    els.filterBtns().forEach(btn => {
-      btn.addEventListener('click', () => renderRankTable(btn.dataset.filter));
-    });
-
     // === NÂNG CẤP: THỐNG KÊ CÁ NHÂN (LOCAL) ===
     function renderPersonalStats() {
       // 1. Hiển thị thành tích tốt nhất
@@ -803,13 +665,13 @@
         els.personalScore.textContent = '0';
         els.personalBadge.textContent = 'Mới';
       }
-      
+     
       // 2. Vẽ biểu đồ 10 lần gần nhất
       const ctx = els.personalChart.getContext('2d');
       if (personalChart) personalChart.destroy();
-      
+     
       const recentHistory = [...personalHistory].reverse(); // Đảo ngược để hiển thị từ cũ đến mới
-      
+     
       personalChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -820,8 +682,8 @@
             { label: 'Chính xác', data: recentHistory.map(h=>h.acc), borderColor: '#8b5cf6', tension: 0.4, fill: false, yAxisID: 'y1' }
           ]
         },
-        options: { 
-          responsive: true, 
+        options: {
+          responsive: true,
           plugins: { legend: { position: 'top' } },
           scales: {
             y: {
@@ -843,7 +705,6 @@
         }
       });
     }
-
     // === GIỌNG ĐỌC & TỐC ĐỘ ===
     function loadVoices() {
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(globalLang.split('-')[0]));
@@ -855,7 +716,6 @@
         localStorage.setItem('voice', selectedVoice.name);
       }
     }
-
     function speak(text, onWord) {
       if (!selectedVoice || currentMode === 'read-only') return;
       speechSynthesis.cancel();
@@ -870,25 +730,26 @@
       }
       speechSynthesis.speak(currentUtterance);
     }
-
     els.previewVoice.addEventListener('click', () => {
       const test = globalLang === 'vi-VN' ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.';
       speak(test);
     });
-
     speechSynthesis.onvoiceschanged = loadVoices;
     setTimeout(loadVoices, 100);
-
+    // Sửa lỗi thay đổi giọng nói
+    els.aiVoice.addEventListener('change', () => {
+      selectedVoice = voices.find(v => v.name === els.aiVoice.value);
+      localStorage.setItem('voice', selectedVoice.name);
+    });
     // === TẠO VĂN BẢN BẰNG AI ===
     els.generateBtn.addEventListener('click', async () => {
       const topic = els.aiTopic.value.trim() || "một chủ đề thú vị";
+      const keywords = els.aiKeywords.value.trim() ? `, bao gồm các từ khóa: ${els.aiKeywords.value.trim()}` : '';
       const sentences = els.aiSentences.value;
       const langName = globalLang === 'vi-VN' ? 'Tiếng Việt' : globalLang === 'en-US' ? 'Tiếng Anh' : 'Tiếng Indonesia';
-      const prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu về chủ đề: "${topic}". Chỉ trả về đoạn văn, không thêm giải thích.`;
-
+      const prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu về chủ đề: "${topic}"${keywords}. Chỉ trả về đoạn văn, không thêm giải thích.`;
       els.generateBtn.disabled = true;
       els.generateBtn.textContent = "Đang tạo...";
-
       try {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
@@ -907,7 +768,6 @@
         const data = await res.json();
         const generatedText = data.choices?.[0]?.message?.content?.trim();
         if (!generatedText) throw new Error("Không nhận được nội dung.");
-
         els.text.value = generatedText;
         els.aiModal.classList.remove('show');
         alert("Đoạn văn đã được tạo và tự động điền!");
@@ -919,7 +779,6 @@
         els.generateBtn.textContent = "Tạo ngay";
       }
     });
-
     // === DỊCH TOÀN BỘ ĐOẠN ===
     async function translateFull(text, src) {
       if (!text.trim() || globalLang === 'vi-VN') return text;
@@ -929,11 +788,10 @@
         return data.responseData.translatedText || text;
       } catch { return text; }
     }
-
     // === HIỂN THỊ ĐOẠN VĂN MỚI (NÂNG CẤP) ===
     async function showSegment() {
       const text = segments[currentIdx];
-      
+     
       // Reset trạng thái (QUY TẮC MỚI)
       els.next.disabled = true;
       els.input.style.borderColor = 'var(--border)';
@@ -941,7 +799,7 @@
       els.input.value = '';
       els.input.focus();
       correctWords = 0; // Reset số từ đúng cho đoạn này
-      
+     
       // Cập nhật UI theo chế độ
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
       const isReadOnly = currentMode === 'read-only';
@@ -950,7 +808,6 @@
       els.feedback.style.display = isReadOnly ? 'block' : 'block'; // Luôn hiển thị feedback
       els.segment.classList.toggle('reading-mode', isReadOnly);
       els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
-
       // Chế độ Nghe-Viết
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>Nghe và gõ...</em>';
@@ -960,45 +817,37 @@
         setTimeout(() => speak(text, () => {}), 600);
         return;
       }
-
       // Chế độ Chép & Đọc (Karaoke)
       const fragment = document.createDocumentFragment();
       const words = text.split(/(\s+|\b)/).filter(w => w.trim() || w === ' ');
       let charIndex = 0;
       karaokeWords = [];
-
       const src = globalLang === 'en-US' ? 'en' : 'id';
       const fullTrans = await translateFull(text, src);
       els.fullTrans.textContent = 'Tạm dịch là: ' + fullTrans;
-
       for (let word of words) {
         if (!word.trim()) {
           fragment.appendChild(document.createTextNode(word));
           charIndex += word.length;
           continue;
         }
-
         const span = document.createElement('span');
         span.className = 'karaoke-word';
         span.textContent = word;
         span.dataset.start = charIndex;
         span.dataset.end = charIndex + word.length;
         karaokeWords.push(span);
-
         if (globalLang !== 'vi-VN') {
           const tooltip = document.createElement('div');
           tooltip.className = 'word-tooltip';
           tooltip.textContent = word;
           span.appendChild(tooltip);
         }
-
         fragment.appendChild(span);
         charIndex += word.length;
       }
-
       els.segment.innerHTML = '';
       els.segment.appendChild(fragment);
-
       if (globalLang !== 'vi-VN') {
         const wordList = text.split(/\s+/).filter(w => w);
         const transList = fullTrans.split(/\s+/).filter(w => w);
@@ -1008,23 +857,19 @@
           }
         });
       }
-
       if (currentMode.includes('listen') && currentMode !== 'read-only') {
         setTimeout(() => speak(text, highlightKaraoke), 300);
       }
     }
-
     function highlightKaraoke(charIndex) {
       karaokeWords.forEach(w => w.classList.remove('karaoke-active'));
       const word = karaokeWords.find(w => charIndex >= w.dataset.start && charIndex < w.dataset.end);
       if (word) word.classList.add('karaoke-active');
     }
-
     // Helper chuẩn hóa text để so sánh (QUY TẮC MỚI)
     function normalizeText(text) {
         return text.trim().replace(/\s+/g, ' ').toLowerCase();
     }
-
     // === CẬP NHẬT PHẢN HỒI GÕ (NÂNG CẤP) ===
     function updateFeedback() {
       const orig = segments[currentIdx];
@@ -1039,7 +884,7 @@
       });
       correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
-      
+     
       // QUY TẮC MỚI: Phải gõ đúng 100% mới cho qua
       const isMatch = normalizeText(input) === normalizeText(orig);
       els.next.disabled = !isMatch;
@@ -1047,25 +892,23 @@
       els.input.style.borderColor = isMatch ? 'var(--success)' : 'var(--border)';
       els.input.style.boxShadow = isMatch ? '0 0 0 7px rgba(16,185,129,0.25)' : '';
     }
-
     // === HÀM CHUYỂN TIẾP (SỬA LỖI LOGIC) ===
     function next() {
       const wordsInSegment = segments[currentIdx].split(/\s+/).filter(w => w).length;
       typedWords += wordsInSegment; // Tăng tổng số từ mục tiêu đã hoàn thành
       totalCorrectWords += correctWords; // Tăng tổng số từ đúng
-      
+     
       currentIdx++;
       const p = (currentIdx / segments.length) * 100;
       els.progressFill.style.width = p + '%';
       els.progressText.textContent = Math.round(p) + '%';
-      
+     
       if (currentIdx >= segments.length) {
-        end(); 
+        end();
       } else {
         showSegment();
       }
     }
-
     // === HÀM CẬP NHẬT THỐNG KÊ (SỬA LỖI LOGIC) ===
     function updateStats() {
       const s = Math.floor((Date.now() - startTime) / 1000);
@@ -1073,7 +916,7 @@
       // WPM và ACC sẽ dựa trên tổng số liệu, không tính theo thời gian thực mỗi giây
       // để tránh nhầm lẫn. Chỉ cập nhật thời gian.
       els.time.textContent = s + 's';
-      
+     
       // WPM và ACC sẽ được tính toán lại ở cuối (hàm end())
       // Hoặc có thể tính WPM/ACC tạm thời dựa trên 'totalCorrectWords' và 'typedWords'
       const wpm = m > 0 ? Math.round(typedWords / m) : 0;
@@ -1081,132 +924,111 @@
       els.wpm.textContent = wpm;
       els.acc.textContent = acc + '%';
     }
-
     // === HÀM KẾT THÚC (NÂNG CẤP & SỬA LỖI) ===
     function end() {
       clearInterval(timer);
       if (isListening) recognition?.stop();
-      
+     
       const s = (Date.now() - startTime) / 1000 / 60; // phút
-      
+     
       // SỬA LỖI: Tính WPM và ACC dựa trên TỔNG SỐ LIỆU
       const wpm = s > 0 ? Math.round(typedWords / s) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
-      
+     
       const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
       const badge = wpm < 50 ? "Mới" : wpm < 100 ? "Khá" : wpm < 200 ? "Giỏi" : "Xuất sắc";
-
-      const name = playerName.trim() || 'Ẩn danh';
-      const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge };
-      
-      // 1. Lưu Online
-      saveOnlineScore(entry);
-      
-      // 2. Cập nhật lịch sử online (tạm thời)
-      onlineHistory.push(entry);
-      onlineHistory.sort((a,b) => b.score - a.score);
-      if (onlineHistory.length > 100) onlineHistory.pop();
-      
+      const entry = { date: new Date().toISOString(), wpm, acc, score, badge };
+     
       // 3. NÂNG CẤP: Lưu Local (Cá nhân)
       personalHistory.push(entry);
       if (personalHistory.length > 10) personalHistory.shift(); // Giữ 10 lần gần nhất
       localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
-      
+     
       // 4. NÂNG CẤP: Lưu điểm cao nhất
       if (!bestStats || entry.score > bestStats.score) {
           bestStats = entry;
           localStorage.setItem('bestStats', JSON.stringify(bestStats));
       }
-
       // Cập nhật UI
       els.level.textContent = badge;
       els.levelBadge.textContent = badge;
       els.score.textContent = score;
       els.wpm.textContent = wpm; // Cập nhật WPM/ACC cuối cùng
       els.acc.textContent = acc + '%';
-      
+     
       updateMainChart(); // Cập nhật biểu đồ ở trang luyện tập
-      renderRankTable(); // Render lại bảng xếp hạng online
-      
-      alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
+     
+      alert(`Hoàn thành!\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
     }
-
-    // Biểu đồ ở trang luyện tập (dựa trên 10 lần gần nhất TỪ LỊCH SỬ ONLINE)
+    // Biểu đồ ở trang luyện tập (dựa trên 10 lần gần nhất TỪ LỊCH SỬ LOCAL)
     function updateMainChart() {
-      const recent = onlineHistory.slice(0, 10).reverse(); // 10 người điểm cao nhất
+      const recent = personalHistory.slice(-10); // 10 lần gần nhất
       const ctx = els.mainChart.getContext('2d');
       if (mainChart) mainChart.destroy();
       mainChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: recent.map(h => h.name.substring(0, 10)),
+          labels: recent.map((_, i) => `Lần ${i+1}`),
           datasets: [
             { label: 'WPM', data: recent.map(h=>h.wpm), backgroundColor: '#f59e0b' },
             { label: 'Điểm', data: recent.map(h=>h.score), backgroundColor: '#10b981' }
           ]
         },
-        options: { 
-            responsive: true, 
-            plugins: { legend: { position: 'top' }, title: { display: true, text: 'Top 10 Online' } } 
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'top' }, title: { display: true, text: 'Lịch Sử 10 Lần Gần Nhất' } }
         }
       });
     }
-
     function updateModeButtons() {
       els.modeBtns().forEach(btn => {
         btn.classList.toggle('active', btn.dataset.mode === currentMode);
       });
     }
-
     // === SỰ KIỆN ===
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
       localStorage.setItem('lang', globalLang);
       location.reload();
     });
-
     globalLang = localStorage.getItem('lang') || 'vi-VN';
     els.lang.value = globalLang;
-
     els.start.addEventListener('click', () => {
       const text = els.text.value.trim();
       if (!text) return alert('Nhập đoạn văn!');
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
-      
+     
       // Reset toàn bộ
-      currentIdx = 0; 
-      typedWords = 0; 
-      correctWords = 0; 
+      currentIdx = 0;
+      typedWords = 0;
+      correctWords = 0;
       totalCorrectWords = 0;
       hintsUsed = 0;
-      
+     
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.aiRateSelect.value);
-      playerName = els.playerName.value.trim(); // LẤY TÊN
-      
+     
       updateModeButtons();
-      startTime = Date.now(); 
+      startTime = Date.now();
       if (timer) clearInterval(timer);
       timer = setInterval(updateStats, 1000);
-      
+     
       document.getElementById('setupPanel').classList.add('hidden');
       document.getElementById('practiceArea').classList.remove('hidden');
-      
+     
       initSpeechRecognition();
       showSegment();
     });
-
     els.input.addEventListener('input', updateFeedback);
-    els.input.addEventListener('keydown', e => { 
-        if (e.key === 'Enter') { 
-            e.preventDefault(); 
+    els.input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
             if (!els.next.disabled) { // Chỉ cho Enter khi đã gõ đúng
-                next(); 
+                next();
             }
-        } 
+        }
     });
-
     els.hint.addEventListener('click', () => {
       const words = segments[currentIdx].split(/\s+/).filter(w => w);
       const typed = els.input.value.trim().split(/\s+/).filter(w => w);
@@ -1216,18 +1038,15 @@
         hintsUsed++;
       }
     });
-
     els.replay.addEventListener('click', () => speak(segments[currentIdx], highlightKaraoke));
     els.next.addEventListener('click', next);
     els.reset.addEventListener('click', () => location.reload());
-
     els.openAi.addEventListener('click', () => {
       els.aiModal.classList.add('show');
       loadVoices();
     });
     els.closeAi.addEventListener('click', () => els.aiModal.classList.remove('show'));
     els.aiModal.addEventListener('click', e => { if (e.target === els.aiModal) els.aiModal.classList.remove('show'); });
-
     els.modeBtns().forEach(btn => {
       btn.addEventListener('click', () => {
         currentMode = btn.dataset.mode;
@@ -1235,39 +1054,38 @@
         showSegment();
       });
     });
-
     // === NHẬN DIỆN GIỌNG NÓI (NÂNG CẤP) ===
     function initSpeechRecognition() {
       if (recognition) { // Nếu đã khởi tạo, chỉ cần đảm bảo nó dừng
          recognition.onend = null; // Xóa listener cũ
          recognition.stop();
       }
-      
+     
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) return false;
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-      
+     
       recognition = new SpeechRecognition();
       recognition.lang = globalLang;
       recognition.continuous = false; // Chỉ nhận diện 1 lần
       recognition.interimResults = false; // Chỉ trả về kết quả cuối cùng
-      
+     
       recognition.onresult = (e) => {
         const transcript = e.results[0][0].transcript.trim().toLowerCase();
         const target = segments[currentIdx].toLowerCase();
-        
+       
         const wordsTarget = target.split(/\s+/).filter(w => w);
         const wordsSaid = transcript.split(/\s+/).filter(w => w);
-        
+       
         let correct = 0;
         const feedback = wordsSaid.map((w, i) => {
           if (i >= wordsTarget.length) return `<span class="wrong">${w}</span>`;
           if (w === wordsTarget[i]) { correct++; return `<span class="correct">${w}</span>`; }
           return `<span class="wrong">${w}</span>`;
         }).join(' ');
-        
+       
         correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
         els.feedback.innerHTML = feedback || '<em>Đang nghe...</em>';
-        
+       
         // QUY TẮC MỚI: Phải đọc đúng 100%
         const isMatch = correct === wordsTarget.length && wordsSaid.length === wordsTarget.length;
         els.next.disabled = !isMatch;
@@ -1275,20 +1093,19 @@
             els.feedback.innerHTML += "<br><em>(Tuyệt vời! Nhấn 'Tiếp theo')</em>";
         }
       };
-      
+     
       recognition.onerror = () => {
         els.feedback.innerHTML = `<em>Lỗi mic. Nhấn lại.</em>`;
         els.micBtn.classList.remove('listening');
         isListening = false;
       };
-      
+     
       recognition.onend = () => {
         els.micBtn.classList.remove('listening');
         isListening = false;
       };
       return true;
     }
-
     els.micBtn.addEventListener('click', () => {
       if (!recognition && !initSpeechRecognition()) return;
       if (isListening) {
@@ -1300,12 +1117,9 @@
         els.feedback.innerHTML = '<em>Đang nghe... Hãy đọc to!</em>';
       }
     });
-
     // === TẢI DỮ LIỆU KHI MỞ TRANG ===
     window.addEventListener('load', () => {
-      loadOnlineRank(); // Tải BXH online
       renderPersonalStats(); // Render thống kê cá nhân (từ localStorage)
-      setInterval(loadOnlineRank, 60000); // Cập nhật BXH mỗi 60s
     });
   </script>
 </body>
