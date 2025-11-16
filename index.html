@@ -371,12 +371,10 @@
     }
     /* Tối ưu responsive cho các phần dài */
     .full-translate, #liveFeedback, .segment-box { overflow-x: auto; max-width: 100%; }
-    .auth-link { color: var(--primary); cursor: pointer; text-decoration: underline; }
   </style>
   <!-- Thêm Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 <body>
   <div class="container">
@@ -390,9 +388,6 @@
         <h1>HiHi</h1>
       </div>
       <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói – Tạo đoạn văn bằng AI!</p>
-      <div id="authStatus" style="position: absolute; top: 16px; left: 16px; color: var(--muted);">
-        <span>Chưa đăng nhập</span> | <span class="auth-link" id="showLogin">Đăng nhập</span> | <span class="auth-link" id="showRegister">Đăng ký</span>
-      </div>
 
       <div class="theme-toggle-wrapper">
         <div class="tip">
@@ -491,7 +486,7 @@
           <div class="stat-item"><h4>WPM Cao Nhất</h4><div class="val" id="personalWPM">0</div></div>
           <div class="stat-item"><h4>Chính xác</h4><div class="val" id="personalAcc">0%</div></div>
           <div class="stat-item"><h4>Điểm Cao Nhất</h4><div class="val" id="personalScore">0</div></div>
-          <div class="stat-item"><h4>Danh hiệu</h4><div class="val" id="personalBadge">Mới</div></div>
+          <div class="stat-item"><h4>Danh hiệu</h4><div class="val" id="personalBadge">Newbie</div></div>
         </div>
         
         <h3 style="text-align:center; margin-top: 40px;">Lịch Sử 10 Lần Gần Nhất</h3>
@@ -544,16 +539,16 @@
         <button class="modal-close" id="closeAuthModal">×</button>
         <h3 id="authTitle">Đăng Nhập / Đăng Ký</h3>
         <div class="modal-input">
-          <label>Tên đăng nhập</label>
-          <input type="text" id="authUsername" placeholder="Nhập tên đăng nhập..." maxlength="20" />
+          <label>Tên người dùng</label>
+          <input type="text" id="username" placeholder="Nhập tên người dùng..." maxlength="20" />
         </div>
         <div class="modal-input">
           <label>Mật khẩu</label>
-          <input type="password" id="authPassword" placeholder="Nhập mật khẩu..." />
+          <input type="password" id="password" placeholder="Nhập mật khẩu..." />
         </div>
-        <button class="generate-btn" id="authBtn">Xác nhận</button>
+        <button class="generate-btn" id="loginBtn">Đăng Nhập</button>
+        <button class="generate-btn" id="registerBtn" style="margin-top: 10px;">Đăng Ký</button>
         <div id="authError" style="color: var(--danger); margin-top: 10px; display: none;"></div>
-        <p style="text-align: center; margin-top: 10px;"><span class="auth-link" id="toggleAuth">Chuyển sang Đăng ký / Đăng nhập</span></p>
       </div>
     </div>
 
@@ -593,10 +588,10 @@
         <div class="stat-item"><h4>Thời gian</h4><div class="val" id="time">0s</div></div>
         <div class="stat-item"><h4>Tốc độ</h4><div class="val" id="wpm">0</div></div>
         <div class="stat-item"><h4>Chính xác</h4><div class="val" id="accuracy">100%</div></div>
-        <div class="stat-item"><h4>Danh hiệu</h4><div class="val" id="level">Mới</div></div>
+        <div class="stat-item"><h4>Danh hiệu</h4><div class="val" id="level">Newbie</div></div>
       </div>
       <div style="text-align:center;">
-        <div class="level-badge" id="levelBadge">Mới bắt đầu</div>
+        <div class="level-badge" id="levelBadge">Newbie</div>
         <div style="margin-top:12px; color:var(--muted);">Điểm: <strong id="score" style="color:var(--primary); font-size:1.6rem;">0</strong></div>
       </div>
       <canvas id="mainChart"></canvas>
@@ -613,6 +608,7 @@
   <script>
     // === CẤU HÌNH VÀ KHỞI TẠO FIREBASE ===
     
+    // 1. Cấu hình Firebase của bạn
     const firebaseConfig = {
       apiKey: "AIzaSyBWknPoFq6ny8F_CpeYMu_3N6QEVM3s9Pc",
       authDomain: "xh-chinhta.firebaseapp.com",
@@ -625,7 +621,6 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const auth = firebase.auth();
     
     const GROQ_KEY = "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";
     
@@ -651,8 +646,7 @@
     let isListening = false;
     let karaokeWords = [];
     let playerName = '';
-    let currentUser = null;
-    let updateInterval = null;
+    let isLoggedIn = false;
 
     const els = {
       lang: document.getElementById('globalLang'),
@@ -706,15 +700,12 @@
       personalChart: document.getElementById('personalChart'),
       authModal: document.getElementById('authModal'),
       authTitle: document.getElementById('authTitle'),
-      authUsername: document.getElementById('authUsername'),
-      authPassword: document.getElementById('authPassword'),
-      authBtn: document.getElementById('authBtn'),
+      username: document.getElementById('username'),
+      password: document.getElementById('password'),
+      loginBtn: document.getElementById('loginBtn'),
+      registerBtn: document.getElementById('registerBtn'),
       authError: document.getElementById('authError'),
-      toggleAuth: document.getElementById('toggleAuth'),
-      closeAuthModal: document.getElementById('closeAuthModal'),
-      authStatus: document.getElementById('authStatus'),
-      showLogin: document.getElementById('showLogin'),
-      showRegister: document.getElementById('showRegister')
+      closeAuthModal: document.getElementById('closeAuthModal')
     };
 
     // === CHỦ ĐỀ TỐI/SÁNG ===
@@ -743,9 +734,14 @@
           c.classList.toggle('hidden', c.id !== targetId);
         });
         if (targetId === 'rankPanel') {
+          loadOnlineRank();
           const activeSubTab = document.querySelector('.sub-tab-btn.active').dataset.subtab;
-          if (activeSubTab === 'globalRank') loadOnlineRank().then(() => renderRankTable());
-          else loadPersonalStats().then(() => renderPersonalStats());
+          if (activeSubTab === 'globalRank') renderRankTable();
+          else loadPersonalStats();
+        } else if (targetId === 'setupPanel') {
+          if (!isLoggedIn) {
+            els.authModal.classList.add('show');
+          }
         }
       });
     });
@@ -758,58 +754,50 @@
         els.subTabContents().forEach(c => {
           c.classList.toggle('hidden', c.id !== targetId);
         });
-        if (targetId === 'globalRank') loadOnlineRank().then(() => renderRankTable());
-        else loadPersonalStats().then(() => renderPersonalStats());
+        if (targetId === 'globalRank') renderRankTable();
+        else loadPersonalStats();
       });
     });
 
     // === ĐỒNG BỘ BẢNG XẾP HẠNG ONLINE ===
     async function loadOnlineRank() {
       try {
-        const snapshot = await db.ref('rankings').once('value');
-        onlineHistory = Object.values(snapshot.val() || {}).sort((a, b) => b.score - a.score);
+        const snapshot = await db.ref('rankings').orderByChild('score').once('value');
+        onlineHistory = [];
+        snapshot.forEach(child => {
+          onlineHistory.push(child.val());
+        });
+        onlineHistory.reverse(); // Sắp xếp giảm dần theo score
         els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
-        return onlineHistory;
+        renderRankTable();
       } catch (e) {
         els.onlineStatus.textContent = "Không kết nối được server online";
         onlineHistory = [];
-        return [];
       }
     }
 
     async function saveOnlineScore(entry) {
       try {
         await db.ref('rankings').push(entry);
-        if (currentUser) {
-          await db.ref('users/' + currentUser.uid + '/history').push(entry);
-          await updateBestStats(entry);
-        }
       } catch (e) { console.log("Lỗi lưu online:", e); }
     }
 
-    async function updateBestStats(entry) {
-      const userRef = db.ref('users/' + currentUser.uid + '/bestStats');
-      const snapshot = await userRef.once('value');
-      let currentBest = snapshot.val();
-      if (!currentBest || entry.score > currentBest.score) {
-        await userRef.set(entry);
-      }
-    }
-
     async function loadPersonalStats() {
-      if (!currentUser) {
-        personalHistory = [];
-        bestStats = null;
-        return;
-      }
+      if (!playerName) return;
       try {
-        const historySnap = await db.ref('users/' + currentUser.uid + '/history').once('value');
-        personalHistory = Object.values(historySnap.val() || []);
-        const bestSnap = await db.ref('users/' + currentUser.uid + '/bestStats').once('value');
-        bestStats = bestSnap.val() || null;
-      } catch (e) {
-        console.log('Lỗi tải thống kê cá nhân:', e);
-      }
+        const snapshot = await db.ref('rankings').orderByChild('name').equalTo(playerName).once('value');
+        personalHistory = [];
+        let best = null;
+        snapshot.forEach(child => {
+          const h = child.val();
+          personalHistory.push(h);
+          if (!best || h.score > best.score) best = h;
+        });
+        personalHistory.sort((a,b) => new Date(b.date) - new Date(a.date)); // Sắp xếp mới nhất
+        if (personalHistory.length > 10) personalHistory = personalHistory.slice(0,10);
+        bestStats = best;
+        renderPersonalStats();
+      } catch (e) { console.log(e); }
     }
 
     // === BẢNG XẾP HẠNG (ONLINE) ===
@@ -867,16 +855,14 @@
       const ctx = els.personalChart.getContext('2d');
       if (personalChart) personalChart.destroy();
       
-      const recentHistory = [...personalHistory].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,10);
-      
       personalChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: recentHistory.map((_,i) => `Lần ${i+1}`),
+          labels: personalHistory.map((_,i) => `Lần ${i+1}`),
           datasets: [
-            { label: 'WPM', data: recentHistory.map(h=>h.wpm), borderColor: '#f59e0b', tension: 0.4, fill: false },
-            { label: 'Điểm', data: recentHistory.map(h=>h.score), borderColor: '#10b981', tension: 0.4, fill: false },
-            { label: 'Chính xác', data: recentHistory.map(h=>h.acc), borderColor: '#8b5cf6', tension: 0.4, fill: false, yAxisID: 'y1' }
+            { label: 'WPM', data: personalHistory.map(h=>h.wpm), borderColor: '#f59e0b', tension: 0.4, fill: false },
+            { label: 'Điểm', data: personalHistory.map(h=>h.score), borderColor: '#10b981', tension: 0.4, fill: false },
+            { label: 'Chính xác', data: personalHistory.map(h=>h.acc), borderColor: '#8b5cf6', tension: 0.4, fill: false, yAxisID: 'y1' }
           ]
         },
         options: { 
@@ -914,6 +900,11 @@
         localStorage.setItem('voice', selectedVoice.name);
       }
     }
+
+    els.aiVoice.addEventListener('change', () => {
+      selectedVoice = voices.find(v => v.name === els.aiVoice.value);
+      localStorage.setItem('voice', selectedVoice.name);
+    });
 
     function speak(text, onWord) {
       if (!selectedVoice || currentMode === 'read-only') return;
@@ -1075,10 +1066,12 @@
       if (word) word.classList.add('karaoke-active');
     }
 
+    // Normalize text
     function normalizeText(text) {
         return text.trim().replace(/\s+/g, ' ').toLowerCase();
     }
 
+    // Update feedback
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
@@ -1099,6 +1092,7 @@
       els.input.style.boxShadow = isMatch ? '0 0 0 7px rgba(16,185,129,0.25)' : '';
     }
 
+    // Next segment
     function next() {
       const wordsInSegment = segments[currentIdx].split(/\s+/).filter(w => w).length;
       typedWords += wordsInSegment;
@@ -1116,6 +1110,7 @@
       }
     }
 
+    // Update stats
     function updateStats() {
       const s = Math.floor((Date.now() - startTime) / 1000);
       const m = s / 60;
@@ -1127,15 +1122,7 @@
       els.acc.textContent = acc + '%';
     }
 
-    function getBadge(wpm, score) {
-      if (score < 100) return "Newbie 🐣"; // Mới bắt đầu
-      if (score < 200) return "Apprentice 📚"; // Học viên
-      if (score < 300) return "Skilled ✏️"; // Kỹ năng
-      if (score < 400) return "Expert ⭐"; // Chuyên gia
-      if (score < 500) return "Master 🏆"; // Bậc thầy
-      return "Legend 🔥"; // Huyền thoại
-    }
-
+    // End session
     function end() {
       clearInterval(timer);
       if (isListening) recognition?.stop();
@@ -1146,10 +1133,9 @@
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       
       const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
-      const badge = getBadge(wpm, score);
+      let badge = wpm < 30 ? "Newbie" : wpm < 60 ? "Apprentice" : wpm < 100 ? "Expert" : "Master";
 
-      const name = playerName;
-      const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge };
+      const entry = { name: playerName, date: new Date().toISOString(), wpm, acc, score, badge };
       
       saveOnlineScore(entry);
       
@@ -1171,9 +1157,10 @@
       els.acc.textContent = acc + '%';
       
       updateMainChart();
-      alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nDanh hiệu: ${badge}`);
+      alert(`Hoàn thành!\nTên: ${playerName}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nDanh hiệu: ${badge}`);
     }
 
+    // Main chart
     function updateMainChart() {
       const recent = onlineHistory.slice(0, 10);
       const ctx = els.mainChart.getContext('2d');
@@ -1200,71 +1187,7 @@
       });
     }
 
-    // === ĐĂNG KÝ / ĐĂNG NHẬP ===
-    let isRegister = false;
-
-    els.showLogin.addEventListener('click', () => {
-      isRegister = false;
-      els.authTitle.textContent = 'Đăng Nhập';
-      els.authBtn.textContent = 'Đăng Nhập';
-      els.toggleAuth.textContent = 'Chuyển sang Đăng ký';
-      els.authModal.classList.add('show');
-    });
-
-    els.showRegister.addEventListener('click', () => {
-      isRegister = true;
-      els.authTitle.textContent = 'Đăng Ký';
-      els.authBtn.textContent = 'Đăng Ký';
-      els.toggleAuth.textContent = 'Chuyển sang Đăng nhập';
-      els.authModal.classList.add('show');
-    });
-
-    els.toggleAuth.addEventListener('click', () => {
-      isRegister = !isRegister;
-      els.authTitle.textContent = isRegister ? 'Đăng Ký' : 'Đăng Nhập';
-      els.authBtn.textContent = isRegister ? 'Đăng Ký' : 'Đăng Nhập';
-      els.toggleAuth.textContent = isRegister ? 'Chuyển sang Đăng nhập' : 'Chuyển sang Đăng ký';
-    });
-
-    els.authBtn.addEventListener('click', async () => {
-      const username = els.authUsername.value.trim();
-      const password = els.authPassword.value;
-      if (!username || !password) {
-        els.authError.textContent = 'Vui lòng nhập đầy đủ!';
-        els.authError.style.display = 'block';
-        return;
-      }
-
-      try {
-        if (isRegister) {
-          const userCredential = await auth.createUserWithEmailAndPassword(username + '@fake.com', password);
-          currentUser = userCredential.user;
-          await db.ref('users/' + currentUser.uid).set({ username });
-        } else {
-          const userCredential = await auth.signInWithEmailAndPassword(username + '@fake.com', password);
-          currentUser = userCredential.user;
-        }
-        playerName = username;
-        els.authModal.classList.remove('show');
-        els.authStatus.innerHTML = `Đã đăng nhập: ${username} | <span class="auth-link" id="logout">Đăng xuất</span>`;
-        document.getElementById('logout').addEventListener('click', () => {
-          auth.signOut();
-          currentUser = null;
-          playerName = '';
-          els.authStatus.innerHTML = `Chưa đăng nhập | <span class="auth-link" id="showLogin">Đăng nhập</span> | <span class="auth-link" id="showRegister">Đăng ký</span>`;
-          location.reload();
-        });
-        loadPersonalStats().then(renderPersonalStats);
-      } catch (e) {
-        els.authError.textContent = isRegister ? 'Tên đã tồn tại hoặc lỗi!' : 'Sai tên/mật khẩu!';
-        els.authError.style.display = 'block';
-      }
-    });
-
-    els.closeAuthModal.addEventListener('click', () => els.authModal.classList.remove('show'));
-    els.authModal.addEventListener('click', e => { if (e.target === els.authModal) els.authModal.classList.remove('show'); });
-
-    // === SỰ KIỆN ===
+    // Events
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
       localStorage.setItem('lang', globalLang);
@@ -1275,7 +1198,10 @@
     els.lang.value = globalLang;
 
     els.start.addEventListener('click', () => {
-      if (!currentUser) return alert('Vui lòng đăng nhập để bắt đầu!');
+      if (!isLoggedIn) {
+        els.authModal.classList.add('show');
+        return;
+      }
       const text = els.text.value.trim();
       if (!text) return alert('Nhập đoạn văn!');
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
@@ -1301,6 +1227,68 @@
       initSpeechRecognition();
       showSegment();
     });
+
+    // Auth events
+    els.loginBtn.addEventListener('click', async () => {
+      const username = els.username.value.trim();
+      const password = els.password.value;
+      if (!username || !password) {
+        els.authError.textContent = 'Vui lòng nhập đầy đủ!';
+        els.authError.style.display = 'block';
+        return;
+      }
+      
+      try {
+        const snapshot = await db.ref('users').orderByChild('username').equalTo(username).once('value');
+        let user = null;
+        snapshot.forEach(child => {
+          const u = child.val();
+          if (u.password === password) user = u;
+        });
+        if (user) {
+          playerName = username;
+          isLoggedIn = true;
+          els.authModal.classList.remove('show');
+          loadPersonalStats();
+        } else {
+          els.authError.textContent = 'Sai tên hoặc mật khẩu!';
+          els.authError.style.display = 'block';
+        }
+      } catch (e) {
+        els.authError.textContent = 'Lỗi kết nối!';
+        els.authError.style.display = 'block';
+      }
+    });
+
+    els.registerBtn.addEventListener('click', async () => {
+      const username = els.username.value.trim();
+      const password = els.password.value;
+      if (!username || !password) {
+        els.authError.textContent = 'Vui lòng nhập đầy đủ!';
+        els.authError.style.display = 'block';
+        return;
+      }
+      
+      try {
+        const snapshot = await db.ref('users').orderByChild('username').equalTo(username).once('value');
+        if (snapshot.exists()) {
+          els.authError.textContent = 'Tên đã tồn tại!';
+          els.authError.style.display = 'block';
+          return;
+        }
+        await db.ref('users').push({ username, password });
+        playerName = username;
+        isLoggedIn = true;
+        els.authModal.classList.remove('show');
+        loadPersonalStats();
+      } catch (e) {
+        els.authError.textContent = 'Lỗi kết nối!';
+        els.authError.style.display = 'block';
+      }
+    });
+
+    els.closeAuthModal.addEventListener('click', () => els.authModal.classList.remove('show'));
+    els.authModal.addEventListener('click', e => { if (e.target === els.authModal) els.authModal.classList.remove('show'); });
 
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { 
@@ -1342,8 +1330,8 @@
     // === NHẬN DIỆN GIỌNG NÓI ===
     function initSpeechRecognition() {
       if (recognition) {
-         recognition.onend = null;
-         recognition.stop();
+        recognition.onend = null;
+        recognition.stop();
       }
       
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) return false;
@@ -1405,18 +1393,9 @@
 
     // === TẢI DỮ LIỆU KHI MỞ TRANG ===
     window.addEventListener('load', () => {
-      auth.onAuthStateChanged(user => {
-        currentUser = user;
-        if (user) {
-          db.ref('users/' + user.uid + '/username').once('value').then(snap => {
-            playerName = snap.val();
-            els.authStatus.innerHTML = `Đã đăng nhập: ${playerName} | <span class="auth-link" id="logout">Đăng xuất</span>`;
-            document.getElementById('logout').addEventListener('click', () => auth.signOut());
-            loadPersonalStats().then(renderPersonalStats);
-          });
-        }
-      });
-      loadOnlineRank().then(renderRankTable);
+      loadOnlineRank();
+      setInterval(loadOnlineRank, 120000); // Mỗi 120s
+      els.authModal.classList.add('show');
     });
   </script>
 </body>
