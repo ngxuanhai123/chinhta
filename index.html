@@ -18,6 +18,8 @@
   <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
   <style>
     :root {
       --bg: #fff7ed; --card: #ffffff; --text: #1e293b; --muted: #64748b; --border: #fed7aa;
@@ -377,10 +379,27 @@
     .online-status {
       font-size: 0.9rem; color: var(--success); text-align: center; margin-top: 8px;
     }
+    /* Tối ưu giao diện: Tăng padding và max-width để nhìn thấy hết */
+    body { padding: 32px; }
+    .container { max-width: 1400px; }
+    .setup-grid { padding: 48px; }
+    canvas { width: 100%; height: auto; }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="modal show" id="startModal">
+    <div class="modal-content">
+      <h3>Nhập Tên Hoặc Nickname</h3>
+      <div class="modal-input">
+        <label>Tên người chơi (không trùng)</label>
+        <input type="text" id="enterPlayerName" placeholder="Nhập tên hoặc nickname..." maxlength="20" />
+      </div>
+      <button class="generate-btn" id="submitNameBtn">Xác nhận</button>
+      <p id="nameError" style="color: var(--danger); text-align: center; margin-top: 10px;"></p>
+    </div>
+  </div>
+
+  <div class="container hidden" id="mainContainer">
     <header>
       <div class="logo">
         <svg viewBox="0 0 100 100">
@@ -406,13 +425,6 @@
     <div class="tabs">
       <button class="tab active" data-tab="setupPanel">Luyện Tập</button>
       <button class="tab" data-tab="rankPanel">Xếp Hạng</button>
-    </div>
-
-    <div class="name-box">
-      <div class="tip">
-        <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" />
-        <span class="tiptext">Tên sẽ hiển thị trên bảng xếp hạng. Không nhập = "Ẩn danh"</span>
-      </div>
     </div>
 
     <div id="setupPanel" class="tab-content">
@@ -598,9 +610,23 @@
   </div>
 
   <script>
-    // === CẤU HÌNH ===
+    // === CẤU HÌNH VÀ KHỞI TẠO FIREBASE ===
+    
+    // 1. Cấu hình Firebase của bạn
+    const firebaseConfig = {
+      apiKey: "AIzaSyBWknPoFq6ny8F_CpeYMu_3N6QEVM3s9Pc",
+      authDomain: "xh-ch-chinhta.firebaseapp.com",
+      databaseURL: "https://xh-ch-chinhta-default-rtdb.firebaseio.com",
+      projectId: "xh-ch-chinhta",
+      storageBucket: "xh-ch-chinhta.firebasestorage.app",
+      messagingSenderId: "535611478192",
+      appId: "1:535611478192:web:c45475177c8dcef8ef6b75",
+      measurementId: "G-NCC6MG2HMM"
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database(app);
+
     const GROQ_KEY = "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";
-    const ONLINE_RANK_URL = "https://script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
     
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
     let segments = [], currentIdx = 0, startTime, timer;
@@ -663,7 +689,6 @@
       micBtn: document.getElementById('micBtn'),
       rankBody: document.getElementById('rankBody'),
       filterBtns: () => document.querySelectorAll('.filter-btn'),
-      playerName: document.getElementById('playerName'),
       onlineStatus: document.getElementById('onlineStatus'),
       mainTabs: () => document.querySelectorAll('.tab'),
       tabContents: () => document.querySelectorAll('.tab-content'),
@@ -676,8 +701,34 @@
       personalScore: document.getElementById('personalScore'),
       personalBadge: document.getElementById('personalBadge'),
       mainChart: document.getElementById('mainChart'), // Sửa tên ID canvas gốc từ 'chart'
-      personalChart: document.getElementById('personalChart')
+      personalChart: document.getElementById('personalChart'),
+      startModal: document.getElementById('startModal'),
+      enterPlayerName: document.getElementById('enterPlayerName'),
+      submitNameBtn: document.getElementById('submitNameBtn'),
+      nameError: document.getElementById('nameError'),
+      mainContainer: document.getElementById('mainContainer')
     };
+
+    // === TRANG BẮT ĐẦU: KIỂM TRA TÊN UNIQUE ===
+    els.submitNameBtn.addEventListener('click', () => {
+      const name = els.enterPlayerName.value.trim();
+      if (!name) {
+        els.nameError.textContent = 'Vui lòng nhập tên!';
+        return;
+      }
+      db.ref('users/' + name).once('value').then(snapshot => {
+        if (snapshot.exists()) {
+          els.nameError.textContent = 'Tên đã tồn tại! Chọn tên khác.';
+        } else {
+          playerName = name;
+          db.ref('users/' + name).set({ created: new Date().toISOString() });
+          els.startModal.classList.remove('show');
+          els.mainContainer.classList.remove('hidden');
+        }
+      }).catch(() => {
+        els.nameError.textContent = 'Lỗi kết nối server!';
+      });
+    });
 
     // === CHỦ ĐỀ TỐI/SÁNG ===
     function updateThemeIcon() {
@@ -728,27 +779,20 @@
     });
 
     // === ĐỒNG BỘ BẢNG XẾP HẠNG ONLINE ===
-    async function loadOnlineRank() {
-      try {
-        const res = await fetch(ONLINE_RANK_URL + '?t=' + Date.now());
-        const data = await res.json();
-        onlineHistory = data || [];
+    function loadOnlineRank() {
+      db.ref('ranks').orderByChild('score').limitToLast(100).on('value', snapshot => {
+        onlineHistory = [];
+        snapshot.forEach(child => {
+          onlineHistory.push(child.val());
+        });
+        onlineHistory.reverse(); // Sắp xếp giảm dần score
         els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
         renderRankTable(); // Render bảng xếp hạng online
-      } catch (e) {
-        els.onlineStatus.textContent = "Không kết nối được server online";
-        onlineHistory = [];
-      }
+      });
     }
 
-    async function saveOnlineScore(entry) {
-      try {
-        await fetch(ONLINE_RANK_URL, {
-          method: "POST",
-          body: JSON.stringify(entry),
-          headers: { "Content-Type": "application/json" }
-        });
-      } catch (e) { console.log("Lỗi lưu online:", e); }
+    function saveOnlineScore(entry) {
+      db.ref('ranks').push(entry);
     }
 
     // === BẢNG XẾP HẠNG (ONLINE) ===
@@ -1183,7 +1227,6 @@
       
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.aiRateSelect.value);
-      playerName = els.playerName.value.trim(); // LẤY TÊN
       
       updateModeButtons();
       startTime = Date.now(); 
