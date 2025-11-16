@@ -371,10 +371,12 @@
     }
     /* Tối ưu responsive cho các phần dài */
     .full-translate, #liveFeedback, .segment-box { overflow-x: auto; max-width: 100%; }
+    .auth-link { color: var(--primary); cursor: pointer; text-decoration: underline; }
   </style>
   <!-- Thêm Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 <body>
   <div class="container">
@@ -388,6 +390,9 @@
         <h1>HiHi</h1>
       </div>
       <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói – Tạo đoạn văn bằng AI!</p>
+      <div id="authStatus" style="position: absolute; top: 16px; left: 16px; color: var(--muted);">
+        <span>Chưa đăng nhập</span> | <span class="auth-link" id="showLogin">Đăng nhập</span> | <span class="auth-link" id="showRegister">Đăng ký</span>
+      </div>
 
       <div class="theme-toggle-wrapper">
         <div class="tip">
@@ -468,7 +473,7 @@
               <th>WPM</th>
               <th>Chính xác</th>
               <th>Điểm</th>
-              <th>Cấp độ</th>
+              <th>Danh hiệu</th>
             </tr>
           </thead>
           <tbody id="rankBody">
@@ -480,13 +485,13 @@
       <div id="personalStats" class="sub-tab-content hidden">
         <h3 style="text-align:center;">Thành Tích Tốt Nhất Của Bạn</h3>
         <p style="text-align:center; color:var(--muted); margin-bottom:24px;">
-          Dựa trên điểm số cao nhất (lưu trên trình duyệt này).
+          Dựa trên điểm số cao nhất.
         </p>
         <div class="stats-row" id="personalStatsRow">
           <div class="stat-item"><h4>WPM Cao Nhất</h4><div class="val" id="personalWPM">0</div></div>
           <div class="stat-item"><h4>Chính xác</h4><div class="val" id="personalAcc">0%</div></div>
           <div class="stat-item"><h4>Điểm Cao Nhất</h4><div class="val" id="personalScore">0</div></div>
-          <div class="stat-item"><h4>Cấp độ</h4><div class="val" id="personalBadge">Mới</div></div>
+          <div class="stat-item"><h4>Danh hiệu</h4><div class="val" id="personalBadge">Mới</div></div>
         </div>
         
         <h3 style="text-align:center; margin-top: 40px;">Lịch Sử 10 Lần Gần Nhất</h3>
@@ -534,16 +539,21 @@
       </div>
     </div>
 
-    <div class="modal" id="nameModal">
+    <div class="modal" id="authModal">
       <div class="modal-content">
-        <button class="modal-close" id="closeNameModal">×</button>
-        <h3>Nhập Tên Hoặc Nickname</h3>
+        <button class="modal-close" id="closeAuthModal">×</button>
+        <h3 id="authTitle">Đăng Nhập / Đăng Ký</h3>
         <div class="modal-input">
-          <label>Tên/nickname người học để hệ thống đồng bộ và lưu quá trình học của bạn. </label>
-          <input type="text" id="newPlayerName" placeholder="Nhập tên hoặc nickname..." maxlength="20" />
+          <label>Tên đăng nhập</label>
+          <input type="text" id="authUsername" placeholder="Nhập tên đăng nhập..." maxlength="20" />
         </div>
-        <button class="generate-btn" id="submitNameBtn">Xác nhận</button>
-        <div id="nameError" style="color: var(--danger); margin-top: 10px; display: none;"></div>
+        <div class="modal-input">
+          <label>Mật khẩu</label>
+          <input type="password" id="authPassword" placeholder="Nhập mật khẩu..." />
+        </div>
+        <button class="generate-btn" id="authBtn">Xác nhận</button>
+        <div id="authError" style="color: var(--danger); margin-top: 10px; display: none;"></div>
+        <p style="text-align: center; margin-top: 10px;"><span class="auth-link" id="toggleAuth">Chuyển sang Đăng ký / Đăng nhập</span></p>
       </div>
     </div>
 
@@ -583,7 +593,7 @@
         <div class="stat-item"><h4>Thời gian</h4><div class="val" id="time">0s</div></div>
         <div class="stat-item"><h4>Tốc độ</h4><div class="val" id="wpm">0</div></div>
         <div class="stat-item"><h4>Chính xác</h4><div class="val" id="accuracy">100%</div></div>
-        <div class="stat-item"><h4>Cấp độ</h4><div class="val" id="level">Mới</div></div>
+        <div class="stat-item"><h4>Danh hiệu</h4><div class="val" id="level">Mới</div></div>
       </div>
       <div style="text-align:center;">
         <div class="level-badge" id="levelBadge">Mới bắt đầu</div>
@@ -603,7 +613,6 @@
   <script>
     // === CẤU HÌNH VÀ KHỞI TẠO FIREBASE ===
     
-    // 1. Cấu hình Firebase của bạn
     const firebaseConfig = {
       apiKey: "AIzaSyBWknPoFq6ny8F_CpeYMu_3N6QEVM3s9Pc",
       authDomain: "xh-chinhta.firebaseapp.com",
@@ -616,22 +625,23 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const auth = firebase.auth();
     
     const GROQ_KEY = "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";
     
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
     let segments = [], currentIdx = 0, startTime, timer;
     
-    // Biến thống kê (SỬA LỖI LOGIC)
-    let typedWords = 0; // Tổng số từ mục tiêu (đã gõ/đọc xong)
-    let correctWords = 0; // Số từ đúng cho ĐOẠN HIỆN TẠI
-    let totalCorrectWords = 0; // Tổng số từ đúng (toàn bộ session)
+    // Biến thống kê
+    let typedWords = 0;
+    let correctWords = 0;
+    let totalCorrectWords = 0;
     let hintsUsed = 0;
     
-    // Biến xếp hạng & lịch sử (NÂNG CẤP)
+    // Biến xếp hạng & lịch sử
     let onlineHistory = [];
-    let personalHistory = JSON.parse(localStorage.getItem('personalHistory')) || [];
-    let bestStats = JSON.parse(localStorage.getItem('bestStats')) || null;
+    let personalHistory = [];
+    let bestStats = null;
     let mainChart, personalChart;
     
     let speechRate = 1.0;
@@ -641,6 +651,8 @@
     let isListening = false;
     let karaokeWords = [];
     let playerName = '';
+    let currentUser = null;
+    let updateInterval = null;
 
     const els = {
       lang: document.getElementById('globalLang'),
@@ -683,7 +695,6 @@
       onlineStatus: document.getElementById('onlineStatus'),
       mainTabs: () => document.querySelectorAll('.tab'),
       tabContents: () => document.querySelectorAll('.tab-content'),
-      // NÂNG CẤP: Thêm elements cho tab cá nhân
       subTabBtns: () => document.querySelectorAll('.sub-tab-btn'),
       subTabContents: () => document.querySelectorAll('.sub-tab-content'),
       personalStatsRow: document.getElementById('personalStatsRow'),
@@ -691,13 +702,19 @@
       personalAcc: document.getElementById('personalAcc'),
       personalScore: document.getElementById('personalScore'),
       personalBadge: document.getElementById('personalBadge'),
-      mainChart: document.getElementById('mainChart'), // Sửa tên ID canvas gốc từ 'chart'
+      mainChart: document.getElementById('mainChart'),
       personalChart: document.getElementById('personalChart'),
-      nameModal: document.getElementById('nameModal'),
-      newPlayerName: document.getElementById('newPlayerName'),
-      submitNameBtn: document.getElementById('submitNameBtn'),
-      nameError: document.getElementById('nameError'),
-      closeNameModal: document.getElementById('closeNameModal')
+      authModal: document.getElementById('authModal'),
+      authTitle: document.getElementById('authTitle'),
+      authUsername: document.getElementById('authUsername'),
+      authPassword: document.getElementById('authPassword'),
+      authBtn: document.getElementById('authBtn'),
+      authError: document.getElementById('authError'),
+      toggleAuth: document.getElementById('toggleAuth'),
+      closeAuthModal: document.getElementById('closeAuthModal'),
+      authStatus: document.getElementById('authStatus'),
+      showLogin: document.getElementById('showLogin'),
+      showRegister: document.getElementById('showRegister')
     };
 
     // === CHỦ ĐỀ TỐI/SÁNG ===
@@ -716,7 +733,7 @@
     document.body.setAttribute('data-theme', savedTheme);
     updateThemeIcon();
 
-    // === CHUYỂN TAB (CHÍNH & PHỤ) - NÂNG CẤP ===
+    // === CHUYỂN TAB (CHÍNH & PHỤ) ===
     els.mainTabs().forEach(btn => {
       btn.addEventListener('click', () => {
         const targetId = btn.dataset.tab;
@@ -726,10 +743,9 @@
           c.classList.toggle('hidden', c.id !== targetId);
         });
         if (targetId === 'rankPanel') {
-          // Khi chuyển sang tab xếp hạng, tự động render tab con đang active
           const activeSubTab = document.querySelector('.sub-tab-btn.active').dataset.subtab;
-          if (activeSubTab === 'globalRank') renderRankTable();
-          else renderPersonalStats();
+          if (activeSubTab === 'globalRank') loadOnlineRank().then(() => renderRankTable());
+          else loadPersonalStats().then(() => renderPersonalStats());
         }
       });
     });
@@ -742,9 +758,8 @@
         els.subTabContents().forEach(c => {
           c.classList.toggle('hidden', c.id !== targetId);
         });
-        // Render nội dung tương ứng khi click
-        if (targetId === 'globalRank') renderRankTable();
-        else renderPersonalStats();
+        if (targetId === 'globalRank') loadOnlineRank().then(() => renderRankTable());
+        else loadPersonalStats().then(() => renderPersonalStats());
       });
     });
 
@@ -752,19 +767,49 @@
     async function loadOnlineRank() {
       try {
         const snapshot = await db.ref('rankings').once('value');
-        onlineHistory = Object.values(snapshot.val() || {});
+        onlineHistory = Object.values(snapshot.val() || {}).sort((a, b) => b.score - a.score);
         els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
-        renderRankTable(); // Render bảng xếp hạng online
+        return onlineHistory;
       } catch (e) {
         els.onlineStatus.textContent = "Không kết nối được server online";
         onlineHistory = [];
+        return [];
       }
     }
 
     async function saveOnlineScore(entry) {
       try {
         await db.ref('rankings').push(entry);
+        if (currentUser) {
+          await db.ref('users/' + currentUser.uid + '/history').push(entry);
+          await updateBestStats(entry);
+        }
       } catch (e) { console.log("Lỗi lưu online:", e); }
+    }
+
+    async function updateBestStats(entry) {
+      const userRef = db.ref('users/' + currentUser.uid + '/bestStats');
+      const snapshot = await userRef.once('value');
+      let currentBest = snapshot.val();
+      if (!currentBest || entry.score > currentBest.score) {
+        await userRef.set(entry);
+      }
+    }
+
+    async function loadPersonalStats() {
+      if (!currentUser) {
+        personalHistory = [];
+        bestStats = null;
+        return;
+      }
+      try {
+        const historySnap = await db.ref('users/' + currentUser.uid + '/history').once('value');
+        personalHistory = Object.values(historySnap.val() || []);
+        const bestSnap = await db.ref('users/' + currentUser.uid + '/bestStats').once('value');
+        bestStats = bestSnap.val() || null;
+      } catch (e) {
+        console.log('Lỗi tải thống kê cá nhân:', e);
+      }
     }
 
     // === BẢNG XẾP HẠNG (ONLINE) ===
@@ -782,7 +827,7 @@
         if (filter === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
         if (filter === 'year') return d.getFullYear() === now.getFullYear();
         return true;
-      }).sort((a, b) => b.score - a.score);
+      });
 
       els.rankBody.innerHTML = filtered.length ? filtered.map((h, i) => `
         <tr>
@@ -805,9 +850,8 @@
       btn.addEventListener('click', () => renderRankTable(btn.dataset.filter));
     });
 
-    // === NÂNG CẤP: THỐNG KÊ CÁ NHÂN (LOCAL) ===
+    // === THỐNG KÊ CÁ NHÂN ===
     function renderPersonalStats() {
-      // 1. Hiển thị thành tích tốt nhất
       if (bestStats) {
         els.personalWPM.textContent = bestStats.wpm;
         els.personalAcc.textContent = bestStats.acc + '%';
@@ -817,14 +861,13 @@
         els.personalWPM.textContent = '0';
         els.personalAcc.textContent = '0%';
         els.personalScore.textContent = '0';
-        els.personalBadge.textContent = 'Mới';
+        els.personalBadge.textContent = 'Newbie';
       }
       
-      // 2. Vẽ biểu đồ 10 lần gần nhất
       const ctx = els.personalChart.getContext('2d');
       if (personalChart) personalChart.destroy();
       
-      const recentHistory = [...personalHistory].reverse(); // Đảo ngược để hiển thị từ cũ đến mới
+      const recentHistory = [...personalHistory].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,10);
       
       personalChart = new Chart(ctx, {
         type: 'line',
@@ -853,7 +896,7 @@
               min: 0,
               max: 100,
               title: { display: true, text: 'Chính xác (%)' },
-              grid: { drawOnChartArea: false } // Chỉ hiển thị trục, không hiển thị lưới
+              grid: { drawOnChartArea: false }
             }
           }
         }
@@ -946,28 +989,25 @@
       } catch { return text; }
     }
 
-    // === HIỂN THỊ ĐOẠN VĂN MỚI (NÂNG CẤP) ===
+    // === HIỂN THỊ ĐOẠN VĂN MỚI ===
     async function showSegment() {
       const text = segments[currentIdx];
       
-      // Reset trạng thái (QUY TẮC MỚI)
       els.next.disabled = true;
       els.input.style.borderColor = 'var(--border)';
       els.input.style.boxShadow = '';
       els.input.value = '';
       els.input.focus();
-      correctWords = 0; // Reset số từ đúng cho đoạn này
+      correctWords = 0;
       
-      // Cập nhật UI theo chế độ
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
       const isReadOnly = currentMode === 'read-only';
       els.input.style.display = isReadOnly ? 'none' : 'block';
       els.hint.style.display = isReadOnly ? 'none' : 'block';
-      els.feedback.style.display = isReadOnly ? 'block' : 'block'; // Luôn hiển thị feedback
+      els.feedback.style.display = 'block';
       els.segment.classList.toggle('reading-mode', isReadOnly);
       els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
 
-      // Chế độ Nghe-Viết
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>Nghe và gõ...</em>';
         const src = globalLang === 'en-US' ? 'en' : 'id';
@@ -977,7 +1017,6 @@
         return;
       }
 
-      // Chế độ Chép & Đọc (Karaoke)
       const fragment = document.createDocumentFragment();
       const words = text.split(/(\s+|\b)/).filter(w => w.trim() || w === ' ');
       let charIndex = 0;
@@ -1036,12 +1075,10 @@
       if (word) word.classList.add('karaoke-active');
     }
 
-    // Helper chuẩn hóa text để so sánh (QUY TẮC MỚI)
     function normalizeText(text) {
         return text.trim().replace(/\s+/g, ' ').toLowerCase();
     }
 
-    // === CẬP NHẬT PHẢN HỒI GÕ (NÂNG CẤP) ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
@@ -1053,22 +1090,19 @@
         else if (w.toLowerCase() === oWords[i].toLowerCase()) { correct++; html += `<span class="correct">${w}</span> `; }
         else html += `<span class="wrong">${w}</span> `;
       });
-      correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
+      correctWords = correct;
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
-      // QUY TẮC MỚI: Phải gõ đúng 100% mới cho qua
       const isMatch = normalizeText(input) === normalizeText(orig);
       els.next.disabled = !isMatch;
-      // Thêm visual feedback khi gõ đúng
       els.input.style.borderColor = isMatch ? 'var(--success)' : 'var(--border)';
       els.input.style.boxShadow = isMatch ? '0 0 0 7px rgba(16,185,129,0.25)' : '';
     }
 
-    // === HÀM CHUYỂN TIẾP (SỬA LỖI LOGIC) ===
     function next() {
       const wordsInSegment = segments[currentIdx].split(/\s+/).filter(w => w).length;
-      typedWords += wordsInSegment; // Tăng tổng số từ mục tiêu đã hoàn thành
-      totalCorrectWords += correctWords; // Tăng tổng số từ đúng
+      typedWords += wordsInSegment;
+      totalCorrectWords += correctWords;
       
       currentIdx++;
       const p = (currentIdx / segments.length) * 100;
@@ -1082,74 +1116,66 @@
       }
     }
 
-    // === HÀM CẬP NHẬT THỐNG KÊ (SỬA LỖI LOGIC) ===
     function updateStats() {
       const s = Math.floor((Date.now() - startTime) / 1000);
       const m = s / 60;
-      // WPM và ACC sẽ dựa trên tổng số liệu, không tính theo thời gian thực mỗi giây
-      // để tránh nhầm lẫn. Chỉ cập nhật thời gian.
       els.time.textContent = s + 's';
       
-      // WPM và ACC sẽ được tính toán lại ở cuối (hàm end())
-      // Hoặc có thể tính WPM/ACC tạm thời dựa trên 'totalCorrectWords' và 'typedWords'
       const wpm = m > 0 ? Math.round(typedWords / m) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       els.wpm.textContent = wpm;
       els.acc.textContent = acc + '%';
     }
 
-    // === HÀM KẾT THÚC (NÂNG CẤP & SỬA LỖI) ===
+    function getBadge(wpm, score) {
+      if (score < 100) return "Newbie 🐣"; // Mới bắt đầu
+      if (score < 200) return "Apprentice 📚"; // Học viên
+      if (score < 300) return "Skilled ✏️"; // Kỹ năng
+      if (score < 400) return "Expert ⭐"; // Chuyên gia
+      if (score < 500) return "Master 🏆"; // Bậc thầy
+      return "Legend 🔥"; // Huyền thoại
+    }
+
     function end() {
       clearInterval(timer);
       if (isListening) recognition?.stop();
       
-      const s = (Date.now() - startTime) / 1000 / 60; // phút
+      const s = (Date.now() - startTime) / 1000 / 60;
       
-      // SỬA LỖI: Tính WPM và ACC dựa trên TỔNG SỐ LIỆU
       const wpm = s > 0 ? Math.round(typedWords / s) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       
       const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
-      const badge = wpm < 50 ? "Mới" : wpm < 100 ? "Khá" : wpm < 200 ? "Giỏi" : "Xuất sắc";
+      const badge = getBadge(wpm, score);
 
-      const name = playerName.trim() || 'Ẩn danh';
+      const name = playerName;
       const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge };
       
-      // 1. Lưu Online
       saveOnlineScore(entry);
       
-      // 2. Cập nhật lịch sử online (tạm thời)
       onlineHistory.push(entry);
       onlineHistory.sort((a,b) => b.score - a.score);
       if (onlineHistory.length > 100) onlineHistory.pop();
       
-      // 3. NÂNG CẤP: Lưu Local (Cá nhân)
       personalHistory.push(entry);
-      if (personalHistory.length > 10) personalHistory.shift(); // Giữ 10 lần gần nhất
-      localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
+      if (personalHistory.length > 10) personalHistory.shift();
       
-      // 4. NÂNG CẤP: Lưu điểm cao nhất
       if (!bestStats || entry.score > bestStats.score) {
           bestStats = entry;
-          localStorage.setItem('bestStats', JSON.stringify(bestStats));
       }
 
-      // Cập nhật UI
       els.level.textContent = badge;
       els.levelBadge.textContent = badge;
       els.score.textContent = score;
-      els.wpm.textContent = wpm; // Cập nhật WPM/ACC cuối cùng
+      els.wpm.textContent = wpm;
       els.acc.textContent = acc + '%';
       
-      updateMainChart(); // Cập nhật biểu đồ ở trang luyện tập
-      renderRankTable(); // Render lại bảng xếp hạng online
-      
-      alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
+      updateMainChart();
+      alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nDanh hiệu: ${badge}`);
     }
 
-    // Biểu đồ ở trang luyện tập (dựa trên 10 lần gần nhất TỪ LỊCH SỬ ONLINE)
     function updateMainChart() {
-      const recent = onlineHistory.slice(0, 10).reverse(); // 10 người điểm cao nhất
+      const recent = onlineHistory.slice(0, 10);
       const ctx = els.mainChart.getContext('2d');
       if (mainChart) mainChart.destroy();
       mainChart = new Chart(ctx, {
@@ -1174,6 +1200,70 @@
       });
     }
 
+    // === ĐĂNG KÝ / ĐĂNG NHẬP ===
+    let isRegister = false;
+
+    els.showLogin.addEventListener('click', () => {
+      isRegister = false;
+      els.authTitle.textContent = 'Đăng Nhập';
+      els.authBtn.textContent = 'Đăng Nhập';
+      els.toggleAuth.textContent = 'Chuyển sang Đăng ký';
+      els.authModal.classList.add('show');
+    });
+
+    els.showRegister.addEventListener('click', () => {
+      isRegister = true;
+      els.authTitle.textContent = 'Đăng Ký';
+      els.authBtn.textContent = 'Đăng Ký';
+      els.toggleAuth.textContent = 'Chuyển sang Đăng nhập';
+      els.authModal.classList.add('show');
+    });
+
+    els.toggleAuth.addEventListener('click', () => {
+      isRegister = !isRegister;
+      els.authTitle.textContent = isRegister ? 'Đăng Ký' : 'Đăng Nhập';
+      els.authBtn.textContent = isRegister ? 'Đăng Ký' : 'Đăng Nhập';
+      els.toggleAuth.textContent = isRegister ? 'Chuyển sang Đăng nhập' : 'Chuyển sang Đăng ký';
+    });
+
+    els.authBtn.addEventListener('click', async () => {
+      const username = els.authUsername.value.trim();
+      const password = els.authPassword.value;
+      if (!username || !password) {
+        els.authError.textContent = 'Vui lòng nhập đầy đủ!';
+        els.authError.style.display = 'block';
+        return;
+      }
+
+      try {
+        if (isRegister) {
+          const userCredential = await auth.createUserWithEmailAndPassword(username + '@fake.com', password);
+          currentUser = userCredential.user;
+          await db.ref('users/' + currentUser.uid).set({ username });
+        } else {
+          const userCredential = await auth.signInWithEmailAndPassword(username + '@fake.com', password);
+          currentUser = userCredential.user;
+        }
+        playerName = username;
+        els.authModal.classList.remove('show');
+        els.authStatus.innerHTML = `Đã đăng nhập: ${username} | <span class="auth-link" id="logout">Đăng xuất</span>`;
+        document.getElementById('logout').addEventListener('click', () => {
+          auth.signOut();
+          currentUser = null;
+          playerName = '';
+          els.authStatus.innerHTML = `Chưa đăng nhập | <span class="auth-link" id="showLogin">Đăng nhập</span> | <span class="auth-link" id="showRegister">Đăng ký</span>`;
+          location.reload();
+        });
+        loadPersonalStats().then(renderPersonalStats);
+      } catch (e) {
+        els.authError.textContent = isRegister ? 'Tên đã tồn tại hoặc lỗi!' : 'Sai tên/mật khẩu!';
+        els.authError.style.display = 'block';
+      }
+    });
+
+    els.closeAuthModal.addEventListener('click', () => els.authModal.classList.remove('show'));
+    els.authModal.addEventListener('click', e => { if (e.target === els.authModal) els.authModal.classList.remove('show'); });
+
     // === SỰ KIỆN ===
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
@@ -1185,73 +1275,38 @@
     els.lang.value = globalLang;
 
     els.start.addEventListener('click', () => {
+      if (!currentUser) return alert('Vui lòng đăng nhập để bắt đầu!');
       const text = els.text.value.trim();
       if (!text) return alert('Nhập đoạn văn!');
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       
-      // Mở modal nhập tên
-      els.nameModal.classList.add('show');
-    });
-
-    els.submitNameBtn.addEventListener('click', async () => {
-      const name = els.newPlayerName.value.trim();
-      if (!name) {
-        els.nameError.textContent = 'Vui lòng nhập tên!';
-        els.nameError.style.display = 'block';
-        return;
-      }
+      currentIdx = 0; 
+      typedWords = 0; 
+      correctWords = 0; 
+      totalCorrectWords = 0;
+      hintsUsed = 0;
       
-      try {
-        const snapshot = await db.ref('users').orderByChild('name').equalTo(name).once('value');
-        if (snapshot.exists()) {
-          els.nameError.textContent = 'Tên đã tồn tại! Chọn tên khác.';
-          els.nameError.style.display = 'block';
-          return;
-        }
-        
-        // Lưu tên mới vào server
-        await db.ref('users').push({ name });
-        playerName = name;
-        els.nameModal.classList.remove('show');
-        
-        // Tiếp tục bắt đầu luyện tập
-        // Reset toàn bộ
-        currentIdx = 0; 
-        typedWords = 0; 
-        correctWords = 0; 
-        totalCorrectWords = 0;
-        hintsUsed = 0;
-        
-        currentMode = document.querySelector('input[name="mode"]:checked').value;
-        speechRate = parseFloat(els.aiRateSelect.value);
-        
-        updateModeButtons();
-        startTime = Date.now(); 
-        if (timer) clearInterval(timer);
-        timer = setInterval(updateStats, 1000);
-        
-        document.getElementById('setupPanel').classList.add('hidden');
-        document.getElementById('practiceArea').classList.remove('hidden');
-        
-        initSpeechRecognition();
-        showSegment();
-      } catch (e) {
-        els.nameError.textContent = 'Lỗi kết nối server!';
-        els.nameError.style.display = 'block';
-      }
+      currentMode = document.querySelector('input[name="mode"]:checked').value;
+      speechRate = parseFloat(els.aiRateSelect.value);
+      
+      updateModeButtons();
+      startTime = Date.now(); 
+      if (timer) clearInterval(timer);
+      timer = setInterval(updateStats, 1000);
+      
+      document.getElementById('setupPanel').classList.add('hidden');
+      document.getElementById('practiceArea').classList.remove('hidden');
+      
+      initSpeechRecognition();
+      showSegment();
     });
-
-    els.closeNameModal.addEventListener('click', () => els.nameModal.classList.remove('show'));
-    els.nameModal.addEventListener('click', e => { if (e.target === els.nameModal) els.nameModal.classList.remove('show'); });
 
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { 
         if (e.key === 'Enter') { 
             e.preventDefault(); 
-            if (!els.next.disabled) { // Chỉ cho Enter khi đã gõ đúng
-                next(); 
-            }
+            if (!els.next.disabled) next(); 
         } 
     });
 
@@ -1284,10 +1339,10 @@
       });
     });
 
-    // === NHẬN DIỆN GIỌNG NÓI (NÂNG CẤP) ===
+    // === NHẬN DIỆN GIỌNG NÓI ===
     function initSpeechRecognition() {
-      if (recognition) { // Nếu đã khởi tạo, chỉ cần đảm bảo nó dừng
-         recognition.onend = null; // Xóa listener cũ
+      if (recognition) {
+         recognition.onend = null;
          recognition.stop();
       }
       
@@ -1296,8 +1351,8 @@
       
       recognition = new SpeechRecognition();
       recognition.lang = globalLang;
-      recognition.continuous = false; // Chỉ nhận diện 1 lần
-      recognition.interimResults = false; // Chỉ trả về kết quả cuối cùng
+      recognition.continuous = false;
+      recognition.interimResults = false;
       
       recognition.onresult = (e) => {
         const transcript = e.results[0][0].transcript.trim().toLowerCase();
@@ -1313,10 +1368,9 @@
           return `<span class="wrong">${w}</span>`;
         }).join(' ');
         
-        correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
+        correctWords = correct;
         els.feedback.innerHTML = feedback || '<em>Đang nghe...</em>';
         
-        // QUY TẮC MỚI: Phải đọc đúng 100%
         const isMatch = correct === wordsTarget.length && wordsSaid.length === wordsTarget.length;
         els.next.disabled = !isMatch;
         if(isMatch) {
@@ -1351,11 +1405,19 @@
 
     // === TẢI DỮ LIỆU KHI MỞ TRANG ===
     window.addEventListener('load', () => {
-      loadOnlineRank(); // Tải BXH online
-      renderPersonalStats(); // Render thống kê cá nhân (từ localStorage)
-      setInterval(loadOnlineRank, 60000); // Cập nhật BXH mỗi 60s
+      auth.onAuthStateChanged(user => {
+        currentUser = user;
+        if (user) {
+          db.ref('users/' + user.uid + '/username').once('value').then(snap => {
+            playerName = snap.val();
+            els.authStatus.innerHTML = `Đã đăng nhập: ${playerName} | <span class="auth-link" id="logout">Đăng xuất</span>`;
+            document.getElementById('logout').addEventListener('click', () => auth.signOut());
+            loadPersonalStats().then(renderPersonalStats);
+          });
+        }
+      });
+      loadOnlineRank().then(renderRankTable);
     });
   </script>
 </body>
 </html>
-
