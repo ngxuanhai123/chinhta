@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HiHi - Luyện Chính Tả Thông Minh</title>
+  <title>HiHi - Luyện Chính Tả (Bản Đầy Đủ)</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke, tạo đoạn văn bằng AI.">
   <meta name="theme-color" content="#f59e0b">
   <link rel="manifest" href="data:application/manifest+json,{
@@ -18,6 +18,10 @@
   <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
   <style>
     :root {
       --bg: #fff7ed; --card: #ffffff; --text: #1e293b; --muted: #64748b; --border: #fed7aa;
@@ -600,18 +604,31 @@
   <script>
     // === CẤU HÌNH ===
     const GROQ_KEY = "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";
-    const ONLINE_RANK_URL = "https://script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
     
+    // === CẤU HÌNH FIREBASE MỚI ===
+= {
+ Khóa apiKey: "AIzaSyD_aKqLS7EHEmwxpz4E-aI7YxNdHNIDSKg",
+ authTên miền: "chinhta-3c3fd.firebaseapp.com",
+ URL cơ sở dữ liệu: "https://chinhta-3c3fd-default-rtdb.firebaseio.com",
+ Id dự án: "Chinhta-3C3FD",
+  storageBucket: "chinhta-3c3fd.firebasestorage.app",
+ nhắn tinSenderId: "199247553396",
+ Id ứng dụng: "1:199247553396:web:865372b95dcd5e895a8221",
+  measurementId: "G-0FKB3C7XM6"};Khởi tạo  ứng dụng const Firebase = initializeApp(firebaseConfig); const analytics = getAnalytics(ứng dụng);
+    
+    // Khởi tạo Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    // ================================
+
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
     let segments = [], currentIdx = 0, startTime, timer;
     
-    // Biến thống kê (SỬA LỖI LOGIC)
-    let typedWords = 0; // Tổng số từ mục tiêu (đã gõ/đọc xong)
-    let correctWords = 0; // Số từ đúng cho ĐOẠN HIỆN TẠI
-    let totalCorrectWords = 0; // Tổng số từ đúng (toàn bộ session)
+    let typedWords = 0; 
+    let correctWords = 0; 
+    let totalCorrectWords = 0; 
     let hintsUsed = 0;
     
-    // Biến xếp hạng & lịch sử (NÂNG CẤP)
     let onlineHistory = [];
     let personalHistory = JSON.parse(localStorage.getItem('personalHistory')) || [];
     let bestStats = JSON.parse(localStorage.getItem('bestStats')) || null;
@@ -667,7 +684,6 @@
       onlineStatus: document.getElementById('onlineStatus'),
       mainTabs: () => document.querySelectorAll('.tab'),
       tabContents: () => document.querySelectorAll('.tab-content'),
-      // NÂNG CẤP: Thêm elements cho tab cá nhân
       subTabBtns: () => document.querySelectorAll('.sub-tab-btn'),
       subTabContents: () => document.querySelectorAll('.sub-tab-content'),
       personalStatsRow: document.getElementById('personalStatsRow'),
@@ -675,7 +691,7 @@
       personalAcc: document.getElementById('personalAcc'),
       personalScore: document.getElementById('personalScore'),
       personalBadge: document.getElementById('personalBadge'),
-      mainChart: document.getElementById('mainChart'), // Sửa tên ID canvas gốc từ 'chart'
+      mainChart: document.getElementById('mainChart'),
       personalChart: document.getElementById('personalChart')
     };
 
@@ -695,7 +711,7 @@
     document.body.setAttribute('data-theme', savedTheme);
     updateThemeIcon();
 
-    // === CHUYỂN TAB (CHÍNH & PHỤ) - NÂNG CẤP ===
+    // === CHUYỂN TAB (CHÍNH & PHỤ) ===
     els.mainTabs().forEach(btn => {
       btn.addEventListener('click', () => {
         const targetId = btn.dataset.tab;
@@ -705,7 +721,6 @@
           c.classList.toggle('hidden', c.id !== targetId);
         });
         if (targetId === 'rankPanel') {
-          // Khi chuyển sang tab xếp hạng, tự động render tab con đang active
           const activeSubTab = document.querySelector('.sub-tab-btn.active').dataset.subtab;
           if (activeSubTab === 'globalRank') renderRankTable();
           else renderPersonalStats();
@@ -721,42 +736,56 @@
         els.subTabContents().forEach(c => {
           c.classList.toggle('hidden', c.id !== targetId);
         });
-        // Render nội dung tương ứng khi click
         if (targetId === 'globalRank') renderRankTable();
         else renderPersonalStats();
       });
     });
 
-    // === ĐỒNG BỘ BẢNG XẾP HẠNG ONLINE ===
+    // === ĐỒNG BỘ BẰNG FIREBASE (ĐÃ SỬA) ===
     async function loadOnlineRank() {
       try {
-        const res = await fetch(ONLINE_RANK_URL + '?t=' + Date.now());
-        const data = await res.json();
-        onlineHistory = data || [];
+        // 'leaderboard' là tên thư mục trên Firebase
+        const rankRef = database.ref('leaderboard'); 
+        // Lấy 100 người điểm cao nhất
+        const snapshot = await rankRef.orderByChild('score').limitToLast(100).once('value');
+        
+        onlineHistory = [];
+        snapshot.forEach(childSnapshot => {
+          onlineHistory.push(childSnapshot.val());
+        });
+        
+        // Sắp xếp lại từ cao xuống thấp
+        onlineHistory.sort((a, b) => b.score - a.score);
+        
         els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
-        renderRankTable(); // Render bảng xếp hạng online
+        renderRankTable();
       } catch (e) {
-        els.onlineStatus.textContent = "Không kết nối được server online";
+        els.onlineStatus.textContent = "Không kết nối được Firebase Server.";
+        console.error("Lỗi Firebase:", e);
         onlineHistory = [];
       }
     }
 
     async function saveOnlineScore(entry) {
       try {
-        await fetch(ONLINE_RANK_URL, {
-          method: "POST",
-          body: JSON.stringify(entry),
-          headers: { "Content-Type": "application/json" }
+        // 'leaderboard' là tên thư mục trên Firebase
+        const newRef = database.ref('leaderboard').push(); 
+        await newRef.set({
+            ...entry,
+            timestamp: firebase.database.ServerValue.TIMESTAMP // Thêm dấu thời gian
         });
-      } catch (e) { console.log("Lỗi lưu online:", e); }
+      } catch (e) { 
+        console.log("Lỗi lưu Firebase:", e); 
+      }
     }
 
     // === BẢNG XẾP HẠNG (ONLINE) ===
     function renderRankTable(filter = 'all') {
       const now = new Date();
       const filtered = onlineHistory.filter(h => {
-        const d = new Date(h.date);
-        if (isNaN(d)) return true;
+        // Đảm bảo 'date' là hợp lệ
+        const d = h.date ? new Date(h.date) : (h.timestamp ? new Date(h.timestamp) : new Date());
+        
         if (filter === 'day') return d.toDateString() === now.toDateString();
         if (filter === 'week') {
           const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
@@ -766,13 +795,13 @@
         if (filter === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
         if (filter === 'year') return d.getFullYear() === now.getFullYear();
         return true;
-      }).sort((a, b) => b.score - a.score);
+      }).sort((a, b) => b.score - a.score); // Sắp xếp lại lần nữa sau khi lọc
 
       els.rankBody.innerHTML = filtered.length ? filtered.map((h, i) => `
         <tr>
           <td>${i + 1}</td>
           <td>${h.name || 'Ẩn danh'}</td>
-          <td>${new Date(h.date).toLocaleString('vi')}</td>
+          <td>${h.date ? new Date(h.date).toLocaleString('vi') : 'N/A'}</td>
           <td>${h.wpm}</td>
           <td>${h.acc}%</td>
           <td><strong>${h.score}</strong></td>
@@ -789,9 +818,8 @@
       btn.addEventListener('click', () => renderRankTable(btn.dataset.filter));
     });
 
-    // === NÂNG CẤP: THỐNG KÊ CÁ NHÂN (LOCAL) ===
+    // === THỐNG KÊ CÁ NHÂN (LOCAL) ===
     function renderPersonalStats() {
-      // 1. Hiển thị thành tích tốt nhất
       if (bestStats) {
         els.personalWPM.textContent = bestStats.wpm;
         els.personalAcc.textContent = bestStats.acc + '%';
@@ -804,11 +832,10 @@
         els.personalBadge.textContent = 'Mới';
       }
       
-      // 2. Vẽ biểu đồ 10 lần gần nhất
       const ctx = els.personalChart.getContext('2d');
       if (personalChart) personalChart.destroy();
       
-      const recentHistory = [...personalHistory].reverse(); // Đảo ngược để hiển thị từ cũ đến mới
+      const recentHistory = [...personalHistory].reverse(); 
       
       personalChart = new Chart(ctx, {
         type: 'line',
@@ -837,7 +864,7 @@
               min: 0,
               max: 100,
               title: { display: true, text: 'Chính xác (%)' },
-              grid: { drawOnChartArea: false } // Chỉ hiển thị trục, không hiển thị lưới
+              grid: { drawOnChartArea: false } 
             }
           }
         }
@@ -930,28 +957,25 @@
       } catch { return text; }
     }
 
-    // === HIỂN THỊ ĐOẠN VĂN MỚI (NÂNG CẤP) ===
+    // === HIỂN THỊ ĐOẠN VĂN MỚI ===
     async function showSegment() {
       const text = segments[currentIdx];
       
-      // Reset trạng thái (QUY TẮC MỚI)
       els.next.disabled = true;
       els.input.style.borderColor = 'var(--border)';
       els.input.style.boxShadow = '';
       els.input.value = '';
       els.input.focus();
-      correctWords = 0; // Reset số từ đúng cho đoạn này
+      correctWords = 0; 
       
-      // Cập nhật UI theo chế độ
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
       const isReadOnly = currentMode === 'read-only';
       els.input.style.display = isReadOnly ? 'none' : 'block';
       els.hint.style.display = isReadOnly ? 'none' : 'block';
-      els.feedback.style.display = isReadOnly ? 'block' : 'block'; // Luôn hiển thị feedback
+      els.feedback.style.display = isReadOnly ? 'block' : 'block'; 
       els.segment.classList.toggle('reading-mode', isReadOnly);
       els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
 
-      // Chế độ Nghe-Viết
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>Nghe và gõ...</em>';
         const src = globalLang === 'en-US' ? 'en' : 'id';
@@ -961,7 +985,6 @@
         return;
       }
 
-      // Chế độ Chép & Đọc (Karaoke)
       const fragment = document.createDocumentFragment();
       const words = text.split(/(\s+|\b)/).filter(w => w.trim() || w === ' ');
       let charIndex = 0;
@@ -1020,12 +1043,11 @@
       if (word) word.classList.add('karaoke-active');
     }
 
-    // Helper chuẩn hóa text để so sánh (QUY TẮC MỚI)
     function normalizeText(text) {
         return text.trim().replace(/\s+/g, ' ').toLowerCase();
     }
 
-    // === CẬP NHẬT PHẢN HỒI GÕ (NÂNG CẤP) ===
+    // === CẬP NHẬT PHẢN HỒI GÕ ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
@@ -1037,22 +1059,20 @@
         else if (w.toLowerCase() === oWords[i].toLowerCase()) { correct++; html += `<span class="correct">${w}</span> `; }
         else html += `<span class="wrong">${w}</span> `;
       });
-      correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
+      correctWords = correct; 
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
-      // QUY TẮC MỚI: Phải gõ đúng 100% mới cho qua
       const isMatch = normalizeText(input) === normalizeText(orig);
       els.next.disabled = !isMatch;
-      // Thêm visual feedback khi gõ đúng
       els.input.style.borderColor = isMatch ? 'var(--success)' : 'var(--border)';
       els.input.style.boxShadow = isMatch ? '0 0 0 7px rgba(16,185,129,0.25)' : '';
     }
 
-    // === HÀM CHUYỂN TIẾP (SỬA LỖI LOGIC) ===
+    // === HÀM CHUYỂN TIẾP ===
     function next() {
       const wordsInSegment = segments[currentIdx].split(/\s+/).filter(w => w).length;
-      typedWords += wordsInSegment; // Tăng tổng số từ mục tiêu đã hoàn thành
-      totalCorrectWords += correctWords; // Tăng tổng số từ đúng
+      typedWords += wordsInSegment; 
+      totalCorrectWords += correctWords; 
       
       currentIdx++;
       const p = (currentIdx / segments.length) * 100;
@@ -1066,30 +1086,25 @@
       }
     }
 
-    // === HÀM CẬP NHẬT THỐNG KÊ (SỬA LỖI LOGIC) ===
+    // === HÀM CẬP NHẬT THỐNG KÊ ===
     function updateStats() {
       const s = Math.floor((Date.now() - startTime) / 1000);
       const m = s / 60;
-      // WPM và ACC sẽ dựa trên tổng số liệu, không tính theo thời gian thực mỗi giây
-      // để tránh nhầm lẫn. Chỉ cập nhật thời gian.
       els.time.textContent = s + 's';
       
-      // WPM và ACC sẽ được tính toán lại ở cuối (hàm end())
-      // Hoặc có thể tính WPM/ACC tạm thời dựa trên 'totalCorrectWords' và 'typedWords'
       const wpm = m > 0 ? Math.round(typedWords / m) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       els.wpm.textContent = wpm;
       els.acc.textContent = acc + '%';
     }
 
-    // === HÀM KẾT THÚC (NÂNG CẤP & SỬA LỖI) ===
+    // === HÀM KẾT THÚC ===
     function end() {
       clearInterval(timer);
       if (isListening) recognition?.stop();
       
-      const s = (Date.now() - startTime) / 1000 / 60; // phút
+      const s = (Date.now() - startTime) / 1000 / 60; 
       
-      // SỬA LỖI: Tính WPM và ACC dựa trên TỔNG SỐ LIỆU
       const wpm = s > 0 ? Math.round(typedWords / s) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       
@@ -1099,7 +1114,7 @@
       const name = playerName.trim() || 'Ẩn danh';
       const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge };
       
-      // 1. Lưu Online
+      // 1. Lưu Online (Firebase)
       saveOnlineScore(entry);
       
       // 2. Cập nhật lịch sử online (tạm thời)
@@ -1107,33 +1122,32 @@
       onlineHistory.sort((a,b) => b.score - a.score);
       if (onlineHistory.length > 100) onlineHistory.pop();
       
-      // 3. NÂNG CẤP: Lưu Local (Cá nhân)
+      // 3. Lưu Local (Cá nhân)
       personalHistory.push(entry);
-      if (personalHistory.length > 10) personalHistory.shift(); // Giữ 10 lần gần nhất
+      if (personalHistory.length > 10) personalHistory.shift(); 
       localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
       
-      // 4. NÂNG CẤP: Lưu điểm cao nhất
+      // 4. Lưu điểm cao nhất
       if (!bestStats || entry.score > bestStats.score) {
           bestStats = entry;
           localStorage.setItem('bestStats', JSON.stringify(bestStats));
       }
 
-      // Cập nhật UI
       els.level.textContent = badge;
       els.levelBadge.textContent = badge;
       els.score.textContent = score;
-      els.wpm.textContent = wpm; // Cập nhật WPM/ACC cuối cùng
+      els.wpm.textContent = wpm; 
       els.acc.textContent = acc + '%';
       
-      updateMainChart(); // Cập nhật biểu đồ ở trang luyện tập
-      renderRankTable(); // Render lại bảng xếp hạng online
+      updateMainChart(); 
+      renderRankTable(); 
       
       alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
     }
 
-    // Biểu đồ ở trang luyện tập (dựa trên 10 lần gần nhất TỪ LỊCH SỬ ONLINE)
+    // Biểu đồ Top 10 Online (trang luyện tập)
     function updateMainChart() {
-      const recent = onlineHistory.slice(0, 10).reverse(); // 10 người điểm cao nhất
+      const recent = onlineHistory.slice(0, 10).reverse(); 
       const ctx = els.mainChart.getContext('2d');
       if (mainChart) mainChart.destroy();
       mainChart = new Chart(ctx, {
@@ -1174,7 +1188,6 @@
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       
-      // Reset toàn bộ
       currentIdx = 0; 
       typedWords = 0; 
       correctWords = 0; 
@@ -1183,7 +1196,7 @@
       
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.aiRateSelect.value);
-      playerName = els.playerName.value.trim(); // LẤY TÊN
+      playerName = els.playerName.value.trim(); 
       
       updateModeButtons();
       startTime = Date.now(); 
@@ -1201,7 +1214,7 @@
     els.input.addEventListener('keydown', e => { 
         if (e.key === 'Enter') { 
             e.preventDefault(); 
-            if (!els.next.disabled) { // Chỉ cho Enter khi đã gõ đúng
+            if (!els.next.disabled) { 
                 next(); 
             }
         } 
@@ -1236,10 +1249,10 @@
       });
     });
 
-    // === NHẬN DIỆN GIỌNG NÓI (NÂNG CẤP) ===
+    // === NHẬN DIỆN GIỌNG NÓI ===
     function initSpeechRecognition() {
-      if (recognition) { // Nếu đã khởi tạo, chỉ cần đảm bảo nó dừng
-         recognition.onend = null; // Xóa listener cũ
+      if (recognition) { 
+         recognition.onend = null; 
          recognition.stop();
       }
       
@@ -1248,8 +1261,8 @@
       
       recognition = new SpeechRecognition();
       recognition.lang = globalLang;
-      recognition.continuous = false; // Chỉ nhận diện 1 lần
-      recognition.interimResults = false; // Chỉ trả về kết quả cuối cùng
+      recognition.continuous = false; 
+      recognition.interimResults = false; 
       
       recognition.onresult = (e) => {
         const transcript = e.results[0][0].transcript.trim().toLowerCase();
@@ -1265,10 +1278,9 @@
           return `<span class="wrong">${w}</span>`;
         }).join(' ');
         
-        correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
+        correctWords = correct; 
         els.feedback.innerHTML = feedback || '<em>Đang nghe...</em>';
         
-        // QUY TẮC MỚI: Phải đọc đúng 100%
         const isMatch = correct === wordsTarget.length && wordsSaid.length === wordsTarget.length;
         els.next.disabled = !isMatch;
         if(isMatch) {
@@ -1303,8 +1315,8 @@
 
     // === TẢI DỮ LIỆU KHI MỞ TRANG ===
     window.addEventListener('load', () => {
-      loadOnlineRank(); // Tải BXH online
-      renderPersonalStats(); // Render thống kê cá nhân (từ localStorage)
+      loadOnlineRank(); // Tải BXH online (Firebase)
+      renderPersonalStats(); // Render thống kê cá nhân (Local)
       setInterval(loadOnlineRank, 60000); // Cập nhật BXH mỗi 60s
     });
   </script>
