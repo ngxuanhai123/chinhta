@@ -18,8 +18,6 @@
   <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
   <style>
     :root {
       --bg: #fff7ed; --card: #ffffff; --text: #1e293b; --muted: #64748b; --border: #fed7aa;
@@ -98,14 +96,6 @@
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: white; border-color: transparent; box-shadow: 0 8px 20px rgba(245,158,11,0.3);
     }
-    .name-box {
-      text-align: center; margin: var(--gap) 0;
-    }
-    .name-box input {
-      padding: 12px 18px; width: 260px; border: 2px solid var(--border); border-radius: 16px;
-      font-size: 1.1rem; text-align: center; background: var(--card);
-    }
-    .name-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 5px rgba(245,158,11,0.2); }
     .setup-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap);
       background: var(--card); border-radius: var(--radius); padding: 32px;
@@ -379,27 +369,15 @@
     .online-status {
       font-size: 0.9rem; color: var(--success); text-align: center; margin-top: 8px;
     }
-    /* Tối ưu giao diện: Tăng padding và max-width để nhìn thấy hết */
-    body { padding: 32px; }
-    .container { max-width: 1400px; }
-    .setup-grid { padding: 48px; }
-    canvas { width: 100%; height: auto; }
+    /* Tối ưu responsive cho các phần dài */
+    .full-translate, #liveFeedback, .segment-box { overflow-x: auto; max-width: 100%; }
   </style>
+  <!-- Thêm Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
-  <div class="modal show" id="startModal">
-    <div class="modal-content">
-      <h3>Nhập Tên Hoặc Nickname</h3>
-      <div class="modal-input">
-        <label>Tên người chơi (không trùng)</label>
-        <input type="text" id="enterPlayerName" placeholder="Nhập tên hoặc nickname..." maxlength="20" />
-      </div>
-      <button class="generate-btn" id="submitNameBtn">Xác nhận</button>
-      <p id="nameError" style="color: var(--danger); text-align: center; margin-top: 10px;"></p>
-    </div>
-  </div>
-
-  <div class="container hidden" id="mainContainer">
+  <div class="container">
     <header>
       <div class="logo">
         <svg viewBox="0 0 100 100">
@@ -556,6 +534,19 @@
       </div>
     </div>
 
+    <div class="modal" id="nameModal">
+      <div class="modal-content">
+        <button class="modal-close" id="closeNameModal">×</button>
+        <h3>Nhập Tên Hoặc Nickname</h3>
+        <div class="modal-input">
+          <label>Tên/nickname người học </label>
+          <input type="text" id="newPlayerName" placeholder="Nhập tên hoặc nickname... để hệ thống đồng bộ và lưu quá trình học của bạn" maxlength="20" />
+        </div>
+        <button class="generate-btn" id="submitNameBtn">Xác nhận</button>
+        <div id="nameError" style="color: var(--danger); margin-top: 10px; display: none;"></div>
+      </div>
+    </div>
+
     <div id="practiceArea" class="tab-content hidden">
       <div class="mode-switcher">
         <button class="mode-btn active" data-mode="read-write">Chép</button>
@@ -615,17 +606,17 @@
     // 1. Cấu hình Firebase của bạn
     const firebaseConfig = {
       apiKey: "AIzaSyBWknPoFq6ny8F_CpeYMu_3N6QEVM3s9Pc",
-      authDomain: "xh-ch-chinhta.firebaseapp.com",
-      databaseURL: "https://xh-ch-chinhta-default-rtdb.firebaseio.com",
-      projectId: "xh-ch-chinhta",
-      storageBucket: "xh-ch-chinhta.firebasestorage.app",
+      authDomain: "xh-chinhta.firebaseapp.com",
+      databaseURL: "https://xh-chinhta-default-rtdb.firebaseio.com",
+      projectId: "xh-chinhta",
+      storageBucket: "xh-chinhta.firebasestorage.app",
       messagingSenderId: "535611478192",
       appId: "1:535611478192:web:c45475177c8dcef8ef6b75",
       measurementId: "G-NCC6MG2HMM"
     };
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.database(app);
-
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    
     const GROQ_KEY = "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";
     
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
@@ -702,33 +693,12 @@
       personalBadge: document.getElementById('personalBadge'),
       mainChart: document.getElementById('mainChart'), // Sửa tên ID canvas gốc từ 'chart'
       personalChart: document.getElementById('personalChart'),
-      startModal: document.getElementById('startModal'),
-      enterPlayerName: document.getElementById('enterPlayerName'),
+      nameModal: document.getElementById('nameModal'),
+      newPlayerName: document.getElementById('newPlayerName'),
       submitNameBtn: document.getElementById('submitNameBtn'),
       nameError: document.getElementById('nameError'),
-      mainContainer: document.getElementById('mainContainer')
+      closeNameModal: document.getElementById('closeNameModal')
     };
-
-    // === TRANG BẮT ĐẦU: KIỂM TRA TÊN UNIQUE ===
-    els.submitNameBtn.addEventListener('click', () => {
-      const name = els.enterPlayerName.value.trim();
-      if (!name) {
-        els.nameError.textContent = 'Vui lòng nhập tên!';
-        return;
-      }
-      db.ref('users/' + name).once('value').then(snapshot => {
-        if (snapshot.exists()) {
-          els.nameError.textContent = 'Tên đã tồn tại! Chọn tên khác.';
-        } else {
-          playerName = name;
-          db.ref('users/' + name).set({ created: new Date().toISOString() });
-          els.startModal.classList.remove('show');
-          els.mainContainer.classList.remove('hidden');
-        }
-      }).catch(() => {
-        els.nameError.textContent = 'Lỗi kết nối server!';
-      });
-    });
 
     // === CHỦ ĐỀ TỐI/SÁNG ===
     function updateThemeIcon() {
@@ -779,20 +749,22 @@
     });
 
     // === ĐỒNG BỘ BẢNG XẾP HẠNG ONLINE ===
-    function loadOnlineRank() {
-      db.ref('ranks').orderByChild('score').limitToLast(100).on('value', snapshot => {
-        onlineHistory = [];
-        snapshot.forEach(child => {
-          onlineHistory.push(child.val());
-        });
-        onlineHistory.reverse(); // Sắp xếp giảm dần score
+    async function loadOnlineRank() {
+      try {
+        const snapshot = await db.ref('rankings').once('value');
+        onlineHistory = Object.values(snapshot.val() || {});
         els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
         renderRankTable(); // Render bảng xếp hạng online
-      });
+      } catch (e) {
+        els.onlineStatus.textContent = "Không kết nối được server online";
+        onlineHistory = [];
+      }
     }
 
-    function saveOnlineScore(entry) {
-      db.ref('ranks').push(entry);
+    async function saveOnlineScore(entry) {
+      try {
+        await db.ref('rankings').push(entry);
+      } catch (e) { console.log("Lỗi lưu online:", e); }
     }
 
     // === BẢNG XẾP HẠNG (ONLINE) ===
@@ -1218,27 +1190,60 @@
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       
-      // Reset toàn bộ
-      currentIdx = 0; 
-      typedWords = 0; 
-      correctWords = 0; 
-      totalCorrectWords = 0;
-      hintsUsed = 0;
-      
-      currentMode = document.querySelector('input[name="mode"]:checked').value;
-      speechRate = parseFloat(els.aiRateSelect.value);
-      
-      updateModeButtons();
-      startTime = Date.now(); 
-      if (timer) clearInterval(timer);
-      timer = setInterval(updateStats, 1000);
-      
-      document.getElementById('setupPanel').classList.add('hidden');
-      document.getElementById('practiceArea').classList.remove('hidden');
-      
-      initSpeechRecognition();
-      showSegment();
+      // Mở modal nhập tên
+      els.nameModal.classList.add('show');
     });
+
+    els.submitNameBtn.addEventListener('click', async () => {
+      const name = els.newPlayerName.value.trim();
+      if (!name) {
+        els.nameError.textContent = 'Vui lòng nhập tên!';
+        els.nameError.style.display = 'block';
+        return;
+      }
+      
+      try {
+        const snapshot = await db.ref('users').orderByChild('name').equalTo(name).once('value');
+        if (snapshot.exists()) {
+          els.nameError.textContent = 'Tên đã tồn tại! Chọn tên khác.';
+          els.nameError.style.display = 'block';
+          return;
+        }
+        
+        // Lưu tên mới vào server
+        await db.ref('users').push({ name });
+        playerName = name;
+        els.nameModal.classList.remove('show');
+        
+        // Tiếp tục bắt đầu luyện tập
+        // Reset toàn bộ
+        currentIdx = 0; 
+        typedWords = 0; 
+        correctWords = 0; 
+        totalCorrectWords = 0;
+        hintsUsed = 0;
+        
+        currentMode = document.querySelector('input[name="mode"]:checked').value;
+        speechRate = parseFloat(els.aiRateSelect.value);
+        
+        updateModeButtons();
+        startTime = Date.now(); 
+        if (timer) clearInterval(timer);
+        timer = setInterval(updateStats, 1000);
+        
+        document.getElementById('setupPanel').classList.add('hidden');
+        document.getElementById('practiceArea').classList.remove('hidden');
+        
+        initSpeechRecognition();
+        showSegment();
+      } catch (e) {
+        els.nameError.textContent = 'Lỗi kết nối server!';
+        els.nameError.style.display = 'block';
+      }
+    });
+
+    els.closeNameModal.addEventListener('click', () => els.nameModal.classList.remove('show'));
+    els.nameModal.addEventListener('click', e => { if (e.target === els.nameModal) els.nameModal.classList.remove('show'); });
 
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { 
