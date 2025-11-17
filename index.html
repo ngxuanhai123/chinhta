@@ -669,30 +669,77 @@
 
   <script>
     // === CẤU HÍNH ===
-    // (MỚI) Chuyển sang Gemini API
-    
-    // ⬇️===================================================================⬇️
-    //   DÁN CHUỖI BASE64 KEY GEMINI (KEY MỚI) CỦA BẠN VÀO ĐÂY
-    //   Lấy Key mới từ Google AI Studio -> Mã hóa Base64 -> Dán vào
-    // ⬇️===================================================================⬇️
-    const OBFUSCATED_GEMINI_KEY = "DÁN_CHUỖI_BASE64_MỚI_CỦA_BẠN_VÀO_ĐÂY";
+// === CẤU HÍNH (KHÔNG CẦN KEY NỮA) ===
+// ⬇️===================================================================⬇️
+//   DÁN URL CỦA DỊCH VỤ RENDER (PROXY) CỦA BẠN VÀO ĐÂY
+//   Ví dụ: https://hihi-gemini-proxy-abcde.onrender.com
+// ⬇️===================================================================⬇️
+const PROXY_SERVER_URL = https://keychinhta1.onrender.com;
 
-    const GEMINI_MODEL_NAME = "gemini-1.5-flash"; // Dùng mô hình Flash cho tốc độ
+// === (MỚI) TẠO VĂN BẢN BẰNG AI (Gọi Proxy Server) ===
+els.generateBtn.addEventListener('click', async () => {
+  // 1. Lấy thông tin prompt
+  const topic = els.aiTopic.value.trim();
+  const keywords = els.aiKeywords.value.trim();
+  const sentences = els.aiSentences.value;
+  const langName = globalLang === 'vi-VN' ? 'Tiếng Việt' : globalLang === 'en-US' ? 'Tiếng Anh' : 'Tiếng Indonesia';
+  
+  // 2. Xây dựng prompt
+  let prompt = '';
+  if (keywords) {
+    prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu, sử dụng các từ khoá sau: "${keywords}". Chỉ trả về đoạn văn, không thêm giải thích.`;
+  } else if (topic) {
+    prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu về chủ đề: "${topic}". Chỉ trả về đoạn văn, không thêm giải thích.`;
+  } else {
+    prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu về một chủ đề thú vị ngẫu nhiên. Chỉ trả về đoạn văn, không thêm giải thích.`;
+  }
+
+  els.generateBtn.disabled = true;
+  els.generateBtn.textContent = "Đang tạo...";
+  els.aiResult.style.display = 'none';
+
+  try {
+    // 3. Gọi Server Proxy (đã ẩn Key)
+    const res = await fetch(`${PROXY_SERVER_URL}/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt: prompt }) // Gửi prompt tới server proxy
+    });
     
-    // (MỚI) Hàm giải mã Base64 (atob)
-    function getGeminiKey() {
-      try {
-        return atob(OBFUSCATED_GEMINI_KEY);
-      } catch (e) {
-        console.error("Lỗi giải mã Key Base64:", e);
-        return null;
-      }
+    const data = await res.json();
+    
+    if (!res.ok) {
+        let errorMsg = data.error || `Lỗi ${res.status}: ${res.statusText}`;
+        if (res.status === 500 && errorMsg.includes("API Key not configured")) {
+             errorMsg = "Lỗi Server: API Key chưa được cài đặt trên Render. Vui lòng kiểm tra lại biến môi trường GEMINI_API_KEY.";
+        }
+        throw new Error(errorMsg);
     }
     
-    const ONLINE_RANK_URL = "https.script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
+    // 4. Xử lý phản hồi (giống như trước)
+    const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
     
-    let globalLang = 'vi-VN', voices = [], selectedVoice = null;
-    let segments = [], currentIdx = 0, startTime, timer;
+    if (!generatedText) {
+        if (data.candidates?.[0]?.finishReason === "SAFETY") {
+            throw new Error("Lỗi: Nội dung bị chặn vì lý do an toàn (Safety Block).");
+        }
+        throw new Error("Không nhận được nội dung (phản hồi trống).");
+    }
+
+    els.text.value = generatedText;
+    els.aiModal.classList.remove('show');
+    alert("Đoạn văn đã được tạo và tự động điền!");
+
+  } catch (err) {
+    els.aiResult.textContent = `Lỗi: ${err.message}`;
+    els.aiResult.style.display = 'block';
+  } finally {
+    els.generateBtn.disabled = false;
+    els.generateBtn.textContent = "✨ Tạo ngay";
+  }
+});
     
     // Biến thống kê
     let typedWords = 0;
@@ -1506,3 +1553,4 @@
   </script>
 </body>
 </html>
+
