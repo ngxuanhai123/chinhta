@@ -13,9 +13,9 @@
     \"display\": \"standalone\",
     \"background_color\": \"#fff7ed\",
     \"theme_color\": \"#f59e0b\",
-    \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
+    \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
   }">
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCB2MjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
@@ -58,9 +58,10 @@
     }
     .tagline { color: var(--muted); font-size: 1.2rem; margin-top: 8px; }
 
-    /* NÚT SÁNG/TỐI */
+    /* NÚT SÁNG/TỐI & ĐĂNG XUẤT */
     .theme-toggle-wrapper {
       position: absolute; top: 16px; right: 16px; z-index: 100;
+      display: flex; gap: 10px;
     }
     .theme-toggle {
       background: var(--primary); color: white; border: 3px solid white;
@@ -72,6 +73,15 @@
     .theme-toggle:hover {
       transform: scale(1.1) rotate(180deg);
       box-shadow: 0 10px 24px rgba(245,158,11,0.5);
+    }
+    #logoutBtn {
+      background: var(--danger);
+      box-shadow: 0 6px 16px rgba(239,68,68,0.4);
+      font-size: 1.6rem;
+    }
+    #logoutBtn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 24px rgba(239,68,68,0.5);
     }
     .theme-toggle .icon { width: 26px; height: 26px; fill: white; }
     .tip { position: relative; display: inline-block; }
@@ -104,6 +114,8 @@
       font-size: 1.1rem; text-align: center; background: var(--card);
     }
     .name-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 5px rgba(245,158,11,0.2); }
+    .name-box input:read-only { background: var(--glass); color: var(--muted); }
+    
     .setup-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap);
       background: var(--card); border-radius: var(--radius); padding: 32px;
@@ -148,6 +160,8 @@
       box-shadow: 0 12px 28px rgba(245,158,11,0.4);
     }
     .start-btn:hover { transform: translateY(-3px); }
+    
+    /* MODAL CHUNG */
     .modal {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
       display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s;
@@ -179,6 +193,8 @@
     .modal-input input:focus, .modal-input select:focus {
       outline: none; border-color: var(--primary);
     }
+    .modal-input p { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+    
     .voice-preview {
       margin-top: 8px; padding: 8px 12px; background: var(--glass); border-radius: 12px;
       font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
@@ -194,6 +210,19 @@
       margin-top: 16px; padding: 14px; background: var(--glass); border-radius: 14px;
       border: 1px solid var(--border); min-height: 60px; display: none; white-space: pre-wrap;
     }
+
+    /* MODAL ĐĂNG NHẬP */
+    .modal-actions {
+      display: flex; gap: 12px; margin-top: 20px;
+    }
+    .modal-actions .btn {
+      flex: 1; padding: 14px; border: none; border-radius: 14px; font-weight: 700;
+      font-size: 1.1rem; cursor: pointer;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: var(--glass); color: var(--text); border: 2px solid var(--border); }
+
+    /* KHU VỰC LUYỆN TẬP */
     #practiceArea, #rankPanel {
       background: var(--card); border-radius: var(--radius); padding: 32px;
       box-shadow: var(--shadow); border: 2px solid var(--border); display: flex;
@@ -390,7 +419,7 @@
         </svg>
         <h1>HiHi</h1>
       </div>
-      <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói – Tạo đoạn văn bằng AI!</p>
+      <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói – Tạo đoạn văn bằng AI! 🚀</p>
 
       <div class="theme-toggle-wrapper">
         <div class="tip">
@@ -399,6 +428,10 @@
             <svg class="icon hidden" viewBox="0 0 24 24" id="moonIcon"><path d="M12 3a9 9 0 1 0 9 9c0-.23-.01-.46-.03-.69a1 1 0 0 0-1.26-.97 5.5 5.5 0 1 1-6.9-6.9 1 1 0 0 0-.97-1.26A8.96 8.96 0 0 0 12 3z"/></svg>
           </button>
           <span class="tiptext">Chuyển sáng/tối</span>
+        </div>
+        <div class="tip hidden" id="logoutBtnWrapper">
+          <button class="theme-toggle" id="logoutBtn">🚪</button>
+          <span class="tiptext">Đăng xuất</span>
         </div>
       </div>
     </header>
@@ -410,8 +443,8 @@
 
     <div class="name-box">
       <div class="tip">
-        <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" />
-        <span class="tiptext">Tên sẽ hiển thị trên bảng xếp hạng. Không nhập = "Ẩn danh"</span>
+        <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" readonly />
+        <span class="tiptext">Tên sẽ hiển thị trên bảng xếp hạng.</span>
       </div>
     </div>
 
@@ -420,7 +453,7 @@
         <div class="setup-item">
           <h3 class="tip">
             <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            Ngôn ngữ luyện tập
+            🌍 Ngôn ngữ luyện tập
           </h3>
           <select id="globalLang">
             <option value="vi-VN">Tiếng Việt (không dịch)</option>
@@ -431,7 +464,7 @@
         <div class="setup-item">
           <h3 class="tip">
             <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-            Chế độ luyện
+            🎮 Chế độ luyện
           </h3>
           <div class="radio-group">
             <label class="radio-label"><input type="radio" name="mode" value="read-write" checked> Chép chính tả</label>
@@ -443,11 +476,11 @@
         <div class="setup-item" style="grid-column:1/-1;">
           <h3 class="tip">
             <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-            Đoạn văn luyện tập
+            ✍️ Đoạn văn luyện tập
           </h3>
           <textarea id="sampleText" rows="5" placeholder="Dán hoặc nhập đoạn văn..."></textarea>
-          <button class="ai-btn" id="openAiModal">Tạo bằng AI</button>
-          <button class="start-btn" id="startBtn">Bắt đầu luyện tập</button>
+          <button class="ai-btn" id="openAiModal">🤖 Tạo bằng AI</button>
+          <button class="start-btn" id="startBtn">▶️ Bắt đầu luyện tập</button>
         </div>
       </div>
     </div>
@@ -505,13 +538,39 @@
 
     </div>
 
+    <div class="modal" id="loginModal">
+      <div class="modal-content">
+        <h3>Chào mừng bạn đến với HiHi! 👋</h3>
+        <div class="modal-input">
+          <label for="usernameInput">Nhập tên của bạn (để lưu thành tích)</label>
+          <input type="text" id="usernameInput" placeholder="Tên của bạn..." maxlength="20" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" id="skipLoginBtn">Bỏ qua (Dùng tên ngẫu nhiên)</button>
+          <button class="btn btn-primary" id="loginBtn">Lưu tên & Bắt đầu</button>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="aiModal">
       <div class="modal-content">
         <button class="modal-close" id="closeAiModal">×</button>
-        <h3>Tạo Đoạn Văn Bằng AI</h3>
+        <h3>🤖 Tạo Đoạn Văn Bằng AI</h3>
+        
         <div class="modal-input">
-          <label>Chủ đề</label>
+          <label for="groqApiKey">Groq API Key (Sửa lỗi 401)</label>
+          <input type="password" id="groqApiKey" placeholder="Dán API Key của bạn (vd: gsk_...)" />
+          <p>Lấy key miễn phí tại <strong>Groq.com</strong>. Key sẽ được lưu trên trình duyệt này.</p>
+        </div>
+        <hr style="border:0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <div class="modal-input">
+          <label for="aiTopic">Chủ đề</label>
           <input type="text" id="aiTopic" placeholder="Ví dụ: Môi trường, Gia đình, Công nghệ..." />
+        </div>
+        <div class="modal-input">
+          <label for="aiKeywords">Hoặc theo từ khoá</label>
+          <input type="text" id="aiKeywords" placeholder="Ví dụ: mèo, trời mưa, hạnh phúc..." />
         </div>
         <div class="modal-input">
           <label>Số câu</label>
@@ -524,7 +583,7 @@
         <div class="modal-input">
           <label>Giọng đọc</label>
           <select id="aiVoice"></select>
-          <div class="voice-preview" id="previewVoice">Nghe thử giọng này</div>
+          <div class="voice-preview" id="previewVoice">🔉 Nghe thử giọng này</div>
         </div>
         <div class="modal-input">
           <label>Tốc độ đọc</label>
@@ -539,7 +598,7 @@
             <option value="2.00">2.00x</option>
           </select>
         </div>
-        <button class="generate-btn" id="generateAiBtn">Tạo ngay</button>
+        <button class="generate-btn" id="generateAiBtn">✨ Tạo ngay</button>
         <div id="aiResult"></div>
       </div>
     </div>
@@ -559,7 +618,7 @@
       </div>
       <div class="segment-box" id="currentSegment"></div>
       <div class="mic-box hidden" id="micBox">
-        <button class="mic-btn" id="micBtn">Micro</button>
+        <button class="mic-btn" id="micBtn">🎤</button>
         <p style="margin-top:12px; color:var(--muted);">Nhấn để bắt đầu đọc to</p>
       </div>
       <div class="full-translate">
@@ -572,9 +631,9 @@
       </div>
       <div id="liveFeedback"><em>Nhập hoặc đọc để bắt đầu...</em></div>
       <div class="action-row">
-        <button class="action-btn btn-replay" id="replayBtn">Nghe lại</button>
-        <button class="action-btn btn-next" id="nextBtn" disabled>Tiếp theo</button>
-        <button class="action-btn btn-reset" id="resetBtn">Làm lại</button>
+        <button class="action-btn btn-replay" id="replayBtn">🔄 Nghe lại</button>
+        <button class="action-btn btn-next" id="nextBtn" disabled>➡️ Tiếp theo</button>
+        <button class="action-btn btn-reset" id="resetBtn">↩️ Làm lại</button>
       </div>
       <div class="stats-row">
         <div class="stat-item"><h4>Thời gian</h4><div class="val" id="time">0s</div></div>
@@ -591,27 +650,33 @@
 
     <footer>
       <div class="intro-box">
-        <p><strong>HiHi là ai?</strong> – Người bạn nhỏ giúp bạn luyện chính tả mỗi ngày!</p>
+        <p><strong>🙋 HiHi là ai?</strong> – Người bạn nhỏ giúp bạn luyện chính tả mỗi ngày!</p>
         <p>Gõ chuẩn, nghe rõ, đọc to rõ ràng. Cùng cố lên nhé!</p>
       </div>
     </footer>
   </div>
 
   <script>
-    // === CẤU HÌNH ===
-    const GROQ_KEY = "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";
+    // === CẤU HÍNH ===
+    // (MỚI) Key dự phòng ngẫu nhiên
+    const FALLBACK_GROQ_KEYS = [
+      "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",
+      "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",
+      "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"
+    ];
+    let groqKey = ""; // Sẽ được tải từ localStorage
     const ONLINE_RANK_URL = "https://script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
     
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
     let segments = [], currentIdx = 0, startTime, timer;
     
-    // Biến thống kê (SỬA LỖI LOGIC)
-    let typedWords = 0; // Tổng số từ mục tiêu (đã gõ/đọc xong)
-    let correctWords = 0; // Số từ đúng cho ĐOẠN HIỆN TẠI
-    let totalCorrectWords = 0; // Tổng số từ đúng (toàn bộ session)
+    // Biến thống kê
+    let typedWords = 0;
+    let correctWords = 0;
+    let totalCorrectWords = 0;
     let hintsUsed = 0;
     
-    // Biến xếp hạng & lịch sử (NÂNG CẤP)
+    // Biến xếp hạng & lịch sử
     let onlineHistory = [];
     let personalHistory = JSON.parse(localStorage.getItem('personalHistory')) || [];
     let bestStats = JSON.parse(localStorage.getItem('bestStats')) || null;
@@ -624,6 +689,12 @@
     let isListening = false;
     let karaokeWords = [];
     let playerName = '';
+
+    // DANH SÁCH NICKNAME NGẪU NHIÊN
+    const coolNicknames = [
+      "Chiến Binh Bàn Phím", "Vua Gõ Chữ", "Thần Tốc", "HiHi Pro", "Ninja Luyện Gõ",
+      "Siêu Anh Hùng Gõ", "Chuyên Gia Chính Tả", "Người Bạn Của Chữ", "Đôi Tay Vàng"
+    ];
 
     const els = {
       lang: document.getElementById('globalLang'),
@@ -652,6 +723,7 @@
       openAi: document.getElementById('openAiModal'),
       closeAi: document.getElementById('closeAiModal'),
       aiTopic: document.getElementById('aiTopic'),
+      aiKeywords: document.getElementById('aiKeywords'),
       aiSentences: document.getElementById('aiSentences'),
       aiVoice: document.getElementById('aiVoice'),
       previewVoice: document.getElementById('previewVoice'),
@@ -667,7 +739,6 @@
       onlineStatus: document.getElementById('onlineStatus'),
       mainTabs: () => document.querySelectorAll('.tab'),
       tabContents: () => document.querySelectorAll('.tab-content'),
-      // NÂNG CẤP: Thêm elements cho tab cá nhân
       subTabBtns: () => document.querySelectorAll('.sub-tab-btn'),
       subTabContents: () => document.querySelectorAll('.sub-tab-content'),
       personalStatsRow: document.getElementById('personalStatsRow'),
@@ -675,9 +746,69 @@
       personalAcc: document.getElementById('personalAcc'),
       personalScore: document.getElementById('personalScore'),
       personalBadge: document.getElementById('personalBadge'),
-      mainChart: document.getElementById('mainChart'), // Sửa tên ID canvas gốc từ 'chart'
-      personalChart: document.getElementById('personalChart')
+      mainChart: document.getElementById('mainChart'),
+      personalChart: document.getElementById('personalChart'),
+      // Elements cho Login
+      loginModal: document.getElementById('loginModal'),
+      usernameInput: document.getElementById('usernameInput'),
+      loginBtn: document.getElementById('loginBtn'),
+      skipLoginBtn: document.getElementById('skipLoginBtn'),
+      logoutBtn: document.getElementById('logoutBtn'),
+      logoutBtnWrapper: document.getElementById('logoutBtnWrapper'),
+      // Element cho API Key
+      groqApiKey: document.getElementById('groqApiKey')
     };
+
+    // === HỆ THỐNG TÀI KHOẢN ===
+    function handleLogin(name) {
+      if (!name) return;
+      playerName = name;
+      localStorage.setItem('hihiUser', JSON.stringify({ name: playerName }));
+      els.playerName.value = playerName;
+      els.playerName.readOnly = true;
+      els.loginModal.classList.remove('show');
+      els.logoutBtnWrapper.classList.remove('hidden');
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('hihiUser');
+      playerName = '';
+      els.playerName.value = '';
+      els.playerName.readOnly = true;
+      els.logoutBtnWrapper.classList.add('hidden');
+      els.loginModal.classList.add('show');
+      els.usernameInput.value = '';
+    }
+
+    els.loginBtn.addEventListener('click', () => {
+      const name = els.usernameInput.value.trim();
+      if (name) {
+        handleLogin(name);
+      } else {
+        alert('Vui lòng nhập tên!');
+      }
+    });
+
+    els.skipLoginBtn.addEventListener('click', () => {
+      const randomName = coolNicknames[Math.floor(Math.random() * coolNicknames.length)];
+      handleLogin(randomName);
+    });
+
+    els.logoutBtn.addEventListener('click', handleLogout);
+
+    function checkLogin() {
+      groqKey = localStorage.getItem('groqApiKey') || ""; // Tải API key đã lưu
+      els.groqApiKey.value = groqKey; // (MỚI) Điền key đã lưu vào ô input
+      
+      const user = localStorage.getItem('hihiUser');
+      if (user) {
+        handleLogin(JSON.parse(user).name);
+      } else {
+        els.loginModal.classList.add('show');
+      }
+    }
+    // === KẾT THÚC HỆ THỐNG TÀI KHOẢN ===
+
 
     // === CHỦ ĐỀ TỐI/SÁNG ===
     function updateThemeIcon() {
@@ -695,7 +826,7 @@
     document.body.setAttribute('data-theme', savedTheme);
     updateThemeIcon();
 
-    // === CHUYỂN TAB (CHÍNH & PHỤ) - NÂNG CẤP ===
+    // === CHUYỂN TAB (CHÍNH & PHỤ) ===
     els.mainTabs().forEach(btn => {
       btn.addEventListener('click', () => {
         const targetId = btn.dataset.tab;
@@ -705,7 +836,6 @@
           c.classList.toggle('hidden', c.id !== targetId);
         });
         if (targetId === 'rankPanel') {
-          // Khi chuyển sang tab xếp hạng, tự động render tab con đang active
           const activeSubTab = document.querySelector('.sub-tab-btn.active').dataset.subtab;
           if (activeSubTab === 'globalRank') renderRankTable();
           else renderPersonalStats();
@@ -721,7 +851,6 @@
         els.subTabContents().forEach(c => {
           c.classList.toggle('hidden', c.id !== targetId);
         });
-        // Render nội dung tương ứng khi click
         if (targetId === 'globalRank') renderRankTable();
         else renderPersonalStats();
       });
@@ -734,7 +863,7 @@
         const data = await res.json();
         onlineHistory = data || [];
         els.onlineStatus.textContent = `Đã tải ${onlineHistory.length} kết quả online`;
-        renderRankTable(); // Render bảng xếp hạng online
+        renderRankTable();
       } catch (e) {
         els.onlineStatus.textContent = "Không kết nối được server online";
         onlineHistory = [];
@@ -789,9 +918,8 @@
       btn.addEventListener('click', () => renderRankTable(btn.dataset.filter));
     });
 
-    // === NÂNG CẤP: THỐNG KÊ CÁ NHÂN (LOCAL) ===
+    // === THỐNG KÊ CÁ NHÂN (LOCAL) ===
     function renderPersonalStats() {
-      // 1. Hiển thị thành tích tốt nhất
       if (bestStats) {
         els.personalWPM.textContent = bestStats.wpm;
         els.personalAcc.textContent = bestStats.acc + '%';
@@ -804,11 +932,10 @@
         els.personalBadge.textContent = 'Mới';
       }
       
-      // 2. Vẽ biểu đồ 10 lần gần nhất
       const ctx = els.personalChart.getContext('2d');
       if (personalChart) personalChart.destroy();
       
-      const recentHistory = [...personalHistory].reverse(); // Đảo ngược để hiển thị từ cũ đến mới
+      const recentHistory = [...personalHistory].reverse();
       
       personalChart = new Chart(ctx, {
         type: 'line',
@@ -837,7 +964,7 @@
               min: 0,
               max: 100,
               title: { display: true, text: 'Chính xác (%)' },
-              grid: { drawOnChartArea: false } // Chỉ hiển thị trục, không hiển thị lưới
+              grid: { drawOnChartArea: false }
             }
           }
         }
@@ -848,11 +975,13 @@
     function loadVoices() {
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(globalLang.split('-')[0]));
       els.aiVoice.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Không có giọng</option>';
-      if (voices.length && !selectedVoice) {
-        const saved = localStorage.getItem('voice');
-        selectedVoice = voices.find(v => v.name === saved) || voices[0];
-        els.aiVoice.value = selectedVoice.name;
-        localStorage.setItem('voice', selectedVoice.name);
+      
+      const saved = localStorage.getItem('voice');
+      // Ưu tiên giọng đã lưu
+      selectedVoice = voices.find(v => v.name === saved) || voices[0];
+      
+      if (selectedVoice) {
+          els.aiVoice.value = selectedVoice.name; // Đặt giá trị <select>
       }
     }
 
@@ -860,7 +989,7 @@
       if (!selectedVoice || currentMode === 'read-only') return;
       speechSynthesis.cancel();
       currentUtterance = new SpeechSynthesisUtterance(text);
-      currentUtterance.voice = selectedVoice;
+      currentUtterance.voice = selectedVoice; // Sử dụng biến toàn cục đã được cập nhật
       currentUtterance.rate = speechRate;
       currentUtterance.lang = globalLang;
       if (onWord) {
@@ -871,6 +1000,15 @@
       speechSynthesis.speak(currentUtterance);
     }
 
+    // (FIX LỖI) Thêm listener để cập nhật giọng đọc khi thay đổi
+    els.aiVoice.addEventListener('change', () => {
+        const voiceName = els.aiVoice.value;
+        selectedVoice = voices.find(v => v.name === voiceName);
+        if (selectedVoice) {
+            localStorage.setItem('voice', selectedVoice.name);
+        }
+    });
+
     els.previewVoice.addEventListener('click', () => {
       const test = globalLang === 'vi-VN' ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.';
       speak(test);
@@ -879,31 +1017,69 @@
     speechSynthesis.onvoiceschanged = loadVoices;
     setTimeout(loadVoices, 100);
 
-    // === TẠO VĂN BẢN BẰNG AI ===
+    // === TẠO VĂN BẢN BẰNG AI (CẬP NHẬT) ===
     els.generateBtn.addEventListener('click', async () => {
-      const topic = els.aiTopic.value.trim() || "một chủ đề thú vị";
+      // 1. Lấy và lưu API Key
+      const userKey = els.groqApiKey.value.trim();
+      let keyToUse = userKey;
+
+      if (userKey) {
+        localStorage.setItem('groqApiKey', userKey);
+        groqKey = userKey; // Cập nhật key toàn cục nếu người dùng nhập
+      } else {
+        // Nếu người dùng không nhập, dùng key đã lưu (nếu có)
+        keyToUse = groqKey;
+      }
+
+      // (MỚI) Nếu vẫn không có key nào, dùng key ngẫu nhiên dự phòng
+      if (!keyToUse) {
+        keyToUse = FALLBACK_GROQ_KEYS[Math.floor(Math.random() * FALLBACK_GROQ_KEYS.length)];
+        console.log("Không tìm thấy key người dùng, sử dụng key dự phòng ngẫu nhiên.");
+      }
+      
+      // 2. Lấy thông tin prompt
+      const topic = els.aiTopic.value.trim();
+      const keywords = els.aiKeywords.value.trim();
       const sentences = els.aiSentences.value;
       const langName = globalLang === 'vi-VN' ? 'Tiếng Việt' : globalLang === 'en-US' ? 'Tiếng Anh' : 'Tiếng Indonesia';
-      const prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu về chủ đề: "${topic}". Chỉ trả về đoạn văn, không thêm giải thích.`;
+      
+      // 3. Xây dựng prompt ưu tiên từ khoá
+      let prompt = '';
+      if (keywords) {
+        prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu, sử dụng các từ khoá sau: "${keywords}". Chỉ trả về đoạn văn, không thêm giải thích.`;
+      } else if (topic) {
+        prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu về chủ đề: "${topic}". Chỉ trả về đoạn văn, không thêm giải thích.`;
+      } else {
+        prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu về một chủ đề thú vị ngẫu nhiên. Chỉ trả về đoạn văn, không thêm giải thích.`;
+      }
 
       els.generateBtn.disabled = true;
       els.generateBtn.textContent = "Đang tạo...";
+      els.aiResult.style.display = 'none';
 
       try {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${GROQ_KEY}`,
+            "Authorization": `Bearer ${keyToUse}`, // Dùng key đã chọn
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
+            model: "llama-3.1-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             max_tokens: 500,
             temperature: 0.7
           })
         });
-        if (!res.ok) throw new Error(`Lỗi ${res.status}`);
+        
+        if (!res.ok) {
+            let errorMsg = `Lỗi ${res.status}: ${res.statusText}.`;
+            if (res.status === 401 || res.status === 403) {
+                errorMsg += " Key API có thể sai hoặc hết hạn. Vui lòng kiểm tra lại trong ô nhập Key.";
+            }
+            throw new Error(errorMsg);
+        }
+        
         const data = await res.json();
         const generatedText = data.choices?.[0]?.message?.content?.trim();
         if (!generatedText) throw new Error("Không nhận được nội dung.");
@@ -916,7 +1092,7 @@
         els.aiResult.style.display = 'block';
       } finally {
         els.generateBtn.disabled = false;
-        els.generateBtn.textContent = "Tạo ngay";
+        els.generateBtn.textContent = "✨ Tạo ngay";
       }
     });
 
@@ -930,28 +1106,25 @@
       } catch { return text; }
     }
 
-    // === HIỂN THỊ ĐOẠN VĂN MỚI (NÂNG CẤP) ===
+    // === HIỂN THỊ ĐOẠN VĂN MỚI ===
     async function showSegment() {
       const text = segments[currentIdx];
       
-      // Reset trạng thái (QUY TẮC MỚI)
       els.next.disabled = true;
       els.input.style.borderColor = 'var(--border)';
       els.input.style.boxShadow = '';
       els.input.value = '';
       els.input.focus();
-      correctWords = 0; // Reset số từ đúng cho đoạn này
+      correctWords = 0;
       
-      // Cập nhật UI theo chế độ
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
       const isReadOnly = currentMode === 'read-only';
       els.input.style.display = isReadOnly ? 'none' : 'block';
       els.hint.style.display = isReadOnly ? 'none' : 'block';
-      els.feedback.style.display = isReadOnly ? 'block' : 'block'; // Luôn hiển thị feedback
+      els.feedback.style.display = isReadOnly ? 'block' : 'block';
       els.segment.classList.toggle('reading-mode', isReadOnly);
       els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
 
-      // Chế độ Nghe-Viết
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>Nghe và gõ...</em>';
         const src = globalLang === 'en-US' ? 'en' : 'id';
@@ -961,7 +1134,6 @@
         return;
       }
 
-      // Chế độ Chép & Đọc (Karaoke)
       const fragment = document.createDocumentFragment();
       const words = text.split(/(\s+|\b)/).filter(w => w.trim() || w === ' ');
       let charIndex = 0;
@@ -1020,12 +1192,11 @@
       if (word) word.classList.add('karaoke-active');
     }
 
-    // Helper chuẩn hóa text để so sánh (QUY TẮC MỚI)
     function normalizeText(text) {
         return text.trim().replace(/\s+/g, ' ').toLowerCase();
     }
 
-    // === CẬP NHẬT PHẢN HỒI GÕ (NÂNG CẤP) ===
+    // === CẬP NHẬT PHẢN HỒI GÕ ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
@@ -1037,22 +1208,20 @@
         else if (w.toLowerCase() === oWords[i].toLowerCase()) { correct++; html += `<span class="correct">${w}</span> `; }
         else html += `<span class="wrong">${w}</span> `;
       });
-      correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
+      correctWords = correct;
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
-      // QUY TẮC MỚI: Phải gõ đúng 100% mới cho qua
       const isMatch = normalizeText(input) === normalizeText(orig);
       els.next.disabled = !isMatch;
-      // Thêm visual feedback khi gõ đúng
       els.input.style.borderColor = isMatch ? 'var(--success)' : 'var(--border)';
       els.input.style.boxShadow = isMatch ? '0 0 0 7px rgba(16,185,129,0.25)' : '';
     }
 
-    // === HÀM CHUYỂN TIẾP (SỬA LỖI LOGIC) ===
+    // === HÀM CHUYỂN TIẾP ===
     function next() {
       const wordsInSegment = segments[currentIdx].split(/\s+/).filter(w => w).length;
-      typedWords += wordsInSegment; // Tăng tổng số từ mục tiêu đã hoàn thành
-      totalCorrectWords += correctWords; // Tăng tổng số từ đúng
+      typedWords += wordsInSegment;
+      totalCorrectWords += correctWords;
       
       currentIdx++;
       const p = (currentIdx / segments.length) * 100;
@@ -1066,30 +1235,25 @@
       }
     }
 
-    // === HÀM CẬP NHẬT THỐNG KÊ (SỬA LỖI LOGIC) ===
+    // === HÀM CẬP NHẬT THỐNG KÊ ===
     function updateStats() {
       const s = Math.floor((Date.now() - startTime) / 1000);
       const m = s / 60;
-      // WPM và ACC sẽ dựa trên tổng số liệu, không tính theo thời gian thực mỗi giây
-      // để tránh nhầm lẫn. Chỉ cập nhật thời gian.
       els.time.textContent = s + 's';
       
-      // WPM và ACC sẽ được tính toán lại ở cuối (hàm end())
-      // Hoặc có thể tính WPM/ACC tạm thời dựa trên 'totalCorrectWords' và 'typedWords'
       const wpm = m > 0 ? Math.round(typedWords / m) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       els.wpm.textContent = wpm;
       els.acc.textContent = acc + '%';
     }
 
-    // === HÀM KẾT THÚC (NÂNG CẤP & SỬA LỖI) ===
+    // === HÀM KẾT THÚC ===
     function end() {
       clearInterval(timer);
       if (isListening) recognition?.stop();
       
       const s = (Date.now() - startTime) / 1000 / 60; // phút
       
-      // SỬA LỖI: Tính WPM và ACC dựa trên TỔNG SỐ LIỆU
       const wpm = s > 0 ? Math.round(typedWords / s) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       
@@ -1099,41 +1263,36 @@
       const name = playerName.trim() || 'Ẩn danh';
       const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge };
       
-      // 1. Lưu Online
       saveOnlineScore(entry);
       
-      // 2. Cập nhật lịch sử online (tạm thời)
       onlineHistory.push(entry);
       onlineHistory.sort((a,b) => b.score - a.score);
       if (onlineHistory.length > 100) onlineHistory.pop();
       
-      // 3. NÂNG CẤP: Lưu Local (Cá nhân)
       personalHistory.push(entry);
-      if (personalHistory.length > 10) personalHistory.shift(); // Giữ 10 lần gần nhất
+      if (personalHistory.length > 10) personalHistory.shift();
       localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
       
-      // 4. NÂNG CẤP: Lưu điểm cao nhất
       if (!bestStats || entry.score > bestStats.score) {
           bestStats = entry;
           localStorage.setItem('bestStats', JSON.stringify(bestStats));
       }
 
-      // Cập nhật UI
       els.level.textContent = badge;
       els.levelBadge.textContent = badge;
       els.score.textContent = score;
-      els.wpm.textContent = wpm; // Cập nhật WPM/ACC cuối cùng
+      els.wpm.textContent = wpm;
       els.acc.textContent = acc + '%';
       
-      updateMainChart(); // Cập nhật biểu đồ ở trang luyện tập
-      renderRankTable(); // Render lại bảng xếp hạng online
+      updateMainChart();
+      renderRankTable();
       
       alert(`Hoàn thành!\nTên: ${name}\nTốc độ: ${wpm} WPM\nChính xác: ${acc}%\nĐiểm: ${score}\nCấp: ${badge}`);
     }
 
-    // Biểu đồ ở trang luyện tập (dựa trên 10 lần gần nhất TỪ LỊCH SỬ ONLINE)
+    // Biểu đồ ở trang luyện tập
     function updateMainChart() {
-      const recent = onlineHistory.slice(0, 10).reverse(); // 10 người điểm cao nhất
+      const recent = onlineHistory.slice(0, 10).reverse();
       const ctx = els.mainChart.getContext('2d');
       if (mainChart) mainChart.destroy();
       mainChart = new Chart(ctx, {
@@ -1174,7 +1333,6 @@
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       
-      // Reset toàn bộ
       currentIdx = 0; 
       typedWords = 0; 
       correctWords = 0; 
@@ -1183,7 +1341,6 @@
       
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.aiRateSelect.value);
-      playerName = els.playerName.value.trim(); // LẤY TÊN
       
       updateModeButtons();
       startTime = Date.now(); 
@@ -1201,7 +1358,7 @@
     els.input.addEventListener('keydown', e => { 
         if (e.key === 'Enter') { 
             e.preventDefault(); 
-            if (!els.next.disabled) { // Chỉ cho Enter khi đã gõ đúng
+            if (!els.next.disabled) {
                 next(); 
             }
         } 
@@ -1222,6 +1379,7 @@
     els.reset.addEventListener('click', () => location.reload());
 
     els.openAi.addEventListener('click', () => {
+      els.groqApiKey.value = groqKey; // Điền key đã lưu khi mở
       els.aiModal.classList.add('show');
       loadVoices();
     });
@@ -1236,10 +1394,10 @@
       });
     });
 
-    // === NHẬN DIỆN GIỌNG NÓI (NÂNG CẤP) ===
+    // === NHẬN DIỆN GIỌNG NÓI ===
     function initSpeechRecognition() {
-      if (recognition) { // Nếu đã khởi tạo, chỉ cần đảm bảo nó dừng
-         recognition.onend = null; // Xóa listener cũ
+      if (recognition) {
+         recognition.onend = null;
          recognition.stop();
       }
       
@@ -1248,8 +1406,8 @@
       
       recognition = new SpeechRecognition();
       recognition.lang = globalLang;
-      recognition.continuous = false; // Chỉ nhận diện 1 lần
-      recognition.interimResults = false; // Chỉ trả về kết quả cuối cùng
+      recognition.continuous = false;
+      recognition.interimResults = false;
       
       recognition.onresult = (e) => {
         const transcript = e.results[0][0].transcript.trim().toLowerCase();
@@ -1265,10 +1423,9 @@
           return `<span class="wrong">${w}</span>`;
         }).join(' ');
         
-        correctWords = correct; // Cập nhật số từ đúng của ĐOẠN NÀY
+        correctWords = correct;
         els.feedback.innerHTML = feedback || '<em>Đang nghe...</em>';
         
-        // QUY TẮC MỚI: Phải đọc đúng 100%
         const isMatch = correct === wordsTarget.length && wordsSaid.length === wordsTarget.length;
         els.next.disabled = !isMatch;
         if(isMatch) {
@@ -1303,9 +1460,10 @@
 
     // === TẢI DỮ LIỆU KHI MỞ TRANG ===
     window.addEventListener('load', () => {
-      loadOnlineRank(); // Tải BXH online
-      renderPersonalStats(); // Render thống kê cá nhân (từ localStorage)
-      setInterval(loadOnlineRank, 60000); // Cập nhật BXH mỗi 60s
+      checkLogin(); // KIỂM TRA ĐĂNG NHẬP
+      loadOnlineRank();
+      renderPersonalStats();
+      setInterval(loadOnlineRank, 60000);
     });
   </script>
 </body>
