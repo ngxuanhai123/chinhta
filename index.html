@@ -15,12 +15,12 @@
     \"theme_color\": \"#f59e0b\",
     \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
   }">
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aGggZD0iTTI1IgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg: #fff7ed; --card: #ffffff; --text: #1e293b; --muted: #64748b; --border: #fed7aa;
+      --bg: #fff7ed; --card: #ffffff; --text: #1e2gsk_oKfgqxYb3SzlpMTzCQF9WGdyb3FYpUoT75TuHeIFfQUNMvxJEQ0493b; --muted: #64748b; --border: #fed7aa;
       --primary: #f59e0b; --primary-light: #fbbf24; --success: #10b981; --danger: #ef4444;
       --hint: #8b5cf6; --translate: #3b82f6; --glass: rgba(255,255,255,0.9);
       --shadow: 0 20px 40px rgba(245,158,11,0.15); --radius: 28px; --gap: 24px;
@@ -195,6 +195,17 @@
       outline: none; border-color: var(--primary);
     }
     .modal-input p { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+
+    /* (MỚI) CSS Grid cho AI Modal */
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .modal-grid .modal-grid-full {
+      grid-column: 1 / -1;
+    }
     
     .voice-preview {
       margin-top: 8px; padding: 8px 12px; background: var(--glass); border-radius: 12px;
@@ -558,47 +569,46 @@
         <button class="modal-close" id="closeAiModal">×</button>
         <h3>🤖 Tạo Đoạn Văn Bằng AI</h3>
         
-        <div class="modal-input" style="display: none;">
-          <label for="groqApiKey">Groq API Key (Sửa lỗi 401)</label>
-          <input type="password" id="groqApiKey" placeholder="Dán API Key của bạn (vd: gsk_...)" />
-          <p>Lấy key miễn phí tại <strong>Groq.com</strong>. Key sẽ được lưu trên trình duyệt này.</p>
-        </div>
-        <hr style="display: none; border:0; border-top: 1px solid var(--border); margin: 20px 0;">
+        <div class="modal-grid">
+            <div class="modal-input modal-grid-full">
+              <label for="aiTopic">Chủ đề</label>
+              <input type="text" id="aiTopic" placeholder="Ví dụ: Môi trường, Gia đình, Công nghệ..." />
+            </div>
+            <div class="modal-input modal-grid-full">
+              <label for="aiKeywords">Hoặc theo từ khoá</label>
+              <input type="text" id="aiKeywords" placeholder="Ví dụ: mèo, trời mưa, hạnh phúc..." />
+            </div>
 
-        <div class="modal-input">
-          <label for="aiTopic">Chủ đề</label>
-          <input type="text" id="aiTopic" placeholder="Ví dụ: Môi trường, Gia đình, Công nghệ..." />
+            <div class="modal-input">
+              <label>Số câu</label>
+              <select id="aiSentences">
+                <option value="3">3 câu (ngắn)</option>
+                <option value="5" selected>5 câu (trung bình)</option>
+                <option value="8">8 câu (dài)</option>
+              </select>
+            </div>
+
+            <div class="modal-input">
+              <label>Tốc độ đọc</label>
+              <select id="aiRateSelect">
+                <option value="0.25">0.25x</option>
+                <option value="0.50">0.50x</option>
+                <option value="0.75">0.75x</option>
+                <option value="1.00" selected>1.00x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.50">1.50x</option>
+                <option value="1.75">1.75x</option>
+                <option value="2.00">2.00x</option>
+              </select>
+            </div>
+
+            <div class="modal-input modal-grid-full">
+              <label>Giọng đọc</label>
+              <select id="aiVoice"></select>
+              <div class="voice-preview" id="previewVoice">🔉 Nghe thử giọng này</div>
+            </div>
         </div>
-        <div class="modal-input">
-          <label for="aiKeywords">Hoặc theo từ khoá</label>
-          <input type="text" id="aiKeywords" placeholder="Ví dụ: mèo, trời mưa, hạnh phúc..." />
-        </div>
-        <div class="modal-input">
-          <label>Số câu</label>
-          <select id="aiSentences">
-            <option value="3">3 câu (ngắn)</option>
-            <option value="5" selected>5 câu (trung bình)</option>
-            <option value="8">8 câu (dài)</option>
-          </select>
-        </div>
-        <div class="modal-input">
-          <label>Giọng đọc</label>
-          <select id="aiVoice"></select>
-          <div class="voice-preview" id="previewVoice">🔉 Nghe thử giọng này</div>
-        </div>
-        <div class="modal-input">
-          <label>Tốc độ đọc</label>
-          <select id="aiRateSelect">
-            <option value="0.25">0.25x</option>
-            <option value="0.50">0.50x</option>
-            <option value="0.75">0.75x</option>
-            <option value="1.00" selected>1.00x</option>
-            <option value="1.25">1.25x</option>
-            <option value="1.50">1.50x</option>
-            <option value="1.75">1.75x</option>
-            <option value="2.00">2.00x</option>
-          </select>
-        </div>
+        
         <button class="generate-btn" id="generateAiBtn">✨ Tạo ngay</button>
         <div id="aiResult"></div>
       </div>
@@ -659,25 +669,21 @@
 
   <script>
     // === CẤU HÍNH ===
-    // (MỚI) Key dự phòng ngẫu nhiên
-    const FALLBACK_GROQ_KEYS = [
-      "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",
-      "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",
-      "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"
-    ];
-    // let groqKey = ""; // SỬA LỖI: Đã xóa, không cần lưu key của người dùng nữa
+    // (ĐÃ XÓA) Key dự phòng (đã chuyển lên Server Proxy)
+    // (ĐÃ XÓA) Biến groqKey
+    
+    // (MỚI) URL Server Proxy (Đã ẩn Key)
+    // Đảm bảo URL này CHÍNH XÁC là URL Render của bạn
+    const PROXY_SERVER_URL = "https://keychinhta.onrender.com";
+    const AI_ENDPOINT = PROXY_SERVER_URL + "/api/generate-ai";
+    
     const ONLINE_RANK_URL = "https://script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
     
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
     let segments = [], currentIdx = 0, startTime, timer;
     
-    // Biến thống kê
-    let typedWords = 0;
-    let correctWords = 0;
-    let totalCorrectWords = 0;
-    let hintsUsed = 0;
+    let typedWords = 0, correctWords = 0, totalCorrectWords = 0, hintsUsed = 0;
     
-    // Biến xếp hạng & lịch sử
     let onlineHistory = [];
     let personalHistory = JSON.parse(localStorage.getItem('personalHistory')) || [];
     let bestStats = JSON.parse(localStorage.getItem('bestStats')) || null;
@@ -691,7 +697,6 @@
     let karaokeWords = [];
     let playerName = '';
 
-    // DANH SÁCH NICKNAME NGẪU NHIÊN
     const coolNicknames = [
       "Chiến Binh Bàn Phím", "Vua Gõ Chữ", "Thần Tốc", "HiHi Pro", "Ninja Luyện Gõ",
       "Siêu Anh Hùng Gõ", "Chuyên Gia Chính Tả", "Người Bạn Của Chữ", "Đôi Tay Vàng"
@@ -749,14 +754,13 @@
       personalBadge: document.getElementById('personalBadge'),
       mainChart: document.getElementById('mainChart'),
       personalChart: document.getElementById('personalChart'),
-      // Elements cho Login
       loginModal: document.getElementById('loginModal'),
       usernameInput: document.getElementById('usernameInput'),
       loginBtn: document.getElementById('loginBtn'),
       skipLoginBtn: document.getElementById('skipLoginBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
-      logoutBtnWrapper: document.getElementById('logoutBtnWrapper'),
-      // SỬA LỖI: Đã xóa groqApiKey element
+      logoutBtnWrapper: document.getElementById('logoutBtnWrapper')
+      // (ĐÃ XÓA) groqApiKey
     };
 
     // === HỆ THỐNG TÀI KHOẢN ===
@@ -797,7 +801,7 @@
     els.logoutBtn.addEventListener('click', handleLogout);
 
     function checkLogin() {
-      // SỬA LỖI: Đã xóa logic tải và hiển thị groqKey
+      // (ĐÃ XÓA) Logic tải API key
       
       const user = localStorage.getItem('hihiUser');
       if (user) {
@@ -976,11 +980,10 @@
       els.aiVoice.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Không có giọng</option>';
       
       const saved = localStorage.getItem('voice');
-      // Ưu tiên giọng đã lưu
       selectedVoice = voices.find(v => v.name === saved) || voices[0];
       
       if (selectedVoice) {
-          els.aiVoice.value = selectedVoice.name; // Đặt giá trị <select>
+          els.aiVoice.value = selectedVoice.name;
       }
     }
 
@@ -988,7 +991,7 @@
       if (!selectedVoice || currentMode === 'read-only') return;
       speechSynthesis.cancel();
       currentUtterance = new SpeechSynthesisUtterance(text);
-      currentUtterance.voice = selectedVoice; // Sử dụng biến toàn cục đã được cập nhật
+      currentUtterance.voice = selectedVoice;
       currentUtterance.rate = speechRate;
       currentUtterance.lang = globalLang;
       if (onWord) {
@@ -999,7 +1002,6 @@
       speechSynthesis.speak(currentUtterance);
     }
 
-    // (FIX LỖI) Thêm listener để cập nhật giọng đọc khi thay đổi
     els.aiVoice.addEventListener('change', () => {
         const voiceName = els.aiVoice.value;
         selectedVoice = voices.find(v => v.name === voiceName);
@@ -1016,19 +1018,15 @@
     speechSynthesis.onvoiceschanged = loadVoices;
     setTimeout(loadVoices, 100);
 
-    // === TẠO VĂN BẢN BẰNG AI (CẬP NHẬT) ===
+    // === (CẬP NHẬT) TẠO VĂN BẢN BẰNG AI (Qua Server Proxy) ===
     els.generateBtn.addEventListener('click', async () => {
-      // SỬA LỖI: Bỏ qua key của người dùng, luôn dùng key dự phòng
-      const keyToUse = FALLBACK_GROQ_KEYS[Math.floor(Math.random() * FALLBACK_GROQ_KEYS.length)];
-      console.log("Sử dụng key dự phòng ngẫu nhiên.");
-      
-      // 2. Lấy thông tin prompt
+      // 1. Lấy thông tin prompt
       const topic = els.aiTopic.value.trim();
       const keywords = els.aiKeywords.value.trim();
       const sentences = els.aiSentences.value;
       const langName = globalLang === 'vi-VN' ? 'Tiếng Việt' : globalLang === 'en-US' ? 'Tiếng Anh' : 'Tiếng Indonesia';
       
-      // 3. Xây dựng prompt ưu tiên từ khoá
+      // 2. Xây dựng prompt
       let prompt = '';
       if (keywords) {
         prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu, sử dụng các từ khoá sau: "${keywords}". Chỉ trả về đoạn văn, không thêm giải thích.`;
@@ -1043,35 +1041,29 @@
       els.aiResult.style.display = 'none';
 
       try {
-        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        // 3. Gọi đến Server Proxy (Key đã được ẩn)
+        const res = await fetch(AI_ENDPOINT, {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${keyToUse}`, // Dùng key đã chọn
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            model: "llama-3.1-70b-versatile",
-            messages: [{ role: "user", content: prompt }],
-            max_tokens: 500,
-            temperature: 0.7
-          })
+          body: JSON.stringify({ prompt: prompt })
         });
         
         if (!res.ok) {
-            let errorMsg = `Lỗi ${res.status}: ${res.statusText}.`;
-            if (res.status === 401 || res.status === 403) {
-                errorMsg += " Key API dự phòng có thể đã hết hạn. Vui lòng thử lại sau.";
-            }
-            throw new Error(errorMsg);
+            // Lấy lỗi từ Server Proxy
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Lỗi ${res.status}: Không kết nối được Server Proxy.`);
         }
         
         const data = await res.json();
-        const generatedText = data.choices?.[0]?.message?.content?.trim();
-        if (!generatedText) throw new Error("Không nhận được nội dung.");
+        const generatedText = data.result?.trim(); // Lấy từ 'result'
+        if (!generatedText) throw new Error("Không nhận được nội dung từ Server.");
 
         els.text.value = generatedText;
         els.aiModal.classList.remove('show');
         alert("Đoạn văn đã được tạo và tự động điền!");
+
       } catch (err) {
         els.aiResult.textContent = `Lỗi: ${err.message}`;
         els.aiResult.style.display = 'block';
@@ -1178,19 +1170,23 @@
     }
 
     function normalizeText(text) {
-        return text.trim().replace(/\s+/g, ' ').toLowerCase();
+        // (SỬA LỖI BUG PHỤ) Loại bỏ dấu câu khi so sánh
+        return text.trim().replace(/[.,!?:;'"“”()[\]{}]/g, '').replace(/\s+/g, ' ').toLowerCase();
     }
 
     // === CẬP NHẬT PHẢN HỒI GÕ ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
-      const oWords = orig.replace(/[.,!?:;'"“”()[\]{}]/g, '').split(/\s+/).filter(w => w);
-      const iWords = input.replace(/[.,!?:;'"“”()[\]{}]/g, '').split(/\s+/).filter(w => w);
+      
+      // (SỬA LỖI BUG PHỤ) Chuẩn hóa cả hai văn bản trước khi chia từ
+      const oWords = normalizeText(orig).split(/\s+/).filter(w => w);
+      const iWords = normalizeText(input).split(/\s+/).filter(w => w);
+      
       let html = '', correct = 0;
       iWords.forEach((w, i) => {
         if (i >= oWords.length) html += `<span class="wrong">${w}</span> `;
-        else if (w.toLowerCase() === oWords[i].toLowerCase()) { correct++; html += `<span class="correct">${w}</span> `; }
+        else if (w === oWords[i]) { correct++; html += `<span class="correct">${w}</span> `; }
         else html += `<span class="wrong">${w}</span> `;
       });
       correctWords = correct;
@@ -1204,7 +1200,7 @@
 
     // === HÀM CHUYỂN TIẾP ===
     function next() {
-      const wordsInSegment = segments[currentIdx].split(/\s+/).filter(w => w).length;
+      const wordsInSegment = normalizeText(segments[currentIdx]).split(/\s+/).filter(w => w).length;
       typedWords += wordsInSegment;
       totalCorrectWords += correctWords;
       
@@ -1350,8 +1346,8 @@
     });
 
     els.hint.addEventListener('click', () => {
-      const words = segments[currentIdx].split(/\s+/).filter(w => w);
-      const typed = els.input.value.trim().split(/\s+/).filter(w => w);
+      const words = normalizeText(segments[currentIdx]).split(/\s+/).filter(w => w);
+      const typed = normalizeText(els.input.value).split(/\s+/).filter(w => w);
       if (typed.length < words.length) {
         const nextWord = words[typed.length];
         els.feedback.innerHTML += ` <span style="color:#8b5cf6; font-weight:700;">→ ${nextWord}</span>`;
@@ -1364,7 +1360,7 @@
     els.reset.addEventListener('click', () => location.reload());
 
     els.openAi.addEventListener('click', () => {
-      // SỬA LỖI: Đã xóa logic điền API key
+      // (ĐÃ XÓA) Logic điền key
       els.aiModal.classList.add('show');
       loadVoices();
     });
@@ -1395,10 +1391,9 @@
       recognition.interimResults = false;
       
       recognition.onresult = (e) => {
-        // SỬA LỖI (BUG PHỤ): Loại bỏ dấu câu trước khi so sánh
-        const puncRegex = /[.,!?:;'"“”()[\]{}]/g;
-        const transcript = e.results[0][0].transcript.trim().toLowerCase().replace(puncRegex, '');
-        const target = segments[currentIdx].toLowerCase().replace(puncRegex, '');
+        // (SỬA LỖI BUG PHỤ) Chuẩn hóa cả hai văn bản
+        const transcript = normalizeText(e.results[0][0].transcript);
+        const target = normalizeText(segments[currentIdx]);
         
         const wordsTarget = target.split(/\s+/).filter(w => w);
         const wordsSaid = transcript.split(/\s+/).filter(w => w);
@@ -1413,7 +1408,7 @@
         correctWords = correct;
         els.feedback.innerHTML = feedback || '<em>Đang nghe...</em>';
         
-        const isMatch = correct === wordsTarget.length && wordsSaid.length === wordsTarget.length;
+        const isMatch = (correct === wordsTarget.length) && (wordsSaid.length === wordsTarget.length);
         els.next.disabled = !isMatch;
         if(isMatch) {
             els.feedback.innerHTML += "<br><em>(Tuyệt vời! Nhấn 'Tiếp theo')</em>";
