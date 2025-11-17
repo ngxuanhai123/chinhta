@@ -16,7 +16,7 @@
     \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
   }">
   <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
@@ -491,7 +491,7 @@
             ✍️ Đoạn văn luyện tập
           </h3>
           <textarea id="sampleText" rows="5" placeholder="Dán hoặc nhập đoạn văn..."></textarea>
-          <button class="ai-btn" id="openAiModal">🤖 Tạo bằng AI</button>
+          <button class="ai-btn" id="openAiModal">🤖 Tạo bằng AI (Gemini)</button>
           <button class="start-btn" id="startBtn">▶️ Bắt đầu luyện tập</button>
         </div>
       </div>
@@ -567,7 +567,7 @@
     <div class="modal" id="aiModal">
       <div class="modal-content">
         <button class="modal-close" id="closeAiModal">×</button>
-        <h3>🤖 Tạo Đoạn Văn Bằng AI</h3>
+        <h3>🤖 Tạo Đoạn Văn Bằng AI (Gemini)</h3>
         
         <div class="modal-grid">
             <div class="modal-input modal-grid-full">
@@ -669,26 +669,27 @@
 
   <script>
     // === CẤU HÍNH ===
-    // (MỚI) Key được "giấu" bằng Base64.
-    // CẢNH BÁO: Đây KHÔNG an toàn 100%. Chỉ che mắt người dùng thường.
-    const OBFUSCATED_KEYS = [
-      'Z3NrX2J5akJNemIycUFxU0NScktteGFIV0dkeWIzRllwOURYS0ExQk1BVkRmRnFHbmZMYnc5N3Y=', // key 1
-      'Z3NrX0ZtNDk3UGZ3YnpJVnlQY2dkZ0t0V0dkeWIzRllsNXNLeGlwdExyVmo1SkZwVVZhOVROTVk=', // key 2
-      'Z3NrX3dSczlnUjQ3MDBXWlZJWTFXQWk0V0dkeWIzRlltMDNTRUhvdG0zWTFDbUcyQ2NLaTd4eDI='  // key 3
-    ];
+    // (MỚI) Chuyển sang Gemini API
     
-    // (MỚI) Hàm giải mã Base64 (atob) và chọn Key ngẫu nhiên
-    function getGroqKey() {
-      const obfuscatedKey = OBFUSCATED_KEYS[Math.floor(Math.random() * OBFUSCATED_KEYS.length)];
+    // ⬇️===================================================================⬇️
+    //   DÁN CHUỖI BASE64 KEY GEMINI (KEY MỚI) CỦA BẠN VÀO ĐÂY
+    //   Lấy Key mới từ Google AI Studio -> Mã hóa Base64 -> Dán vào
+    // ⬇️===================================================================⬇️
+    const OBFUSCATED_GEMINI_KEY = "DÁN_CHUỖI_BASE64_MỚI_CỦA_BẠN_VÀO_ĐÂY";
+
+    const GEMINI_MODEL_NAME = "gemini-1.5-flash"; // Dùng mô hình Flash cho tốc độ
+    
+    // (MỚI) Hàm giải mã Base64 (atob)
+    function getGeminiKey() {
       try {
-        return atob(obfuscatedKey);
+        return atob(OBFUSCATED_GEMINI_KEY);
       } catch (e) {
         console.error("Lỗi giải mã Key Base64:", e);
         return null;
       }
     }
     
-    const ONLINE_RANK_URL = "https://script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
+    const ONLINE_RANK_URL = "https.script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
     
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
     let segments = [], currentIdx = 0, startTime, timer;
@@ -778,7 +779,6 @@
       skipLoginBtn: document.getElementById('skipLoginBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
       logoutBtnWrapper: document.getElementById('logoutBtnWrapper')
-      // (ĐÃ XÓA) groqApiKey
     };
 
     // === HỆ THỐNG TÀI KHOẢN ===
@@ -819,8 +819,6 @@
     els.logoutBtn.addEventListener('click', handleLogout);
 
     function checkLogin() {
-      // (ĐÃ XÓA) Logic tải API key
-      
       const user = localStorage.getItem('hihiUser');
       if (user) {
         handleLogin(JSON.parse(user).name);
@@ -1038,13 +1036,15 @@
     speechSynthesis.onvoiceschanged = loadVoices;
     setTimeout(loadVoices, 100);
 
-    // === (CẬP NHẬT) TẠO VĂN BẢN BẰNG AI (Trực tiếp bằng Key "giấu") ===
+    // === (MỚI) TẠO VĂN BẢN BẰNG AI (Dùng Gemini) ===
     els.generateBtn.addEventListener('click', async () => {
-      // 1. Lấy Key đã giải mã, ngẫu nhiên
-      const keyToUse = getGroqKey();
+      // 1. Lấy Key Gemini đã giải mã
+      const keyToUse = getGeminiKey();
       if (!keyToUse) {
-        els.aiResult.textContent = "Lỗi: Không thể giải mã API Key.";
+        const errorMsg = "Lỗi: API Key (Gemini) bị trống. Vui lòng dán Key đã mã hóa Base64 vào biến OBFUSCATED_GEMINI_KEY.";
+        els.aiResult.textContent = errorMsg;
         els.aiResult.style.display = 'block';
+        console.error(errorMsg);
         return;
       }
 
@@ -1068,41 +1068,56 @@
       els.generateBtn.textContent = "Đang tạo...";
       els.aiResult.style.display = 'none';
 
+      // 4. Cấu trúc URL và Body cho Gemini API
+      const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL_NAME}:generateContent?key=${keyToUse}`;
+      
+      const requestBody = {
+        "contents": [
+          { "parts": [{ "text": prompt }] }
+        ],
+        "generationConfig": {
+          "temperature": 0.7,
+          "maxOutputTokens": 500
+        }
+      };
+
       try {
-        // 4. Gọi trực tiếp Groq API
-        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        // 5. Gọi trực tiếp Gemini API
+        const res = await fetch(GEMINI_API_URL, {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${keyToUse}`, // Dùng key đã giải mã
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            // ✅ (MỚI) Sử dụng model hiện hành của Groq
-            model: "llama-3.1-8b-instant", 
-            messages: [{ role: "user", content: prompt }],
-            max_tokens: 500,
-            temperature: 0.7
-          })
+          body: JSON.stringify(requestBody)
         });
         
+        const data = await res.json();
+        
         if (!res.ok) {
-            const errorData = await res.json();
-            let errorMsg = errorData.error?.message || `Lỗi ${res.status}: ${res.statusText}`;
-            if (res.status === 401 || res.status === 403) {
-                errorMsg = "Lỗi: Một trong các API Key của bạn sai hoặc hết hạn. Vui lòng kiểm tra lại Key.";
-            } else if (errorData.error?.code === "model_not_found") {
-                errorMsg = "Lỗi: Model AI (llama-3.1-8b-instant) không tồn tại. Groq có thể đã thay đổi model.";
+            let errorMsg = data.error?.message || `Lỗi ${res.status}: ${res.statusText}`;
+            if (res.status === 400) {
+                 errorMsg = "Lỗi: Yêu cầu không hợp lệ (Bad Request). Có thể API Key của bạn chưa được kích hoạt cho Gemini API.";
+            } else if (res.status === 403) {
+                errorMsg = "Lỗi: API Key sai, bị vô hiệu hóa hoặc đã bị lộ. Vui lòng tạo Key MỚI và mã hóa lại.";
             }
             throw new Error(errorMsg);
         }
         
-        const data = await res.json();
-        const generatedText = data.choices?.[0]?.message?.content?.trim();
-        if (!generatedText) throw new Error("Không nhận được nội dung.");
+        // 6. Xử lý phản hồi của Gemini (khác với Groq/OpenAI)
+        const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        
+        if (!generatedText) {
+            // Trường hợp Gemini chặn nội dung (Safety)
+            if (data.candidates?.[0]?.finishReason === "SAFETY") {
+                throw new Error("Lỗi: Nội dung bị chặn vì lý do an toàn (Safety Block).");
+            }
+            throw new Error("Không nhận được nội dung (phản hồi trống).");
+        }
 
         els.text.value = generatedText;
         els.aiModal.classList.remove('show');
         alert("Đoạn văn đã được tạo và tự động điền!");
+
       } catch (err) {
         els.aiResult.textContent = `Lỗi: ${err.message}`;
         els.aiResult.style.display = 'block';
@@ -1218,7 +1233,6 @@
       const orig = segments[currentIdx];
       const input = els.input.value;
       
-      // (SỬA LỖI BUG PHỤ) Chuẩn hóa cả hai văn bản trước khi chia từ
       const oWords = normalizeText(orig).split(/\s+/).filter(w => w);
       // Sử dụng normalizeText nhưng giữ lại khoảng trắng cuối nếu có
       const iWords = normalizeText(input.replace(/ $/, ' \u00A0')).split(/\s+/).filter(w => w);
