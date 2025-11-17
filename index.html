@@ -15,7 +15,7 @@
     \"theme_color\": \"#f59e0b\",
     \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
   }">
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aGggZD0iTTI1IgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
@@ -40,7 +40,8 @@
     header {
       background: var(--card); border-radius: var(--radius); padding: 32px 24px;
       text-align: center; box-shadow: var(--shadow); border: 2px solid var(--border);
-      position: relative; overflow: hidden;
+      position: relative; 
+      /* overflow: hidden; */ /* <-- SỬA LỖI: Đã xóa overflow: hidden để tooltip hiển thị */
     }
     header::before {
       content: ''; position: absolute; top:0; left:0; right:0; height:8px;
@@ -557,12 +558,12 @@
         <button class="modal-close" id="closeAiModal">×</button>
         <h3>🤖 Tạo Đoạn Văn Bằng AI</h3>
         
-        <div class="modal-input">
+        <div class="modal-input" style="display: none;">
           <label for="groqApiKey">Groq API Key (Sửa lỗi 401)</label>
           <input type="password" id="groqApiKey" placeholder="Dán API Key của bạn (vd: gsk_...)" />
           <p>Lấy key miễn phí tại <strong>Groq.com</strong>. Key sẽ được lưu trên trình duyệt này.</p>
         </div>
-        <hr style="border:0; border-top: 1px solid var(--border); margin: 20px 0;">
+        <hr style="display: none; border:0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <div class="modal-input">
           <label for="aiTopic">Chủ đề</label>
@@ -664,7 +665,7 @@
       "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",
       "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"
     ];
-    let groqKey = ""; // Sẽ được tải từ localStorage
+    // let groqKey = ""; // SỬA LỖI: Đã xóa, không cần lưu key của người dùng nữa
     const ONLINE_RANK_URL = "https://script.google.com/macros/s/AKfycbxz2f5j8c3Z6x8z9v7w6t5r4e3d2c1b0a9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g/exec";
     
     let globalLang = 'vi-VN', voices = [], selectedVoice = null;
@@ -755,8 +756,7 @@
       skipLoginBtn: document.getElementById('skipLoginBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
       logoutBtnWrapper: document.getElementById('logoutBtnWrapper'),
-      // Element cho API Key
-      groqApiKey: document.getElementById('groqApiKey')
+      // SỬA LỖI: Đã xóa groqApiKey element
     };
 
     // === HỆ THỐNG TÀI KHOẢN ===
@@ -797,8 +797,7 @@
     els.logoutBtn.addEventListener('click', handleLogout);
 
     function checkLogin() {
-      groqKey = localStorage.getItem('groqApiKey') || ""; // Tải API key đã lưu
-      els.groqApiKey.value = groqKey; // (MỚI) Điền key đã lưu vào ô input
+      // SỬA LỖI: Đã xóa logic tải và hiển thị groqKey
       
       const user = localStorage.getItem('hihiUser');
       if (user) {
@@ -1019,23 +1018,9 @@
 
     // === TẠO VĂN BẢN BẰNG AI (CẬP NHẬT) ===
     els.generateBtn.addEventListener('click', async () => {
-      // 1. Lấy và lưu API Key
-      const userKey = els.groqApiKey.value.trim();
-      let keyToUse = userKey;
-
-      if (userKey) {
-        localStorage.setItem('groqApiKey', userKey);
-        groqKey = userKey; // Cập nhật key toàn cục nếu người dùng nhập
-      } else {
-        // Nếu người dùng không nhập, dùng key đã lưu (nếu có)
-        keyToUse = groqKey;
-      }
-
-      // (MỚI) Nếu vẫn không có key nào, dùng key ngẫu nhiên dự phòng
-      if (!keyToUse) {
-        keyToUse = FALLBACK_GROQ_KEYS[Math.floor(Math.random() * FALLBACK_GROQ_KEYS.length)];
-        console.log("Không tìm thấy key người dùng, sử dụng key dự phòng ngẫu nhiên.");
-      }
+      // SỬA LỖI: Bỏ qua key của người dùng, luôn dùng key dự phòng
+      const keyToUse = FALLBACK_GROQ_KEYS[Math.floor(Math.random() * FALLBACK_GROQ_KEYS.length)];
+      console.log("Sử dụng key dự phòng ngẫu nhiên.");
       
       // 2. Lấy thông tin prompt
       const topic = els.aiTopic.value.trim();
@@ -1075,7 +1060,7 @@
         if (!res.ok) {
             let errorMsg = `Lỗi ${res.status}: ${res.statusText}.`;
             if (res.status === 401 || res.status === 403) {
-                errorMsg += " Key API có thể sai hoặc hết hạn. Vui lòng kiểm tra lại trong ô nhập Key.";
+                errorMsg += " Key API dự phòng có thể đã hết hạn. Vui lòng thử lại sau.";
             }
             throw new Error(errorMsg);
         }
@@ -1379,7 +1364,7 @@
     els.reset.addEventListener('click', () => location.reload());
 
     els.openAi.addEventListener('click', () => {
-      els.groqApiKey.value = groqKey; // Điền key đã lưu khi mở
+      // SỬA LỖI: Đã xóa logic điền API key
       els.aiModal.classList.add('show');
       loadVoices();
     });
@@ -1410,8 +1395,10 @@
       recognition.interimResults = false;
       
       recognition.onresult = (e) => {
-        const transcript = e.results[0][0].transcript.trim().toLowerCase();
-        const target = segments[currentIdx].toLowerCase();
+        // SỬA LỖI (BUG PHỤ): Loại bỏ dấu câu trước khi so sánh
+        const puncRegex = /[.,!?:;'"“”()[\]{}]/g;
+        const transcript = e.results[0][0].transcript.trim().toLowerCase().replace(puncRegex, '');
+        const target = segments[currentIdx].toLowerCase().replace(puncRegex, '');
         
         const wordsTarget = target.split(/\s+/).filter(w => w);
         const wordsSaid = transcript.split(/\s+/).filter(w => w);
