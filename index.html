@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HiHi - Luyện Chính Tả Thông Minh</title>
+  <title>HiHi - Luyện Chính Tả Thông Minh (Xmas Edition)</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke.">
   <meta name="theme-color" content="#f59e0b">
-  <link href="https://googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   
   <style>
     :root {
+      /* MẶC ĐỊNH (CAM) */
       --bg: #fff7ed;
       --card: #ffffff; --text: #1e293b; --muted: #64748b; --border: #fed7aa;
       --primary: #f59e0b; --primary-light: #fbbf24; --success: #10b981; --danger: #ef4444;
@@ -18,22 +19,71 @@
       --glass: rgba(255,255,255,0.9);
       --shadow: 0 20px 40px rgba(245,158,11,0.15); --radius: 28px; --gap: 24px;
       --karaoke: #f59e0b; --karaoke-bg: rgba(245,158,11,0.2);
+      --header-gradient: linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a, #fbbf24, #f59e0b);
+      --font-logo: 'Poppins', sans-serif;
     }
+
     [data-theme="dark"] {
       --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --muted: #94a3b8;
       --border: #334155;
       --glass: rgba(30,41,59,0.8); --shadow: 0 20px 40px rgba(0,0,0,0.3);
       --karaoke-bg: rgba(245,158,11,0.3);
+      --header-gradient: linear-gradient(90deg, #f59e0b, #fbbf24, #78350f, #fbbf24, #f59e0b);
     }
+
+    /* --- GIAO DIỆN GIÁNG SINH & NĂM MỚI --- */
+    [data-theme="holiday"] {
+      --bg: #0f2b1d; /* Xanh lá đậm rừng thông */
+      --card: #ffffff; 
+      --text: #1e293b; 
+      --muted: #475569;
+      --border: #ef4444; /* Đỏ giáng sinh */
+      --primary: #d90429; /* Đỏ rực */
+      --primary-light: #ef233c;
+      --success: #166534; 
+      --danger: #b91c1c;
+      --hint: #6d28d9; 
+      --translate: #0284c7;
+      --glass: rgba(255, 255, 255, 0.95);
+      --shadow: 0 20px 40px rgba(220, 38, 38, 0.25);
+      --karaoke: #d90429;
+      --karaoke-bg: rgba(217, 4, 41, 0.15);
+      --header-gradient: repeating-linear-gradient(45deg, #ef4444, #ef4444 10px, #ffffff 10px, #ffffff 20px, #16a34a 20px, #16a34a 30px);
+      --font-logo: 'Mountains of Christmas', cursive;
+    }
+    /* Khi Dark mode + Holiday */
+    [data-theme="holiday-dark"] {
+      --bg: #1a1010; /* Đỏ đen tối */
+      --card: #2a1818; --text: #ffe4e6; --muted: #fda4af;
+      --border: #991b1b;
+      --primary: #fbbf24; /* Vàng ánh kim */
+      --primary-light: #fcd34d;
+      --glass: rgba(40, 20, 20, 0.9);
+      --shadow: 0 20px 40px rgba(0,0,0,0.5);
+      --karaoke-bg: rgba(251, 191, 36, 0.2);
+      --header-gradient: linear-gradient(90deg, #b91c1c, #166534, #b91c1c);
+      --font-logo: 'Mountains of Christmas', cursive;
+    }
+
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text);
       min-height: 100vh; padding: 16px; line-height: 1.6; transition: 0.4s;
-      padding-top: 60px;
+      padding-top: 60px; overflow-x: hidden;
     }
     .container { max-width: 1200px; margin: 0 auto; display: flex;
-      flex-direction: column; gap: var(--gap); position: relative; }
+      flex-direction: column; gap: var(--gap); position: relative; z-index: 10; }
     
+    /* TUYẾT RƠI */
+    .snowflake {
+      position: fixed; top: 0; z-index: 1;
+      color: #fff; font-size: 1em; font-family: Arial;
+      text-shadow: 0 0 1px #000; pointer-events: none;
+      animation: fall linear forwards; display: none;
+    }
+    [data-theme*="holiday"] .snowflake { display: block; }
+    @keyframes fall { to { transform: translateY(105vh); } }
+
     /* BROWSER WARNING */
     #browserWarning {
       position: fixed; top: 0; left: 0; width: 100%;
@@ -51,28 +101,35 @@
       background: var(--card);
       border-radius: var(--radius); padding: 32px 24px;
       text-align: center; box-shadow: var(--shadow); border: 2px solid var(--border);
-      position: relative; 
+      position: relative; overflow: hidden;
     }
     header::before {
       content: '';
       position: absolute; top:0; left:0; right:0; height:8px;
-      background: linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a, #fbbf24, #f59e0b);
+      background: var(--header-gradient);
     }
+    /* Trang trí Giáng sinh Header */
+    .xmas-decor {
+      display: none; position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+      font-size: 3rem; z-index: 0; pointer-events: none; opacity: 0.8;
+    }
+    [data-theme*="holiday"] .xmas-decor { display: block; }
+
     .logo {
       display: flex; align-items: center; justify-content: center; gap: 16px;
-      flex-wrap: wrap;
+      flex-wrap: wrap; position: relative; z-index: 1;
     }
     .logo svg { width: 64px; height: 64px; fill: var(--primary); animation: float 3s ease-in-out infinite; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
     .logo h1 {
-      font-family: 'Poppins', sans-serif;
+      font-family: var(--font-logo);
       font-size: 2.5rem; font-weight: 700;
-      background: linear-gradient(90deg, #f59e0b, #d97706);
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .tagline { color: var(--muted); font-size: 1.2rem; margin-top: 8px; }
+    .tagline { color: var(--muted); font-size: 1.2rem; margin-top: 8px; position: relative; z-index: 1;}
 
-    /* NÚT SÁNG/TỐI & ĐĂNG XUẤT */
+    /* NÚT SÁNG/TỐI & ĐĂNG XUẤT & HOLIDAY */
     .theme-toggle-wrapper {
       position: absolute; top: 16px; right: 16px; z-index: 100;
       display: flex; gap: 10px;
@@ -81,20 +138,23 @@
       background: var(--primary); color: white; border: 3px solid white;
       width: 50px; height: 50px; border-radius: 50%; display: flex;
       align-items: center; justify-content: center; cursor: pointer;
-      box-shadow: 0 6px 16px rgba(245,158,11,0.4); transition: all 0.3s ease;
-      font-size: 1.3rem;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: all 0.3s ease;
+      font-size: 1.3rem; position: relative;
     }
     .theme-toggle:hover {
-      transform: scale(1.1) rotate(180deg);
-      box-shadow: 0 10px 24px rgba(245,158,11,0.5);
+      transform: scale(1.1) rotate(15deg);
     }
     #logoutBtn {
       background: var(--danger);
-      box-shadow: 0 6px 16px rgba(239,68,68,0.4); font-size: 1.6rem;
     }
-    #logoutBtn:hover {
-      transform: scale(1.1); box-shadow: 0 10px 24px rgba(239,68,68,0.5);
+    #holidayBtn {
+      background: #16a34a; /* Green for Holiday Btn */
     }
+    [data-theme*="holiday"] #holidayBtn {
+      background: #dc2626; /* Red when active */
+      border-color: #fbbf24;
+    }
+
     .theme-toggle .icon { width: 26px; height: 26px; fill: white; }
     .tip { position: relative; display: inline-block; }
     .tip .tiptext {
@@ -112,12 +172,12 @@
     .tab {
       padding: 14px 28px; background: var(--glass); border: 2px solid var(--border);
       border-radius: 18px; font-weight: 600; cursor: pointer; font-size: 1.2rem;
-      display: flex; align-items: center; gap: 8px; transition: 0.4s;
+      display: flex; align-items: center; gap: 8px; transition: 0.4s; color: var(--text);
     }
     .tab.active {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: white; border-color: transparent;
-      box-shadow: 0 8px 20px rgba(245,158,11,0.3);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     .name-box { text-align: center; margin: var(--gap) 0; }
     .name-box input {
@@ -139,7 +199,7 @@
       background: var(--glass); border-radius: 20px; padding: 24px;
       border: 1px solid var(--border); transition: 0.4s;
     }
-    .setup-item:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(245,158,11,0.2); }
+    .setup-item:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
     .setup-item h3 {
       display: flex; align-items: center; gap: 10px; color: var(--primary);
       font-size: 1.25rem; margin-bottom: 14px; font-weight: 700;
@@ -228,9 +288,9 @@
       background: var(--glass); padding: 32px; border-radius: 20px;
       border: 3px dashed var(--primary);
       font-size: 1.5rem; line-height: 2; text-align: center; min-height: 140px; font-weight: 600;
-      user-select: none; overflow: hidden; position: relative;
+      user-select: none; overflow: hidden; position: relative; color: var(--text);
     }
-    .segment-box.reading-mode { border-style: solid; border-color: #10b981; }
+    .segment-box.reading-mode { border-style: solid; border-color: var(--success); }
     .karaoke-word {
       transition: all 0.2s ease; padding: 2px 4px; border-radius: 6px;
       display: inline-block; position: relative; cursor: pointer;
@@ -288,7 +348,7 @@
     #liveFeedback {
       margin-top: 16px; padding: 18px; background: var(--glass); border-radius: 16px;
       border: 1px solid var(--border); font-family: 'Courier New', monospace; font-size: 1.2rem;
-      min-height: 60px; white-space: pre-wrap;
+      min-height: 60px; white-space: pre-wrap; color: var(--text);
     }
     .correct { color: var(--success); font-weight: 700; }
     .wrong { color: var(--danger); text-decoration: line-through; }
@@ -321,12 +381,12 @@
     .stat-item .val { font-size: 2rem; font-weight: 700; color: var(--primary); }
     .level-badge {
       display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px;
-      border-radius: 30px; font-weight: 700; font-size: 1.1rem; background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      border-radius: 30px; font-weight: 700; font-size: 1.1rem; background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: white; margin: 20px auto; box-shadow: 0 8px 20px rgba(245,158,11,0.4);
     }
     canvas { margin-top: 24px; border-radius: 20px; background: var(--card); padding: 20px; border: 1px solid var(--border); }
     .hidden { display: none !important; }
-    footer { text-align: center; padding: 32px 16px; color: var(--muted); font-size: 1rem; }
+    footer { text-align: center; padding: 32px 16px; color: var(--muted); font-size: 1rem; position: relative; z-index: 10; }
     .intro-box {
       background: var(--glass); border-radius: 18px; padding: 20px; max-width: 600px; margin: 0 auto;
       border: 1px solid var(--border); box-shadow: 0 6px 16px rgba(0,0,0,0.1);
@@ -340,6 +400,8 @@
   </style>
 </head>
 <body>
+  <div id="snowContainer"></div>
+
   <div id="browserWarning">
     <span>⚠️ Web chạy tốt nhất trên Chrome/EDGE ở Windows</span>
     <span class="close-warn" onclick="document.getElementById('browserWarning').style.display='none'">&times;</span>
@@ -347,23 +409,31 @@
 
   <div class="container">
     <header>
+      <div class="xmas-decor">🎄</div>
       <div class="logo">
         <svg viewBox="0 0 100 100">
           <rect x="20" y="30" width="60" height="40" rx="5" fill="currentColor" />
           <path d="M25 40 h10 v20 h-10 z M40 40 h10 v20 h-10 z M55 40 h10 v20 h-10 z" fill="#fff" />
           <path d="M85 20 L90 70 L95 20" stroke="#fff" stroke-width="5" stroke-linecap="round" />
         </svg>
-        <h1>HiHi</h1>
+        <h1>HiHi <span style="font-size:0.6em; opacity:0.8;">2026</span></h1>
       </div>
       <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói! 🚀</p>
 
       <div class="theme-toggle-wrapper">
         <div class="tip">
+            <button class="theme-toggle" id="holidayBtn">
+              🎄
+            </button>
+            <span class="tiptext">Giao diện Giáng Sinh</span>
+        </div>
+
+        <div class="tip">
           <button class="theme-toggle" id="themeBtn">
             <svg class="icon" viewBox="0 0 24 24" id="sunIcon"><path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm8-7a1 1 0 0 1 0 2h-2a1 1 0 1 1 0-2h2zm-16 0a1 1 0 0 1 0 2H2a1 1 0 1 1 0-2h2zM5.64 5.64a1 1 0 0 1 1.42 0l1.41 1.41a1 1 0 1 1-1.42 1.42L5.64 6.06a1 1 0 0 1 0-1.42zm12.72 0a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.42l1.41-1.41a1 1 0 0 1 1.42 0zM5.64 18.36a1 1 0 0 1 0-1.42l1.41-1.41a1 1 0 1 1 1.42 1.42l-1.41 1.41a1 1 0 0 1-1.42 0zm12.72 0a1 1 0 0 1-1.42 0l-1.41-1.41a1 1 0 1 1 1.42-1.42l1.41 1.41a1 1 0 0 1 0 1.42zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>
             <svg class="icon hidden" viewBox="0 0 24 24" id="moonIcon"><path d="M12 3a9 9 0 1 0 9 9c0-.23-.01-.46-.03-.69a1 1 0 0 0-1.26-.97 5.5 5.5 0 1 1-6.9-6.9 1 1 0 0 0-.97-1.26A8.96 8.96 0 0 0 12 3z"/></svg>
           </button>
-          <span class="tiptext">Chuyển sáng/tối</span>
+          <span class="tiptext">Chuyển Sáng/Tối</span>
         </div>
         <div class="tip hidden" id="logoutBtnWrapper">
           <button class="theme-toggle" id="logoutBtn">🚪</button>
@@ -528,7 +598,7 @@
     <footer>
       <div class="intro-box">
         <p><strong>🙋 HiHi là ai?</strong> – Người bạn nhỏ giúp bạn luyện chính tả mỗi ngày!</p>
-        <p>Gõ chuẩn, nghe rõ, đọc to rõ ràng. Cùng cố lên nhé!</p>
+        <p>Chào mừng năm mới 2026! Cùng cố lên nhé!</p>
       </div>
     </footer>
   </div>
@@ -590,6 +660,7 @@
       next: document.getElementById('nextBtn'),
       reset: document.getElementById('resetBtn'),
       theme: document.getElementById('themeBtn'),
+      holidayBtn: document.getElementById('holidayBtn'), // Nút Giáng Sinh
       sun: document.getElementById('sunIcon'),
       moon: document.getElementById('moonIcon'),
       voiceSelect: document.getElementById('voiceSelect'),
@@ -645,13 +716,94 @@
       else els.loginModal.classList.add('show');
     }
     
-    // === CHỦ ĐỀ ===
-    function updateThemeIcon() {
-      const isDark = document.body.getAttribute('data-theme') === 'dark';
-      els.sun.classList.toggle('hidden', isDark);
-      els.moon.classList.toggle('hidden', !isDark);
+    // === CHỦ ĐỀ & GIÁNG SINH ===
+    function createSnowflakes() {
+        const snowContainer = document.getElementById('snowContainer');
+        snowContainer.innerHTML = '';
+        for (let i = 0; i < 30; i++) {
+            const flake = document.createElement('div');
+            flake.className = 'snowflake';
+            flake.textContent = ['❄', '❅', '❆'][Math.floor(Math.random() * 3)];
+            flake.style.left = Math.random() * 100 + 'vw';
+            flake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            flake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            flake.style.opacity = Math.random();
+            flake.style.animationDelay = Math.random() * 5 + 's';
+            snowContainer.appendChild(flake);
+        }
     }
-    
+
+    function isHolidaySeason() {
+        const now = new Date();
+        const month = now.getMonth(); // 0 = Jan, 11 = Dec
+        const date = now.getDate();
+        const year = now.getFullYear();
+        
+        // Từ 15/11 (Tháng 10 JS) hoặc Tháng 12 hoặc Tháng 1 năm 2026
+        if (month === 10 && date >= 15) return true;
+        if (month === 11) return true;
+        if (year === 2026 && month === 0) return true;
+        
+        return false;
+    }
+
+    function applyTheme(themeMode) {
+        // themeMode có thể là: 'light', 'dark', 'holiday'
+        const body = document.body;
+        const isDarkPreferred = localStorage.getItem('baseTheme') === 'dark';
+
+        if (themeMode === 'holiday') {
+            body.setAttribute('data-theme', isDarkPreferred ? 'holiday-dark' : 'holiday');
+        } else {
+            body.setAttribute('data-theme', isDarkPreferred ? 'dark' : 'light');
+        }
+
+        // Cập nhật icon
+        els.sun.classList.toggle('hidden', isDarkPreferred);
+        els.moon.classList.toggle('hidden', !isDarkPreferred);
+        
+        // Nếu đang ở mode holiday, cập nhật UI
+        if (themeMode === 'holiday') {
+            createSnowflakes();
+        }
+    }
+
+    function toggleBaseTheme() {
+        const current = localStorage.getItem('baseTheme') === 'dark' ? 'dark' : 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('baseTheme', next);
+        
+        const isHolidayOn = localStorage.getItem('isHoliday') === 'true';
+        applyTheme(isHolidayOn ? 'holiday' : next);
+    }
+
+    function toggleHolidayMode() {
+        const isCurrentlyOn = localStorage.getItem('isHoliday') === 'true';
+        const nextState = !isCurrentlyOn;
+        localStorage.setItem('isHoliday', nextState);
+        
+        const base = localStorage.getItem('baseTheme') || 'light';
+        applyTheme(nextState ? 'holiday' : base);
+    }
+
+    function initTheme() {
+        // Mặc định base theme
+        if (!localStorage.getItem('baseTheme')) localStorage.setItem('baseTheme', 'light');
+
+        // Kiểm tra tự động Giáng Sinh
+        if (isHolidaySeason()) {
+            // Nếu chưa từng set holiday, tự động bật
+            if (localStorage.getItem('autoHolidaySet') !== 'true') {
+                localStorage.setItem('isHoliday', 'true');
+                localStorage.setItem('autoHolidaySet', 'true');
+            }
+        }
+        
+        const isHoliday = localStorage.getItem('isHoliday') === 'true';
+        const base = localStorage.getItem('baseTheme');
+        applyTheme(isHoliday ? 'holiday' : base);
+    }
+
     // === TABS ===
     function setupTabs(tabButtons, tabContents) {
         tabButtons.forEach(btn => {
@@ -717,7 +869,6 @@
     }
     
     // === DỊCH THUẬT ===
-    // 1. Dịch toàn bộ câu (Chỉ để hiểu ý chính)
     async function translateFull(text, src) {
       if (!text.trim() || globalLang === 'vi-VN') return text;
       try {
@@ -727,13 +878,11 @@
       } catch { return text; }
     }
 
-    // 2. Dịch từng từ riêng biệt (Khi di chuột)
     async function translateSingleWord(word, targetElement) {
         if (globalLang === 'vi-VN') return;
         const cleanWord = word.replace(/[.,!?;:"()]/g, "").trim().toLowerCase();
         if (!cleanWord) return;
 
-        // Kiểm tra cache trước
         if (wordCache[cleanWord]) {
             targetElement.textContent = wordCache[cleanWord];
             return;
@@ -774,7 +923,6 @@
       
       const srcLang = globalLang.split('-')[0];
       
-      // TIẾN TRÌNH 1: Dịch toàn bộ
       if (globalLang !== 'vi-VN') {
           els.fullTrans.innerHTML = '<em>Đang dịch...</em>';
           translateFull(text, srcLang).then(trans => {
@@ -790,16 +938,13 @@
         return;
       }
 
-      // Xử lý hiển thị từ
       const fragment = document.createDocumentFragment();
-      // Regex giữ dấu câu và khoảng trắng
       const wordsAndSpace = text.split(/([^\s\w]+|\s+)/).filter(w => w !== ""); 
       
       let charIndex = 0;
       karaokeWords = [];
 
       wordsAndSpace.forEach(part => {
-          // Nếu là khoảng trắng hoặc dấu câu thuần túy thì không tạo tooltip
           if (!part.trim() || /^[.,!?;:"()]+$/.test(part)) {
               fragment.appendChild(document.createTextNode(part));
               charIndex += part.length;
@@ -812,14 +957,11 @@
           span.dataset.start = charIndex;
           span.dataset.end = charIndex + part.length;
           
-          // TIẾN TRÌNH 2: Tạo tooltip rỗng, sẽ dịch khi hover
           if (globalLang !== 'vi-VN') {
               const tooltip = document.createElement('div');
               tooltip.className = 'word-tooltip';
-              tooltip.textContent = ""; // Chưa dịch
+              tooltip.textContent = "";
               span.appendChild(tooltip);
-              
-              // Sự kiện dịch khi hover
               span.addEventListener('mouseenter', () => translateSingleWord(part, tooltip));
           }
 
@@ -902,7 +1044,6 @@
       const name = playerName.trim() || 'Ẩn danh';
       const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge, sentences: totalSentences };
       
-      // Lưu cục bộ
       personalHistory.push(entry);
       if (personalHistory.length > 10) personalHistory.shift();
       localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
@@ -966,12 +1107,11 @@
     els.skipLoginBtn.addEventListener('click', () => handleLogin(coolNicknames[Math.floor(Math.random() * coolNicknames.length)]));
     els.logoutBtn.addEventListener('click', handleLogout);
 
-    els.theme.addEventListener('click', () => {
-      const isDark = document.body.getAttribute('data-theme') === 'dark';
-      document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      localStorage.setItem('theme', isDark ? 'light' : 'dark');
-      updateThemeIcon();
-    });
+    // Nút Đổi Theme Cơ bản (Sáng/Tối)
+    els.theme.addEventListener('click', toggleBaseTheme);
+
+    // Nút Bật/Tắt Chế độ Giáng Sinh
+    els.holidayBtn.addEventListener('click', toggleHolidayMode);
 
     setupTabs(els.mainTabs(), els.tabContents());
 
@@ -998,7 +1138,6 @@
       currentIdx = 0; typedWords = 0; correctWords = 0; totalCorrectWords = 0; hintsUsed = 0; totalSentences = segments.length;
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       
-      // Cập nhật lại speedRate từ selector mới
       speechRate = parseFloat(els.voiceRateSelect.value);
       
       els.modeBtns().forEach(btn => btn.classList.toggle('active', btn.dataset.mode === currentMode));
@@ -1041,8 +1180,7 @@
     });
 
     // === 6. KHỞI CHẠY ===
-    document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
-    updateThemeIcon();
+    initTheme(); // Khởi tạo theme (bao gồm check ngày)
     els.lang.value = globalLang;
     
     window.addEventListener('load', () => {
