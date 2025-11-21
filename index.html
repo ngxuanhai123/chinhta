@@ -3,443 +3,455 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HiHi - Luyện Chính Tả Thông Minh (Xmas Edition)</title>
+  <title>HiHi - Luyện Chính Tả Thông Minh (Modern Edition)</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke.">
-  <meta name="theme-color" content="#f59e0b">
-  <link href="https://googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#8b5cf6">
+  <link href="https://googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Outfit:wght@400;600;800&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   
   <style>
     :root {
-      /* MẶC ĐỊNH (CAM) */
-      --bg: #fff7ed;
-      --card: #ffffff; --text: #1e293b; --muted: #64748b; --border: #fed7aa;
-      --primary: #f59e0b; --primary-light: #fbbf24; --success: #10b981; --danger: #ef4444;
-      --hint: #8b5cf6; --translate: #3b82f6;
-      --glass: rgba(255,255,255,0.9);
-      --shadow: 0 20px 40px rgba(245,158,11,0.15); --radius: 28px; --gap: 24px;
-      --karaoke: #f59e0b; --karaoke-bg: rgba(245,158,11,0.2);
-      --header-gradient: linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a, #fbbf24, #f59e0b);
-      --font-logo: 'Poppins', sans-serif;
-    }
+      /* --- MÀU SẮC HIỆN ĐẠI (DEFAULT) --- */
+      --bg-gradient: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                     radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                     radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      --bg-color: #0f172a;
+      
+      --glass-surface: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.4);
+      --glass-blur: 20px;
 
-    [data-theme="dark"] {
-      --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --muted: #94a3b8;
-      --border: #334155;
-      --glass: rgba(30,41,59,0.8); --shadow: 0 20px 40px rgba(0,0,0,0.3);
-      --karaoke-bg: rgba(245,158,11,0.3);
-      --header-gradient: linear-gradient(90deg, #f59e0b, #fbbf24, #78350f, #fbbf24, #f59e0b);
-    }
-
-    /* --- GIAO DIỆN GIÁNG SINH & NĂM MỚI --- */
-    [data-theme="holiday"] {
-      --bg: #0f2b1d; /* Xanh lá đậm rừng thông */
-      --card: #ffffff; 
       --text: #1e293b; 
-      --muted: #475569;
-      --border: #ef4444; /* Đỏ giáng sinh */
-      --primary: #d90429; /* Đỏ rực */
-      --primary-light: #ef233c;
-      --success: #166534; 
-      --danger: #b91c1c;
-      --hint: #6d28d9; 
-      --translate: #0284c7;
-      --glass: rgba(255, 255, 255, 0.95);
-      --shadow: 0 20px 40px rgba(220, 38, 38, 0.25);
-      --karaoke: #d90429;
-      --karaoke-bg: rgba(217, 4, 41, 0.15);
-      --header-gradient: repeating-linear-gradient(45deg, #ef4444, #ef4444 10px, #ffffff 10px, #ffffff 20px, #16a34a 20px, #16a34a 30px);
-      --font-logo: 'Mountains of Christmas', cursive;
-    }
-    /* Khi Dark mode + Holiday */
-    [data-theme="holiday-dark"] {
-      --bg: #1a1010; /* Đỏ đen tối */
-      --card: #2a1818; --text: #ffe4e6; --muted: #fda4af;
-      --border: #991b1b;
-      --primary: #fbbf24; /* Vàng ánh kim */
-      --primary-light: #fcd34d;
-      --glass: rgba(40, 20, 20, 0.9);
-      --shadow: 0 20px 40px rgba(0,0,0,0.5);
-      --karaoke-bg: rgba(251, 191, 36, 0.2);
-      --header-gradient: linear-gradient(90deg, #b91c1c, #166534, #b91c1c);
-      --font-logo: 'Mountains of Christmas', cursive;
+      --text-dim: #64748b;
+      
+      /* Gradient chủ đạo: Violet -> Pink */
+      --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      --primary-shadow: rgba(139, 92, 246, 0.4);
+      --primary: #8b5cf6;
+      
+      --success: #10b981; 
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+
+      --card-radius: 24px;
+      --input-radius: 16px;
+      --btn-radius: 16px;
+      
+      --font-main: 'Be Vietnam Pro', sans-serif;
+      --font-display: 'Outfit', sans-serif;
+      
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      --shadow-glow: 0 0 20px rgba(139, 92, 246, 0.3);
     }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text);
-      min-height: 100vh; padding: 16px; line-height: 1.6; transition: 0.4s;
-      padding-top: 60px; overflow-x: hidden;
+    /* DARK MODE */
+    [data-theme="dark"] {
+      --bg-color: #020617;
+      --glass-surface: rgba(15, 23, 42, 0.65); /* Tối màu và trong suốt */
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
-    .container { max-width: 1200px; margin: 0 auto; display: flex;
-      flex-direction: column; gap: var(--gap); position: relative; z-index: 10; }
+
+    /* HOLIDAY MODE */
+    [data-theme*="holiday"] {
+      --primary-gradient: linear-gradient(135deg, #dc2626 0%, #16a34a 100%); /* Đỏ - Xanh */
+      --primary-shadow: rgba(220, 38, 38, 0.4);
+      --primary: #dc2626;
+      --bg-color: #0f2b1d;
+      --font-display: 'Mountains of Christmas', cursive;
+    }
+    [data-theme="holiday"] {
+      --glass-surface: rgba(255, 255, 255, 0.85);
+    }
+    [data-theme="holiday-dark"] {
+      --glass-surface: rgba(20, 10, 10, 0.75);
+      --text: #ffe4e6;
+      --bg-color: #1a0505;
+    }
+
+    /* --- RESET & BASE --- */
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing: antialiased; }
     
-    /* TUYẾT RƠI */
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-color);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+      transition: background-color 0.5s ease, color 0.3s ease;
+    }
+
+    /* BACKGROUND ANIMATION (AURORA) */
+    .aurora-bg {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1; overflow: hidden; pointer-events: none;
+    }
+    .aurora-blob {
+      position: absolute; filter: blur(80px); opacity: 0.6;
+      animation: floatBlob 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #8b5cf6; animation-delay: 0s; }
+    .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: #ec4899; animation-delay: -5s; }
+    .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: #3b82f6; animation-delay: -10s; }
+    
+    [data-theme*="holiday"] .blob-1 { background: #dc2626; }
+    [data-theme*="holiday"] .blob-2 { background: #16a34a; }
+    [data-theme*="holiday"] .blob-3 { background: #fbbf24; }
+
+    @keyframes floatBlob {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(20px, 40px) scale(1.1); }
+    }
+
+    /* SNOWFLAKES */
     .snowflake {
-      position: fixed; top: 0; z-index: 1;
-      color: #fff; font-size: 1em; font-family: Arial;
-      text-shadow: 0 0 1px #000; pointer-events: none;
+      position: fixed; top: -10px; z-index: 999; color: #fff; 
+      text-shadow: 0 0 5px rgba(255,255,255,0.8); pointer-events: none;
       animation: fall linear forwards; display: none;
     }
     [data-theme*="holiday"] .snowflake { display: block; }
-    @keyframes fall { to { transform: translateY(105vh); } }
+    @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
-    /* BROWSER WARNING */
-    #browserWarning {
-      position: fixed; top: 0; left: 0; width: 100%;
-      background: #fff3cd; color: #856404;
-      text-align: center; padding: 10px; font-weight: 600;
-      border-bottom: 1px solid #ffeeba; z-index: 9999;
-      display: flex; justify-content: center; align-items: center; gap: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    #browserWarning .close-warn {
-      cursor: pointer; font-size: 1.2rem; font-weight: bold; color: #856404;
+    /* LAYOUT CONTAINER */
+    .container {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 32px;
+      position: relative; z-index: 10;
+      padding-top: 40px;
     }
 
+    /* GLASS CARD STYLE */
+    .glass-card {
+      background: var(--glass-surface);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow-lg);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* HEADER */
     header {
-      background: var(--card);
-      border-radius: var(--radius); padding: 32px 24px;
-      text-align: center; box-shadow: var(--shadow); border: 2px solid var(--border);
-      position: relative; overflow: hidden;
+      padding: 40px 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
     header::before {
-      content: '';
-      position: absolute; top:0; left:0; right:0; height:8px;
-      background: var(--header-gradient);
+      content: ''; position: absolute; top:0; left:0; right:0; height: 6px;
+      background: var(--primary-gradient);
     }
-    /* Trang trí Giáng sinh Header */
-    .xmas-decor {
-      display: none; position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
-      font-size: 3rem; z-index: 0; pointer-events: none; opacity: 0.8;
-    }
-    [data-theme*="holiday"] .xmas-decor { display: block; }
-
+    
     .logo {
-      display: flex; align-items: center; justify-content: center; gap: 16px;
-      flex-wrap: wrap; position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      margin-bottom: 8px;
     }
-    .logo svg { width: 64px; height: 64px; fill: var(--primary); animation: float 3s ease-in-out infinite; }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .logo svg { width: 50px; height: 50px; fill: url(#grad1); animation: floatLogo 6s ease-in-out infinite; }
+    /* SVG Gradient def in HTML */
+    
     .logo h1 {
-      font-family: var(--font-logo);
-      font-size: 2.5rem; font-weight: 700;
-      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      font-family: var(--font-display);
+      font-size: 3.5rem; font-weight: 800; letter-spacing: -0.03em;
+      background: var(--primary-gradient);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1.1;
     }
-    .tagline { color: var(--muted); font-size: 1.2rem; margin-top: 8px; position: relative; z-index: 1;}
+    .tagline {
+      color: var(--text-dim); font-size: 1.1rem; font-weight: 500;
+    }
+    
+    @keyframes floatLogo { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px) rotate(2deg)} }
 
-    /* NÚT SÁNG/TỐI & ĐĂNG XUẤT & HOLIDAY */
+    /* BUTTONS & CONTROLS */
     .theme-toggle-wrapper {
-      position: absolute; top: 16px; right: 16px; z-index: 100;
-      display: flex; gap: 10px;
+      position: absolute; top: 20px; right: 20px; display: flex; gap: 12px;
     }
-    .theme-toggle {
-      background: var(--primary); color: white; border: 3px solid white;
-      width: 50px; height: 50px; border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; cursor: pointer;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: all 0.3s ease;
-      font-size: 1.3rem; position: relative;
+    .icon-btn {
+      width: 44px; height: 44px; border-radius: 50%; border: none;
+      background: var(--glass-surface); color: var(--text);
+      border: 1px solid var(--glass-border); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: 0.3s; box-shadow: var(--shadow-sm);
+      font-size: 1.2rem;
     }
-    .theme-toggle:hover {
-      transform: scale(1.1) rotate(15deg);
-    }
-    #logoutBtn {
-      background: var(--danger);
-    }
-    #holidayBtn {
-      background: #16a34a; /* Green for Holiday Btn */
-    }
-    [data-theme*="holiday"] #holidayBtn {
-      background: #dc2626; /* Red when active */
-      border-color: #fbbf24;
-    }
+    .icon-btn:hover { transform: scale(1.1); background: var(--text); color: var(--bg-color); }
+    
+    #logoutBtn { color: var(--danger); }
+    #logoutBtn:hover { background: var(--danger); color: white; }
+    #holidayBtn { color: #16a34a; }
+    [data-theme*="holiday"] #holidayBtn { background: #dc2626; color: #fff; border-color: #fbbf24; }
 
-    .theme-toggle .icon { width: 26px; height: 26px; fill: white; }
-    .tip { position: relative; display: inline-block; }
-    .tip .tiptext {
-      visibility: hidden; background: var(--card); color: var(--text);
-      padding: 8px 12px; border-radius: 12px; font-size: 0.85rem;
-      position: absolute; bottom: 120%; left: 50%;
-      transform: translateX(-50%); width: max-content; z-index: 100;
-      opacity: 0; transition: 0.3s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid var(--border); white-space: nowrap;
+    /* TABS */
+    .tabs {
+      display: inline-flex; background: var(--glass-surface);
+      padding: 6px; border-radius: 20px; border: 1px solid var(--glass-border);
+      margin: 0 auto; position: relative;
+      box-shadow: var(--shadow-sm);
     }
-    .tip:hover .tiptext { visibility: visible; opacity: 1; }
-
-    /* TABS CHÍNH */
-    .tabs { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
     .tab {
-      padding: 14px 28px; background: var(--glass); border: 2px solid var(--border);
-      border-radius: 18px; font-weight: 600; cursor: pointer; font-size: 1.2rem;
-      display: flex; align-items: center; gap: 8px; transition: 0.4s; color: var(--text);
+      padding: 12px 32px; border-radius: 14px; border: none;
+      background: transparent; color: var(--text-dim);
+      font-weight: 600; font-size: 1rem; cursor: pointer;
+      transition: 0.3s; font-family: var(--font-main);
     }
     .tab.active {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: white; border-color: transparent;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      background: var(--primary-gradient); color: white;
+      box-shadow: 0 4px 12px var(--primary-shadow);
     }
-    .name-box { text-align: center; margin: var(--gap) 0; }
-    .name-box input {
-      padding: 12px 18px; width: 260px;
-      border: 2px solid var(--border); border-radius: 16px;
-      font-size: 1.1rem; text-align: center; background: var(--card); color: var(--text);
-    }
-    .name-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 5px rgba(245,158,11,0.2); }
-    .name-box input:read-only { background: var(--glass); color: var(--muted); }
-    
-    .setup-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap);
-      background: var(--card); border-radius: var(--radius); padding: 32px;
-      box-shadow: var(--shadow); border: 2px solid var(--border);
-    }
-    @media (max-width: 900px) { .setup-grid { grid-template-columns: 1fr; } }
-    
-    .setup-item {
-      background: var(--glass); border-radius: 20px; padding: 24px;
-      border: 1px solid var(--border); transition: 0.4s;
-    }
-    .setup-item:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
-    .setup-item h3 {
-      display: flex; align-items: center; gap: 10px; color: var(--primary);
-      font-size: 1.25rem; margin-bottom: 14px; font-weight: 700;
-    }
-    .setup-item h3 svg { width: 24px; height: 24px; fill: var(--primary); }
-    
-    select, textarea {
-      width: 100%; padding: 14px 16px;
-      border: 2px solid var(--border); border-radius: 14px;
-      background: var(--card); color: var(--text); font-size: 1rem;
-    }
-    select:focus, textarea:focus {
-      outline: none; border-color: var(--primary); box-shadow: 0 0 0 5px rgba(245,158,11,0.2);
-    }
-    
-    .radio-group { display: grid; gap: 12px; }
-    .radio-label {
-      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-      background: var(--glass); border: 1px solid var(--border); border-radius: 14px;
-      cursor: pointer; font-size: 1.05rem; color: var(--text);
-    }
-    .radio-label:hover { background: rgba(245,158,11,0.1); }
-    .radio-label input { accent-color: var(--primary); }
-    
-    .voice-preview {
-      margin-top: 8px; padding: 8px 12px; background: var(--glass); border-radius: 12px;
-      font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
-      border: 1px solid var(--border); color: var(--text); justify-content: center;
-    }
-    .voice-preview:hover { background: var(--border); }
 
-    .start-btn {
-      grid-column: 1/-1; margin-top: 20px; padding: 18px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: white; font-weight: 700; font-size: 1.3rem; border: none; border-radius: 18px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
-      box-shadow: 0 12px 28px rgba(245,158,11,0.4);
+    /* INPUT NAME */
+    .name-box { text-align: center; margin-bottom: 10px; }
+    .name-box input {
+      background: transparent; border: none; border-bottom: 2px solid var(--glass-border);
+      text-align: center; font-size: 1.2rem; color: var(--text); font-weight: 700;
+      width: 300px; padding: 8px; font-family: var(--font-display);
     }
-    .start-btn:hover { transform: translateY(-3px); }
+    .name-box input:focus { outline: none; border-color: var(--primary); }
+
+    /* SETUP GRID */
+    .setup-grid {
+      padding: 40px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;
+    }
+    .setup-item {
+      background: rgba(255,255,255,0.05); border-radius: var(--input-radius);
+      padding: 24px; border: 1px solid var(--glass-border);
+    }
+    .setup-item h3 {
+      font-size: 1.1rem; margin-bottom: 16px; color: var(--primary);
+      display: flex; align-items: center; gap: 8px; font-weight: 700;
+    }
+    .setup-item h3 svg { width: 20px; fill: var(--primary); }
+
+    select, textarea, input[type="text"] {
+      width: 100%; padding: 14px 16px;
+      border: 2px solid var(--glass-border); border-radius: var(--input-radius);
+      background: rgba(255,255,255,0.5); color: #0f172a; /* Luôn tối để dễ đọc trên nền kính */
+      font-family: var(--font-main); font-size: 1rem; transition: 0.3s;
+    }
+    [data-theme="dark"] select, [data-theme="dark"] textarea, [data-theme="dark"] input[type="text"] {
+       background: rgba(0,0,0,0.3); color: #fff; border-color: rgba(255,255,255,0.1);
+    }
+
+    select:focus, textarea:focus, input[type="text"]:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--primary-shadow);
+    }
+
+    /* RADIO CUSTOM */
+    .radio-group { display: flex; flex-direction: column; gap: 10px; }
+    .radio-label {
+      display: flex; align-items: center; gap: 12px; padding: 12px;
+      border-radius: 12px; cursor: pointer; transition: 0.2s;
+      border: 1px solid transparent;
+    }
+    .radio-label:hover { background: rgba(139, 92, 246, 0.1); }
+    .radio-label:has(input:checked) {
+      background: rgba(139, 92, 246, 0.15); border-color: var(--primary); font-weight: 600;
+    }
+    input[type="radio"] { accent-color: var(--primary); width: 18px; height: 18px; }
+
+    /* MAIN BUTTON */
+    .start-btn {
+      grid-column: 1/-1;
+      margin-top: 10px; padding: 20px;
+      background: var(--primary-gradient);
+      color: white; font-weight: 700; font-size: 1.25rem;
+      border: none; border-radius: var(--btn-radius);
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 10px 20px var(--primary-shadow);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .start-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 15px 30px var(--primary-shadow); }
+    .start-btn:active { transform: translateY(-1px); }
+
+    /* PRACTICE AREA */
+    #practiceArea, #rankPanel { padding: 40px; }
     
-    /* MODAL CHUNG */
+    .mode-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .mode-btn {
+      padding: 8px 20px; border-radius: 30px; border: 1px solid var(--glass-border);
+      background: transparent; color: var(--text); font-weight: 600; cursor: pointer;
+      transition: 0.3s; font-size: 0.9rem;
+    }
+    .mode-btn.active { background: var(--text); color: var(--bg-color); border-color: transparent; }
+
+    .progress-box { margin-bottom: 20px; }
+    .progress-bar {
+      height: 12px; background: rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden;
+    }
+    [data-theme="dark"] .progress-bar { background: rgba(255,255,255,0.1); }
+    .progress-fill {
+      height: 100%; background: var(--primary-gradient); width: 0;
+      border-radius: 10px; transition: width 0.5s ease;
+    }
+
+    .segment-box {
+      font-size: 1.6rem; line-height: 1.8; text-align: center;
+      min-height: 160px; padding: 40px;
+      background: rgba(255,255,255,0.5); border-radius: 20px;
+      border: 2px dashed var(--primary); margin-bottom: 24px;
+      color: var(--text); font-weight: 600;
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;
+    }
+    [data-theme="dark"] .segment-box { background: rgba(0,0,0,0.2); border-color: var(--text-dim); }
+    
+    .karaoke-word {
+      padding: 4px 8px; border-radius: 8px; transition: 0.2s; position: relative;
+    }
+    .karaoke-active {
+      background: var(--primary); color: white !important; transform: scale(1.1);
+      box-shadow: 0 4px 12px var(--primary-shadow); z-index: 10;
+    }
+    .word-tooltip {
+        position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+        background: #1e293b; color: white; padding: 4px 8px; border-radius: 6px;
+        font-size: 0.8rem; opacity: 0; pointer-events: none; transition: 0.2s;
+        white-space: nowrap;
+    }
+    .karaoke-word:hover .word-tooltip { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+
+    .input-wrapper { position: relative; margin: 30px 0; }
+    #userInput {
+      font-size: 1.5rem; padding: 20px 60px 20px 24px;
+      border-radius: 24px; border: 2px solid var(--glass-border);
+      box-shadow: var(--shadow-sm);
+    }
+    .hint-btn {
+      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 12px;
+      background: #8b5cf6; color: white; border: none; font-weight: bold;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+
+    #liveFeedback {
+      font-family: 'Courier New', monospace; font-size: 1.2rem;
+      min-height: 50px; margin-bottom: 30px; color: var(--text-dim);
+    }
+    .correct { color: var(--success); font-weight: 700; }
+    .wrong { color: var(--danger); text-decoration: line-through; opacity: 0.7; }
+
+    /* ACTION BUTTONS */
+    .action-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .action-btn {
+      padding: 16px 32px; border-radius: 16px; border: none;
+      font-weight: 700; font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; gap: 10px; transition: 0.3s;
+      color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .action-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+    .btn-replay { background: var(--warning); }
+    .btn-next { background: var(--success); }
+    .btn-reset { background: var(--glass-surface); color: var(--text); border: 1px solid var(--glass-border); }
+    
+    /* STATS */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px;
+    }
+    .stat-item {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+      padding: 16px; border-radius: 16px; text-align: center;
+    }
+    .stat-item h4 { font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .stat-item .val { font-size: 1.8rem; font-weight: 800; color: var(--primary); font-family: var(--font-display); }
+
+    /* BADGE & MODAL */
+    .level-badge {
+      display: inline-block; padding: 8px 24px; border-radius: 30px;
+      background: var(--primary-gradient); color: white; font-weight: 700;
+      box-shadow: var(--shadow-glow); margin-top: 20px;
+    }
+
     .modal {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
-      display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0;
-      visibility: hidden; transition: 0.3s;
+      position: fixed; top:0; left:0; width:100%; height:100%; z-index: 2000;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transition: 0.3s;
     }
     .modal.show { opacity: 1; visibility: visible; }
     .modal-content {
-      background: var(--card); border-radius: 24px; width: 90%; max-width: 500px;
-      padding: 32px; box-shadow: var(--shadow); position: relative; border: 2px solid var(--border);
+      background: var(--bg-color); border: 1px solid var(--glass-border);
+      padding: 40px; border-radius: 32px; width: 90%; max-width: 450px;
+      text-align: center; box-shadow: var(--shadow-lg);
     }
-    .modal h3 { text-align: center; margin-bottom: 20px; color: var(--primary); font-size: 1.4rem; }
-    .modal-input { margin-bottom: 16px; }
-    .modal-input label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text); }
-    .modal-input input {
-      width: 100%; padding: 12px 16px;
-      border: 2px solid var(--border); border-radius: 14px;
-      background: var(--card); font-size: 1rem; color: var(--text);
-    }
-    .modal-input input:focus { outline: none; border-color: var(--primary); }
+    .modal h3 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 24px; color: var(--primary); }
 
-    /* MODAL ĐĂNG NHẬP */
-    .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
-    .modal-actions .btn {
-      flex: 1; padding: 14px; border: none; border-radius: 14px; font-weight: 700;
-      font-size: 1.1rem; cursor: pointer;
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .logo h1 { font-size: 2.5rem; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .setup-grid { grid-template-columns: 1fr; padding: 24px; }
+      #userInput { font-size: 1.2rem; }
     }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-secondary { background: var(--glass); color: var(--text); border: 2px solid var(--border); }
 
-    /* KHU VỰC LUYỆN TẬP */
-    #practiceArea, #rankPanel {
-      background: var(--card); border-radius: var(--radius); padding: 32px;
-      box-shadow: var(--shadow); border: 2px solid var(--border); display: flex;
-      flex-direction: column; gap: var(--gap);
-    }
-    .progress-box {
-      background: var(--glass); padding: 16px; border-radius: 18px; border: 1px solid var(--border);
-    }
-    .progress-bar { height: 16px; background: var(--border); border-radius: 8px; overflow: hidden; }
-    .progress-fill {
-      height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light));
-      width: 0; border-radius: 8px; transition: width 0.6s ease;
-    }
-    .segment-box {
-      background: var(--glass); padding: 32px; border-radius: 20px;
-      border: 3px dashed var(--primary);
-      font-size: 1.5rem; line-height: 2; text-align: center; min-height: 140px; font-weight: 600;
-      user-select: none; overflow: hidden; position: relative; color: var(--text);
-    }
-    .segment-box.reading-mode { border-style: solid; border-color: var(--success); }
-    .karaoke-word {
-      transition: all 0.2s ease; padding: 2px 4px; border-radius: 6px;
-      display: inline-block; position: relative; cursor: pointer;
-    }
-    .karaoke-active {
-      background: var(--karaoke-bg) !important; color: var(--karaoke) !important;
-      font-weight: 800; transform: scale(1.05); box-shadow: 0 0 12px rgba(245,158,11,0.5);
-    }
-    /* TOOLTIP DỊCH TỪNG TỪ */
-    .word-tooltip {
-      position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
-      background: var(--text); color: var(--card); padding: 6px 10px; border-radius: 8px;
-      font-size: 0.9rem; white-space: nowrap; z-index: 100; opacity: 0; pointer-events: none;
-      transition: opacity 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    .karaoke-word:hover .word-tooltip { opacity: 1; }
-    .karaoke-word:hover { background: rgba(59,130,246,0.1); }
-
-    .mic-box { text-align: center; margin: 20px 0; }
-    .mic-btn {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: #ef4444; color: white; border: none; font-size: 2rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; margin: 0 auto;
-      box-shadow: 0 8px 20px rgba(239,68,68,0.4); transition: 0.3s;
-    }
-    .mic-btn.listening {
-      background: #10b981; animation: pulse 1.5s infinite; box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
-      70% { box-shadow: 0 0 0 20px rgba(16,185,129,0); }
-      100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
-    }
-    .full-translate {
-      background: var(--glass); padding: 16px 20px; border-radius: 16px;
-      border: 1px solid var(--border); font-size: 1.1rem; color: var(--translate);
-      display: flex; align-items: center; gap: 10px; min-height: 50px;
-    }
-    .full-translate svg { width: 20px; height: 20px; fill: var(--translate); animation: spin 1s linear infinite; }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    
-    .input-box { position: relative; margin: 20px 0; }
-    #userInput {
-      width: 100%; padding: 18px 70px 18px 20px; font-size: 1.4rem;
-      border: 3px solid var(--border); border-radius: 20px; background: var(--card); color: var(--text);
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-    #userInput:focus { border-color: var(--primary); box-shadow: 0 0 0 7px rgba(245,158,11,0.25); outline: none; }
-    .hint-btn {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      background: var(--hint); color: white; width: 50px; height: 50px; border-radius: 50%;
-      border: none; font-size: 1.4rem; cursor: pointer;
-      box-shadow: 0 6px 16px rgba(139,92,246,0.4); display: flex; align-items: center; justify-content: center;
-    }
-    #liveFeedback {
-      margin-top: 16px; padding: 18px; background: var(--glass); border-radius: 16px;
-      border: 1px solid var(--border); font-family: 'Courier New', monospace; font-size: 1.2rem;
-      min-height: 60px; white-space: pre-wrap; color: var(--text);
-    }
-    .correct { color: var(--success); font-weight: 700; }
-    .wrong { color: var(--danger); text-decoration: line-through; }
-    .action-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 28px 0; }
-    .action-btn {
-      padding: 14px 28px; border: none; border-radius: 16px; font-weight: 600;
-      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 10px;
-      min-width: 140px; justify-content: center; transition: 0.3s;
-    }
-    .action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-    .btn-replay { background: #f97316; color: white; }
-    .btn-hint { background: var(--hint); color: white; }
-    .btn-next { background: var(--primary); color: white; }
-    .btn-reset { background: var(--danger); color: white; }
-    .mode-switcher { display: flex; gap: 8px; justify-content: center; margin: 16px 0; }
-    .mode-btn {
-      padding: 8px 16px; background: var(--glass); border: 1px solid var(--border);
-      border-radius: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 600; transition: 0.3s;
-      color: var(--text);
-    }
-    .mode-btn.active { background: var(--primary); color: white; border-color: transparent; }
-    
-    /* THỐNG KÊ CÁ NHÂN */
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
-    .stat-item {
-      background: var(--glass); padding: 20px; border-radius: 18px; text-align: center;
-      border: 1px solid var(--border);
-    }
-    .stat-item h4 { font-size: 1rem; color: var(--muted); margin-bottom: 8px; }
-    .stat-item .val { font-size: 2rem; font-weight: 700; color: var(--primary); }
-    .level-badge {
-      display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px;
-      border-radius: 30px; font-weight: 700; font-size: 1.1rem; background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: white; margin: 20px auto; box-shadow: 0 8px 20px rgba(245,158,11,0.4);
-    }
-    canvas { margin-top: 24px; border-radius: 20px; background: var(--card); padding: 20px; border: 1px solid var(--border); }
+    /* UTILS */
     .hidden { display: none !important; }
-    footer { text-align: center; padding: 32px 16px; color: var(--muted); font-size: 1rem; position: relative; z-index: 10; }
-    .intro-box {
-      background: var(--glass); border-radius: 18px; padding: 20px; max-width: 600px; margin: 0 auto;
-      border: 1px solid var(--border); box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    .mic-btn {
+      width: 70px; height: 70px; border-radius: 50%; background: var(--danger); color: white;
+      font-size: 2rem; border: none; cursor: pointer; margin: 0 auto 20px; display: block;
+      transition: 0.3s; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
     }
-    .intro-box strong { color: var(--primary); font-size: 1.2rem; }
+    .mic-btn.listening { background: var(--success); animation: pulseMic 1.5s infinite; }
+    @keyframes pulseMic { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); } 70% { box-shadow: 0 0 0 20px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
 
-    .sub-tabs {
-      display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;
-      border-bottom: 2px solid var(--border); padding-bottom: 16px;
-    }
+    /* SVG Gradients Defs (Hidden visually but used) */
+    .svg-defs { width: 0; height: 0; position: absolute; }
   </style>
 </head>
 <body>
-  <div id="snowContainer"></div>
 
-  <div id="browserWarning">
-    <span>⚠️ Web chạy tốt nhất trên Chrome/EDGE ở Windows</span>
-    <span class="close-warn" onclick="document.getElementById('browserWarning').style.display='none'">&times;</span>
+  <div class="aurora-bg">
+    <div class="aurora-blob blob-1"></div>
+    <div class="aurora-blob blob-2"></div>
+    <div class="aurora-blob blob-3"></div>
+  </div>
+  
+  <div id="snowContainer"></div>
+  
+  <svg class="svg-defs">
+    <defs>
+      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div id="browserWarning" style="display:none; background:#fef3c7; color:#92400e; padding:10px; text-align:center; font-weight:600;">
+    ⚠️ Web chạy tốt nhất trên Chrome/Edge PC
+    <span class="close-warn" onclick="this.parentElement.style.display='none'" style="cursor:pointer; margin-left:10px;">&times;</span>
   </div>
 
   <div class="container">
-    <header>
-      <div class="xmas-decor">🎄</div>
-      <div class="logo">
-        <svg viewBox="0 0 100 100">
-          <rect x="20" y="30" width="60" height="40" rx="5" fill="currentColor" />
-          <path d="M25 40 h10 v20 h-10 z M40 40 h10 v20 h-10 z M55 40 h10 v20 h-10 z" fill="#fff" />
-          <path d="M85 20 L90 70 L95 20" stroke="#fff" stroke-width="5" stroke-linecap="round" />
-        </svg>
-        <h1>HiHi <span style="font-size:0.6em; opacity:0.8;">2026</span></h1>
-      </div>
-      <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói! 🚀</p>
-
+    <header class="glass-card">
       <div class="theme-toggle-wrapper">
-        <div class="tip">
-            <button class="theme-toggle" id="holidayBtn">
-              🎄
-            </button>
-            <span class="tiptext">Giao diện Giáng Sinh</span>
-        </div>
-
-        <div class="tip">
-          <button class="theme-toggle" id="themeBtn">
-            <svg class="icon" viewBox="0 0 24 24" id="sunIcon"><path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm8-7a1 1 0 0 1 0 2h-2a1 1 0 1 1 0-2h2zm-16 0a1 1 0 0 1 0 2H2a1 1 0 1 1 0-2h2zM5.64 5.64a1 1 0 0 1 1.42 0l1.41 1.41a1 1 0 1 1-1.42 1.42L5.64 6.06a1 1 0 0 1 0-1.42zm12.72 0a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 1 1-1.42-1.42l1.41-1.41a1 1 0 0 1 1.42 0zM5.64 18.36a1 1 0 0 1 0-1.42l1.41-1.41a1 1 0 1 1 1.42 1.42l-1.41 1.41a1 1 0 0 1-1.42 0zm12.72 0a1 1 0 0 1-1.42 0l-1.41-1.41a1 1 0 1 1 1.42-1.42l1.41 1.41a1 1 0 0 1 0 1.42zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>
-            <svg class="icon hidden" viewBox="0 0 24 24" id="moonIcon"><path d="M12 3a9 9 0 1 0 9 9c0-.23-.01-.46-.03-.69a1 1 0 0 0-1.26-.97 5.5 5.5 0 1 1-6.9-6.9 1 1 0 0 0-.97-1.26A8.96 8.96 0 0 0 12 3z"/></svg>
-          </button>
-          <span class="tiptext">Chuyển Sáng/Tối</span>
-        </div>
-        <div class="tip hidden" id="logoutBtnWrapper">
-          <button class="theme-toggle" id="logoutBtn">🚪</button>
-          <span class="tiptext">Đăng xuất</span>
+        <button class="icon-btn" id="holidayBtn" title="Chế độ Giáng Sinh">🎄</button>
+        <button class="icon-btn" id="themeBtn" title="Đổi giao diện Sáng/Tối">
+           <span id="sunIcon">☀️</span><span id="moonIcon" class="hidden">🌙</span>
+        </button>
+        <div id="logoutBtnWrapper" class="hidden">
+            <button class="icon-btn" id="logoutBtn" title="Đăng xuất">🚪</button>
         </div>
       </div>
+
+      <div class="logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+        </svg>
+        <h1>HiHi<span style="font-size:0.4em; vertical-align: super; opacity: 0.8;">2026</span></h1>
+      </div>
+      <p class="tagline">Luyện chính tả & ngoại ngữ phong cách mới 🚀</p>
     </header>
 
     <div class="tabs">
@@ -448,158 +460,138 @@
     </div>
 
     <div class="name-box">
-      <div class="tip">
-        <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" readonly />
-        <span class="tiptext">Tên sẽ hiển thị trong thống kê.</span>
-      </div>
+      <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" readonly />
     </div>
 
-    <div id="setupPanel" class="tab-content">
+    <div id="setupPanel" class="tab-content glass-card">
       <div class="setup-grid">
         <div class="setup-item">
-          <h3 class="tip">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            🌍 Ngôn ngữ
-          </h3>
+          <h3>🌍 Ngôn ngữ</h3>
           <select id="globalLang">
-            <option value="vi-VN">Tiếng Việt (không dịch)</option>
+            <option value="vi-VN">Tiếng Việt (Gốc)</option>
             <option value="en-US">Tiếng Anh → Việt</option>
             <option value="id-ID">Tiếng Indonesia → Việt</option>
           </select>
         </div>
 
         <div class="setup-item">
-          <h3 class="tip">
-             <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-            🎮 Chế độ
-          </h3>
+          <h3>🎮 Chế độ chơi</h3>
           <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="mode" value="read-write" checked> Chép chính tả</label>
-            <label class="radio-label"><input type="radio" name="mode" value="listen-write"> Nghe chính tả</label>
-            <label class="radio-label"><input type="radio" name="mode" value="read-listen-write"> Nghe-Chép chính tả</label>
-            <label class="radio-label"><input type="radio" name="mode" value="read-only"> Luyện đọc (mic)</label>
+            <label class="radio-label"><input type="radio" name="mode" value="read-write" checked> <span>Nhìn & Chép</span></label>
+            <label class="radio-label"><input type="radio" name="mode" value="listen-write"> <span>Nghe & Chép</span></label>
+            <label class="radio-label"><input type="radio" name="mode" value="read-listen-write"> <span>Nghe - Nhìn - Chép</span></label>
+            <label class="radio-label"><input type="radio" name="mode" value="read-only"> <span>Luyện Đọc (Mic)</span></label>
           </div>
         </div>
         
         <div class="setup-item">
-          <h3 class="tip">
-            🔊 Cài đặt Giọng & Tốc độ
-          </h3>
-          <div style="margin-bottom: 12px;">
-             <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:6px;">Chọn giọng đọc:</label>
+          <h3>🔊 Giọng đọc AI</h3>
+          <div style="display:flex; flex-direction:column; gap:12px;">
              <select id="voiceSelect"></select>
+             <div style="display:flex; gap:10px;">
+                 <select id="voiceRateSelect" style="flex:1;">
+                    <option value="0.75">0.75x (Chậm)</option>
+                    <option value="1.00" selected>1.00x (Chuẩn)</option>
+                    <option value="1.25">1.25x (Nhanh)</option>
+                    <option value="1.50">1.50x (Rất nhanh)</option>
+                  </select>
+                  <button id="previewVoice" class="icon-btn" style="border-radius:12px; width:auto; padding:0 16px;">🔉 Thử</button>
+             </div>
           </div>
-          <div>
-             <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:6px;">Tốc độ đọc:</label>
-             <select id="voiceRateSelect">
-                <option value="0.25">0.25x (Rất chậm)</option>
-                <option value="0.50">0.50x (Chậm)</option>
-                <option value="0.75">0.75x</option>
-                <option value="1.00" selected>1.00x (Bình thường)</option>
-                <option value="1.25">1.25x</option>
-                <option value="1.50">1.50x (Nhanh)</option>
-                <option value="1.75">1.75x</option>
-                <option value="2.00">2.00x (Rất nhanh)</option>
-              </select>
-          </div>
-          <div class="voice-preview" id="previewVoice">🔉 Nghe thử ngay</div>
         </div>
 
-        <div class="setup-item">
-          <h3 class="tip">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-            ✍️ Văn bản luyện tập
-          </h3>
-          <textarea id="sampleText" rows="5" placeholder="Dán hoặc nhập đoạn văn của bạn vào đây..."></textarea>
+        <div class="setup-item" style="grid-column: 1/-1;">
+          <h3>✍️ Dữ liệu đầu vào</h3>
+          <textarea id="sampleText" rows="4" placeholder="Dán đoạn văn bạn muốn luyện vào đây..."></textarea>
         </div>
 
-        <button class="start-btn" id="startBtn">▶️ Bắt đầu luyện tập</button>
+        <button class="start-btn" id="startBtn">
+          <svg style="width:24px;height:24px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          Bắt đầu luyện tập
+        </button>
       </div>
     </div>
 
-    <div id="rankPanel" class="tab-content hidden">
-      <h2 style="text-align:center; color:var(--primary); margin-bottom:10px;">Thống Kê Cá Nhân</h2>
-      
+    <div id="rankPanel" class="tab-content glass-card hidden">
+      <h2 style="text-align:center; color:var(--primary); font-family:var(--font-display);">Thành Tích Cá Nhân</h2>
       <div id="personalStats">
-        <p style="text-align:center; color:var(--muted); margin-bottom:24px;">
-          Dựa trên thành tích tốt nhất của bạn (lưu trên trình duyệt này).
-        </p>
         <div class="stats-row" id="personalStatsRow">
-          <div class="stat-item"><h4>WPM Cao Nhất</h4><div class="val" id="personalWPM">0</div></div>
+          <div class="stat-item"><h4>WPM Max</h4><div class="val" id="personalWPM">0</div></div>
           <div class="stat-item"><h4>Chính xác</h4><div class="val" id="personalAcc">0%</div></div>
-          <div class="stat-item"><h4>Số câu</h4><div class="val" id="personalSentences">0</div></div> <div class="stat-item"><h4>Điểm Cao Nhất</h4><div class="val"id="personalScore">0</div></div>
+          <div class="stat-item"><h4>Số câu</h4><div class="val" id="personalSentences">0</div></div> 
+          <div class="stat-item"><h4>Điểm cao</h4><div class="val"id="personalScore">0</div></div>
         </div>
-        <div class="level-badge" id="personalBadge" style="margin-top:20px;">Mới</div>
-        
-        <h3 style="text-align:center; margin-top: 40px;">Lịch Sử 10 Lần Gần Nhất</h3>
-        <canvas id="personalChart"></canvas>
+        <div style="text-align:center; margin-top:20px;"><span class="level-badge" id="personalBadge">Hạng: Tân binh</span></div>
+        <div style="margin-top: 40px; padding:20px; background:rgba(255,255,255,0.5); border-radius:20px;">
+             <canvas id="personalChart"></canvas>
+        </div>
       </div>
     </div>
 
     <div class="modal" id="loginModal">
       <div class="modal-content">
-        <h3>Chào mừng bạn đến với HiHi! 👋</h3>
-        <div class="modal-input">
-          <label for="usernameInput">Nhập tên của bạn (để lưu thành tích)</label>
-          <input type="text" id="usernameInput" placeholder="Tên của bạn..." maxlength="20" />
-        </div>
-        <div class="modal-actions">
-          <button class="btn btn-secondary" id="skipLoginBtn">Bỏ qua (Dùng tên ngẫu nhiên)</button>
-          <button class="btn btn-primary" id="loginBtn">Lưu tên & Bắt đầu</button>
+        <h3>Xin chào! 👋</h3>
+        <p style="margin-bottom:20px; color:var(--text-dim);">Nhập tên để lưu lại chiến tích nhé.</p>
+        <input type="text" id="usernameInput" placeholder="Tên của bạn..." maxlength="20" style="margin-bottom:20px; text-align:center;" />
+        <div style="display:flex; gap:10px;">
+          <button class="action-btn btn-reset" id="skipLoginBtn" style="flex:1; justify-content:center;">Bỏ qua</button>
+          <button class="action-btn btn-next" id="loginBtn" style="flex:1; justify-content:center; background:var(--primary-gradient);">Vào ngay</button>
         </div>
       </div>
     </div>
 
-    <div id="practiceArea" class="tab-content hidden">
+    <div id="practiceArea" class="tab-content glass-card hidden">
       <div class="mode-switcher">
         <button class="mode-btn active" data-mode="read-write">Chép</button>
         <button class="mode-btn" data-mode="listen-write">Nghe</button>
         <button class="mode-btn" data-mode="read-listen-write">Nghe-Chép</button>
         <button class="mode-btn" data-mode="read-only">Đọc</button>
       </div>
+
       <div class="progress-box">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:600;">
-          <span>Tiến độ</span> <span id="progressText">0%</span>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:600; font-size:0.9rem;">
+          <span>Tiến trình</span> <span id="progressText">0%</span>
         </div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
       </div>
+
       <div class="segment-box" id="currentSegment"></div>
+
       <div class="mic-box hidden" id="micBox">
         <button class="mic-btn" id="micBtn">🎤</button>
-        <p style="margin-top:12px; color:var(--muted);">Nhấn để bắt đầu đọc to</p>
+        <p style="text-align:center; color:var(--text-dim);">Nhấn mic và đọc to đoạn văn trên</p>
       </div>
-      <div class="full-translate">
-        <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 8H17V6h-7V2H8v4H1v2h7.07a15.67 15.67 0 0 1-3.27 4.06 16.14 16.14 0 0 1-2.61-2.13H0l1.27 3.1a17.88 17.88 0 0 0 4.58 5.9l-.2.2L7 19l2-2 1.5 1.5 1.37-4.43zM13 18h2v-2h-2v2z"/></svg>
-        <span id="fullText">Tạm dịch là: Dịch toàn bộ đoạn sẽ hiện ở đây...</span>
+
+      <div id="fullText" style="color:var(--info); font-style:italic; text-align:center; margin-bottom:16px; min-height:24px;"></div>
+
+      <div class="input-wrapper">
+        <input type="text" id="userInput" placeholder="Gõ lại nội dung ở đây..." autocomplete="off" />
+        <button class="hint-btn" id="hintBtn" title="Gợi ý từ tiếp theo">?</button>
       </div>
-      <div class="input-box">
-        <input type="text" id="userInput" placeholder="Gõ lại đoạn văn..." autocomplete="off" />
-        <button class="hint-btn" id="hintBtn" title="Gợi ý">?</button>
-      </div>
-      <div id="liveFeedback"><em>Nhập hoặc đọc để bắt đầu...</em></div>
+
+      <div id="liveFeedback" style="text-align:center;"><em>Kết quả sẽ hiện ở đây...</em></div>
+
       <div class="action-row">
-        <button class="action-btn btn-replay" id="replayBtn">🔄 Nghe lại</button>
-        <button class="action-btn btn-next" id="nextBtn" disabled>➡️ Tiếp theo</button>
-        <button class="action-btn btn-reset" id="resetBtn">↩️ Làm lại</button>
+        <button class="action-btn btn-replay" id="replayBtn">🔊 Nghe lại</button>
+        <button class="action-btn btn-next" id="nextBtn" disabled>Tiếp theo ➡️</button>
+        <button class="action-btn btn-reset" id="resetBtn">Thoát</button>
       </div>
+
       <div class="stats-row">
         <div class="stat-item"><h4>Thời gian</h4><div class="val" id="time">0s</div></div>
         <div class="stat-item"><h4>Tốc độ</h4><div class="val" id="wpm">0</div></div>
         <div class="stat-item"><h4>Chính xác</h4><div class="val" id="accuracy">100%</div></div>
-        <div class="stat-item"><h4>Cấp độ</h4><div class="val" id="level">Mới</div></div>
+        <div class="stat-item"><h4>Điểm</h4><div class="val" id="score">0</div></div>
       </div>
+      
       <div style="text-align:center;">
-        <div class="level-badge" id="levelBadge">Mới bắt đầu</div>
-        <div style="margin-top:12px; color:var(--muted);">Điểm: <strong id="score" style="color:var(--primary); font-size:1.6rem;">0</strong></div>
-      </div>
+        <div class="level-badge" id="levelBadge" style="margin-top:30px;">Cấp độ: Mới bắt đầu</div>
+        <div id="level" class="hidden"></div> </div>
       <canvas id="mainChart" class="hidden"></canvas>
     </div>
 
-    <footer>
-      <div class="intro-box">
-        <p><strong>🙋 HiHi là ai?</strong> – Người bạn nhỏ giúp bạn luyện chính tả mỗi ngày!</p>
-        <p>Chào mừng năm mới 2026! Cùng cố lên nhé!</p>
-      </div>
+    <footer style="text-align:center; margin-top:40px; color:var(--text-dim); font-size:0.9rem;">
+      <p>© 2026 HiHi App. Made with ❤️ & ✨</p>
     </footer>
   </div>
 
@@ -660,7 +652,7 @@
       next: document.getElementById('nextBtn'),
       reset: document.getElementById('resetBtn'),
       theme: document.getElementById('themeBtn'),
-      holidayBtn: document.getElementById('holidayBtn'), // Nút Giáng Sinh
+      holidayBtn: document.getElementById('holidayBtn'), 
       sun: document.getElementById('sunIcon'),
       moon: document.getElementById('moonIcon'),
       voiceSelect: document.getElementById('voiceSelect'),
@@ -739,16 +731,13 @@
         const date = now.getDate();
         const year = now.getFullYear();
         
-        // Từ 15/11 (Tháng 10 JS) hoặc Tháng 12 hoặc Tháng 1 năm 2026
         if (month === 10 && date >= 15) return true;
         if (month === 11) return true;
         if (year === 2026 && month === 0) return true;
-        
         return false;
     }
 
     function applyTheme(themeMode) {
-        // themeMode có thể là: 'light', 'dark', 'holiday'
         const body = document.body;
         const isDarkPreferred = localStorage.getItem('baseTheme') === 'dark';
 
@@ -758,14 +747,11 @@
             body.setAttribute('data-theme', isDarkPreferred ? 'dark' : 'light');
         }
 
-        // Cập nhật icon
-        els.sun.classList.toggle('hidden', isDarkPreferred);
-        els.moon.classList.toggle('hidden', !isDarkPreferred);
+        els.sun.classList.toggle('hidden', !isDarkPreferred);
+        els.moon.classList.toggle('hidden', isDarkPreferred);
         
-        // Nếu đang ở mode holiday, cập nhật UI
-        if (themeMode === 'holiday') {
-            createSnowflakes();
-        }
+        if (themeMode === 'holiday') createSnowflakes();
+        else document.getElementById('snowContainer').innerHTML = '';
     }
 
     function toggleBaseTheme() {
@@ -787,12 +773,9 @@
     }
 
     function initTheme() {
-        // Mặc định base theme
         if (!localStorage.getItem('baseTheme')) localStorage.setItem('baseTheme', 'light');
 
-        // Kiểm tra tự động Giáng Sinh
         if (isHolidaySeason()) {
-            // Nếu chưa từng set holiday, tự động bật
             if (localStorage.getItem('autoHolidaySet') !== 'true') {
                 localStorage.setItem('isHoliday', 'true');
                 localStorage.setItem('autoHolidaySet', 'true');
@@ -836,11 +819,11 @@
         data: {
           labels: recentHistory.map((_,i) => `Lần ${i+1}`),
           datasets: [
-            { label: 'WPM', data: recentHistory.map(h=>h.wpm), borderColor: '#f59e0b', tension: 0.4 },
-            { label: 'Điểm', data: recentHistory.map(h=>h.score), borderColor: '#10b981', tension: 0.4 }
+            { label: 'WPM', data: recentHistory.map(h=>h.wpm), borderColor: '#8b5cf6', tension: 0.4, fill: true, backgroundColor: 'rgba(139, 92, 246, 0.2)' },
+            { label: 'Điểm', data: recentHistory.map(h=>h.score), borderColor: '#ec4899', tension: 0.4 }
           ]
         },
-        options: { responsive: true, plugins: { legend: { position: 'top' } } }
+        options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
       });
     }
 
@@ -890,13 +873,13 @@
 
         try {
             const src = globalLang.split('-')[0];
-            targetElement.textContent = "..."; // Đang tải
+            targetElement.textContent = "..."; 
             const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=${src}|vi`);
             const data = await res.json();
             const result = data.responseData.translatedText;
             
             if (result) {
-                wordCache[cleanWord] = result; // Lưu vào cache
+                wordCache[cleanWord] = result;
                 targetElement.textContent = result;
             } else {
                 targetElement.textContent = "?";
@@ -910,15 +893,14 @@
     async function showSegment() {
       const text = segments[currentIdx];
       els.next.disabled = true;
-      els.input.style.borderColor = 'var(--border)'; els.input.style.boxShadow = ''; els.input.value = ''; els.input.focus();
+      els.input.style.borderColor = ''; els.input.style.boxShadow = ''; els.input.value = ''; els.input.focus();
       correctWords = 0;
       
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
       const isReadOnly = currentMode === 'read-only';
       els.input.style.display = isReadOnly ? 'none' : 'block';
-      els.hint.style.display = isReadOnly ? 'none' : 'block';
+      els.hint.style.display = isReadOnly ? 'none' : 'flex';
       els.feedback.style.display = 'block';
-      els.segment.classList.toggle('reading-mode', isReadOnly);
       els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
       
       const srcLang = globalLang.split('-')[0];
@@ -1006,8 +988,8 @@
       
       const isMatch = normalizeText(input) === normalizeText(orig);
       els.next.disabled = !isMatch;
-      els.input.style.borderColor = isMatch ? 'var(--success)' : 'var(--border)';
-      els.input.style.boxShadow = isMatch ? '0 0 0 7px rgba(16,185,129,0.25)' : '';
+      els.input.style.borderColor = isMatch ? 'var(--success)' : '';
+      els.input.style.boxShadow = isMatch ? '0 0 0 4px rgba(16,185,129,0.25)' : '';
     }
 
     function next() {
@@ -1039,7 +1021,7 @@
       const wpm = s > 0 ? Math.round(typedWords / s) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
-      const badge = wpm < 50 ? "Mới" : wpm < 100 ? "Khá" : wpm < 200 ? "Giỏi" : "Xuất sắc";
+      const badge = wpm < 50 ? "Tân Binh" : wpm < 100 ? "Thành Thạo" : wpm < 200 ? "Cao Thủ" : "Huyền Thoại";
 
       const name = playerName.trim() || 'Ẩn danh';
       const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge, sentences: totalSentences };
@@ -1053,7 +1035,7 @@
           localStorage.setItem('bestStats', JSON.stringify(bestStats));
       }
 
-      els.level.textContent = badge; els.levelBadge.textContent = badge;
+      els.level.textContent = badge; els.levelBadge.textContent = 'Đạt cấp: ' + badge;
       els.score.textContent = score; els.wpm.textContent = wpm; els.acc.textContent = acc + '%';
       
       renderPersonalStats();
@@ -1107,10 +1089,7 @@
     els.skipLoginBtn.addEventListener('click', () => handleLogin(coolNicknames[Math.floor(Math.random() * coolNicknames.length)]));
     els.logoutBtn.addEventListener('click', handleLogout);
 
-    // Nút Đổi Theme Cơ bản (Sáng/Tối)
     els.theme.addEventListener('click', toggleBaseTheme);
-
-    // Nút Bật/Tắt Chế độ Giáng Sinh
     els.holidayBtn.addEventListener('click', toggleHolidayMode);
 
     setupTabs(els.mainTabs(), els.tabContents());
@@ -1158,7 +1137,7 @@
       const words = normalizeText(segments[currentIdx]).split(/\s+/).filter(w => w);
       const typed = normalizeText(els.input.value).split(/\s+/).filter(w => w);
       if (typed.length < words.length) {
-        els.feedback.innerHTML += ` <span style="color:#8b5cf6; font-weight:700;">→ ${words[typed.length]}</span>`;
+        els.feedback.innerHTML += ` <span style="color:var(--info); font-weight:700;">→ ${words[typed.length]}</span>`;
         hintsUsed++;
       }
     });
@@ -1180,7 +1159,7 @@
     });
 
     // === 6. KHỞI CHẠY ===
-    initTheme(); // Khởi tạo theme (bao gồm check ngày)
+    initTheme(); 
     els.lang.value = globalLang;
     
     window.addEventListener('load', () => {
