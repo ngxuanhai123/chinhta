@@ -1,0 +1,27 @@
+{
+  "name": "hihi-dictation-server",
+  "version": "1.0.0",
+  "description": "Server proxy cho ứng dụng HiHi Luyện Chính Tả sử dụng Google Gemini AI",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "gemini",
+    "ai",
+    "dictation",
+    "proxy"
+  ],
+  "author": "HiHi Team",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
