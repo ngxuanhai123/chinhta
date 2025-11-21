@@ -4,18 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>HiHi - Luyện Chính Tả Thông Minh</title>
-  <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke, tạo đoạn văn bằng AI.">
+  <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke.">
   <meta name="theme-color" content="#f59e0b">
-  <link rel="manifest" href="data:application/manifest+json,{
-    \"name\": \"HiHi - Luyện Chính Tả\",
-    \"short_name\": \"HiHi\",
-    \"start_url\": \".\",
-    \"display\": \"standalone\",
-    \"background_color\": \"#fff7ed\",
-    \"theme_color\": \"#f59e0b\",
-    \"icons\": [{\"src\": \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+\",\"sizes\": \"192x192\", \"type\": \"image/svg+xml\"}]
-  }">
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCIgcng9IjUiIGZpbGw9IiNmNTllMGIiLz48cGF0aCBkPSJNMjUgNDAgaDEwIHYyMCBoLTEwIHogTTQwIDQwIGgxMCBvMjAgaC0xMCB6IE01NSA0MCBoMTAgdjIwIGgtMTAgeiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik04NSAyMCBMOTAgNzAgTDk1IDIwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
   <link href="https://googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   
@@ -39,7 +29,7 @@
     body {
       font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text);
       min-height: 100vh; padding: 16px; line-height: 1.6; transition: 0.4s;
-      padding-top: 60px; /* Chừa chỗ cho Browser Warning */
+      padding-top: 60px;
     }
     .container { max-width: 1200px; margin: 0 auto; display: flex;
       flex-direction: column; gap: var(--gap); position: relative; }
@@ -56,7 +46,6 @@
     #browserWarning .close-warn {
       cursor: pointer; font-size: 1.2rem; font-weight: bold; color: #856404;
     }
-    #browserWarning .close-warn:hover { color: #000; }
 
     header {
       background: var(--card);
@@ -145,6 +134,7 @@
       box-shadow: var(--shadow); border: 2px solid var(--border);
     }
     @media (max-width: 900px) { .setup-grid { grid-template-columns: 1fr; } }
+    
     .setup-item {
       background: var(--glass); border-radius: 20px; padding: 24px;
       border: 1px solid var(--border); transition: 0.4s;
@@ -155,6 +145,7 @@
       font-size: 1.25rem; margin-bottom: 14px; font-weight: 700;
     }
     .setup-item h3 svg { width: 24px; height: 24px; fill: var(--primary); }
+    
     select, textarea {
       width: 100%; padding: 14px 16px;
       border: 2px solid var(--border); border-radius: 14px;
@@ -163,6 +154,7 @@
     select:focus, textarea:focus {
       outline: none; border-color: var(--primary); box-shadow: 0 0 0 5px rgba(245,158,11,0.2);
     }
+    
     .radio-group { display: grid; gap: 12px; }
     .radio-label {
       display: flex; align-items: center; gap: 12px; padding: 12px 16px;
@@ -172,12 +164,13 @@
     .radio-label:hover { background: rgba(245,158,11,0.1); }
     .radio-label input { accent-color: var(--primary); }
     
-    .ai-btn {
-      margin-top: 12px; padding: 12px 18px; background: linear-gradient(135deg, #8b5cf6, #c4b5fd);
-      color: white; border: none; border-radius: 14px; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem;
+    .voice-preview {
+      margin-top: 8px; padding: 8px 12px; background: var(--glass); border-radius: 12px;
+      font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border); color: var(--text); justify-content: center;
     }
-    .ai-btn:hover { transform: translateY(-2px); }
+    .voice-preview:hover { background: var(--border); }
+
     .start-btn {
       grid-column: 1/-1; margin-top: 20px; padding: 18px;
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -198,41 +191,15 @@
       background: var(--card); border-radius: 24px; width: 90%; max-width: 500px;
       padding: 32px; box-shadow: var(--shadow); position: relative; border: 2px solid var(--border);
     }
-    .modal-close {
-      position: absolute; top: 16px; right: 16px; background: none;
-      border: none; font-size: 1.5rem; cursor: pointer;
-      color: var(--muted); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-      border-radius: 50%; transition: 0.3s;
-    }
-    .modal-close:hover { background: var(--border); color: var(--text); }
     .modal h3 { text-align: center; margin-bottom: 20px; color: var(--primary); font-size: 1.4rem; }
     .modal-input { margin-bottom: 16px; }
     .modal-input label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text); }
-    .modal-input input, .modal-input select {
+    .modal-input input {
       width: 100%; padding: 12px 16px;
       border: 2px solid var(--border); border-radius: 14px;
       background: var(--card); font-size: 1rem; color: var(--text);
     }
-    .modal-input input:focus, .modal-input select:focus { outline: none; border-color: var(--primary); }
-    .modal-input p { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
-    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-    .modal-grid .modal-grid-full { grid-column: 1 / -1; }
-    
-    .voice-preview {
-      margin-top: 8px; padding: 8px 12px; background: var(--glass); border-radius: 12px;
-      font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
-      border: 1px solid var(--border); color: var(--text);
-    }
-    .generate-btn {
-      width: 100%; margin-top: 20px; padding: 14px;
-      background: linear-gradient(135deg, #8b5cf6, #c4b5fd);
-      color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 1.1rem; cursor: pointer;
-    }
-    .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    #aiResult {
-      margin-top: 16px; padding: 14px; background: var(--glass); border-radius: 14px;
-      border: 1px solid var(--border); min-height: 60px; display: none; white-space: pre-wrap; color: var(--text);
-    }
+    .modal-input input:focus { outline: none; border-color: var(--primary); }
 
     /* MODAL ĐĂNG NHẬP */
     .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
@@ -343,6 +310,8 @@
       color: var(--text);
     }
     .mode-btn.active { background: var(--primary); color: white; border-color: transparent; }
+    
+    /* THỐNG KÊ CÁ NHÂN */
     .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
     .stat-item {
       background: var(--glass); padding: 20px; border-radius: 18px; text-align: center;
@@ -364,35 +333,10 @@
     }
     .intro-box strong { color: var(--primary); font-size: 1.2rem; }
 
-    /* BẢNG XẾP HẠNG & TAB THỐNG KÊ */
     .sub-tabs {
       display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;
       border-bottom: 2px solid var(--border); padding-bottom: 16px;
     }
-    .sub-tab-btn {
-      padding: 10px 20px; background: var(--glass); border: 1px solid var(--border);
-      border-radius: 14px; font-size: 1.05rem; cursor: pointer; font-weight: 600; color: var(--text);
-    }
-    .sub-tab-btn.active { background: var(--primary); color: white; border-color: transparent; }
-    .rank-filter { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-    .filter-btn {
-      padding: 10px 20px; background: var(--glass); border: 1px solid var(--border);
-      border-radius: 14px; font-size: 0.95rem; cursor: pointer; font-weight: 600; color: var(--text);
-    }
-    .filter-btn.active { background: var(--primary); color: white; border-color: transparent; }
-    .rank-table {
-      width: 100%; border-collapse: collapse; margin-top: 16px;
-      background: var(--glass); border-radius: 16px; overflow: hidden;
-      border: 1px solid var(--border); color: var(--text);
-    }
-    .rank-table th {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: white; padding: 16px; text-align: center; font-weight: 700;
-    }
-    .rank-table td { padding: 14px; text-align: center; border-bottom: 1px solid var(--border); }
-    .rank-table tr:hover { background: rgba(245,158,11,0.1); }
-    .no-data { text-align: center; padding: 40px; color: var(--muted); font-style: italic; }
-    .online-status { font-size: 0.9rem; color: var(--success); text-align: center; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -411,7 +355,7 @@
         </svg>
         <h1>HiHi</h1>
       </div>
-      <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói – Tạo đoạn văn bằng AI! 🚀</p>
+      <p class="tagline">Luyện chép, nghe, đọc to – nhận diện giọng nói! 🚀</p>
 
       <div class="theme-toggle-wrapper">
         <div class="tip">
@@ -430,13 +374,13 @@
 
     <div class="tabs">
       <button class="tab active" data-tab="setupPanel">Luyện Tập</button>
-      <button class="tab" data-tab="rankPanel">Xếp Hạng</button>
+      <button class="tab" data-tab="rankPanel">Thống Kê</button>
     </div>
 
     <div class="name-box">
       <div class="tip">
         <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" readonly />
-        <span class="tiptext">Tên sẽ hiển thị trên bảng xếp hạng.</span>
+        <span class="tiptext">Tên sẽ hiển thị trong thống kê.</span>
       </div>
     </div>
 
@@ -445,7 +389,7 @@
         <div class="setup-item">
           <h3 class="tip">
             <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            🌍 Ngôn ngữ luyện tập
+            🌍 Ngôn ngữ
           </h3>
           <select id="globalLang">
             <option value="vi-VN">Tiếng Việt (không dịch)</option>
@@ -453,10 +397,11 @@
             <option value="id-ID">Tiếng Indonesia → Việt</option>
           </select>
         </div>
+
         <div class="setup-item">
           <h3 class="tip">
              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-            🎮 Chế độ luyện
+            🎮 Chế độ
           </h3>
           <div class="radio-group">
             <label class="radio-label"><input type="radio" name="mode" value="read-write" checked> Chép chính tả</label>
@@ -465,57 +410,49 @@
             <label class="radio-label"><input type="radio" name="mode" value="read-only"> Luyện đọc (mic)</label>
           </div>
         </div>
-        <div class="setup-item" style="grid-column:1/-1;">
+        
+        <div class="setup-item">
+          <h3 class="tip">
+            🔊 Cài đặt Giọng & Tốc độ
+          </h3>
+          <div style="margin-bottom: 12px;">
+             <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:6px;">Chọn giọng đọc:</label>
+             <select id="voiceSelect"></select>
+          </div>
+          <div>
+             <label style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:6px;">Tốc độ đọc:</label>
+             <select id="voiceRateSelect">
+                <option value="0.25">0.25x (Rất chậm)</option>
+                <option value="0.50">0.50x (Chậm)</option>
+                <option value="0.75">0.75x</option>
+                <option value="1.00" selected>1.00x (Bình thường)</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.50">1.50x (Nhanh)</option>
+                <option value="1.75">1.75x</option>
+                <option value="2.00">2.00x (Rất nhanh)</option>
+              </select>
+          </div>
+          <div class="voice-preview" id="previewVoice">🔉 Nghe thử ngay</div>
+        </div>
+
+        <div class="setup-item">
           <h3 class="tip">
             <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-            ✍️ Đoạn văn luyện tập
+            ✍️ Văn bản luyện tập
           </h3>
-          <textarea id="sampleText" rows="5" placeholder="Dán hoặc nhập đoạn văn..."></textarea>
-          <button class="ai-btn" id="openAiModal">🤖 Tạo bằng AI (Gemini)</button>
-          <button class="start-btn" id="startBtn">▶️ Bắt đầu luyện tập</button>
+          <textarea id="sampleText" rows="5" placeholder="Dán hoặc nhập đoạn văn của bạn vào đây..."></textarea>
         </div>
+
+        <button class="start-btn" id="startBtn">▶️ Bắt đầu luyện tập</button>
       </div>
     </div>
 
     <div id="rankPanel" class="tab-content hidden">
-      <h2 style="text-align:center; color:var(--primary); margin-bottom:10px;">Bảng Xếp Hạng & Thống Kê</h2>
+      <h2 style="text-align:center; color:var(--primary); margin-bottom:10px;">Thống Kê Cá Nhân</h2>
       
-      <div class="sub-tabs">
-        <button class="sub-tab-btn active" data-subtab="globalRank">🌍 Xếp Hạng Chung</button>
-        <button class="sub-tab-btn" data-subtab="personalStats">👤 Thống Kê Cá Nhân</button>
-      </div>
-
-      <div id="globalRank" class="sub-tab-content">
-        <div class="rank-filter">
-          <button class="filter-btn active" data-filter="all">Tất cả</button>
-          <button class="filter-btn" data-filter="day">Hôm nay</button>
-          <button class="filter-btn" data-filter="week">Tuần này</button>
-          <button class="filter-btn" data-filter="month">Tháng này</button>
-          <button class="filter-btn" data-filter="year">Năm nay</button>
-        </div>
-        <div class="online-status" id="onlineStatus">Đang tải...</div>
-        <table class="rank-table" id="rankTable">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Tên</th>
-              <th>Ngày</th>
-              <th>WPM</th>
-              <th>Chính xác</th>
-              <th>Số câu</th> <th>Điểm</th>
-              <th>Cấp độ</th>
-            </tr>
-          </thead>
-          <tbody id="rankBody">
-            <tr><td colspan="8" class="no-data">Đang tải...</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div id="personalStats" class="sub-tab-content hidden">
-        <h3 style="text-align:center;">Thành Tích Tốt Nhất Của Bạn</h3>
+      <div id="personalStats">
         <p style="text-align:center; color:var(--muted); margin-bottom:24px;">
-          Dựa trên điểm số cao nhất (lưu trên trình duyệt này).
+          Dựa trên thành tích tốt nhất của bạn (lưu trên trình duyệt này).
         </p>
         <div class="stats-row" id="personalStatsRow">
           <div class="stat-item"><h4>WPM Cao Nhất</h4><div class="val" id="personalWPM">0</div></div>
@@ -527,7 +464,6 @@
         <h3 style="text-align:center; margin-top: 40px;">Lịch Sử 10 Lần Gần Nhất</h3>
         <canvas id="personalChart"></canvas>
       </div>
-
     </div>
 
     <div class="modal" id="loginModal">
@@ -541,56 +477,6 @@
           <button class="btn btn-secondary" id="skipLoginBtn">Bỏ qua (Dùng tên ngẫu nhiên)</button>
           <button class="btn btn-primary" id="loginBtn">Lưu tên & Bắt đầu</button>
         </div>
-      </div>
-    </div>
-
-    <div class="modal" id="aiModal">
-      <div class="modal-content">
-        <button class="modal-close" id="closeAiModal">×</button>
-        <h3>🤖 Tạo Đoạn Văn Bằng AI (Gemini)</h3>
-        
-        <div class="modal-grid">
-            <div class="modal-input modal-grid-full">
-              <label for="aiTopic">Chủ đề</label>
-              <input type="text" id="aiTopic" placeholder="Ví dụ: Môi trường, Gia đình, Công nghệ..." />
-            </div>
-            <div class="modal-input modal-grid-full">
-              <label for="aiKeywords">Hoặc theo từ khoá</label>
-              <input type="text" id="aiKeywords" placeholder="Ví dụ: mèo, trời mưa, hạnh phúc..." />
-            </div>
-
-            <div class="modal-input">
-              <label>Số câu</label>
-              <select id="aiSentences">
-                <option value="3">3 câu (ngắn)</option>
-                <option value="5" selected>5 câu (trung bình)</option>
-                <option value="8">8 câu (dài)</option>
-              </select>
-            </div>
-
-            <div class="modal-input">
-              <label>Tốc độ đọc</label>
-              <select id="aiRateSelect">
-                <option value="0.25">0.25x</option>
-                <option value="0.50">0.50x</option>
-                <option value="0.75">0.75x</option>
-                <option value="1.00" selected>1.00x</option>
-                <option value="1.25">1.25x</option>
-                <option value="1.50">1.50x</option>
-                <option value="1.75">1.75x</option>
-                <option value="2.00">2.00x</option>
-              </select>
-            </div>
-
-            <div class="modal-input modal-grid-full">
-              <label>Giọng đọc</label>
-              <select id="aiVoice"></select>
-              <div class="voice-preview" id="previewVoice">🔉 Nghe thử giọng này</div>
-            </div>
-        </div>
-        
-        <button class="generate-btn" id="generateAiBtn">✨ Tạo ngay</button>
-        <div id="aiResult"></div>
       </div>
     </div>
 
@@ -636,7 +522,7 @@
         <div class="level-badge" id="levelBadge">Mới bắt đầu</div>
         <div style="margin-top:12px; color:var(--muted);">Điểm: <strong id="score" style="color:var(--primary); font-size:1.6rem;">0</strong></div>
       </div>
-      <canvas id="mainChart"></canvas>
+      <canvas id="mainChart" class="hidden"></canvas>
     </div>
 
     <footer>
@@ -649,16 +535,11 @@
 
   <script>
     // === 1. HẰNG SỐ & CẤU HÌNH ===
-    const PROXY_SERVER_URL = "https://keychinhta1.onrender.com";
-    // Sử dụng URL giả lập hoặc để trống nếu chưa có backend thật.
-    // Code sẽ tự động chuyển sang chế độ Offline nếu URL này không kết nối được.
-    const ONLINE_RANK_URL = "https://example.com/api/rankings"; 
-
     const coolNicknames = [
       "Chiến Binh Bàn Phím", "Vua Gõ Chữ", "Thần Tốc", "HiHi Pro", "Ninja Luyện Gõ",
       "Siêu Anh Hùng Gõ", "Chuyên Gia Chính Tả", "Người Bạn Của Chữ", "Đôi Tay Vàng"
     ];
-    const wordCache = {}; // Cache để lưu từ đã dịch, tránh gọi API nhiều lần
+    const wordCache = {}; // Cache để lưu từ đã dịch
 
     // === 2. BIẾN TOÀN CỤC ===
     let typedWords = 0;
@@ -667,10 +548,9 @@
     let hintsUsed = 0;
     let totalSentences = 0; 
     
-    let onlineHistory = [];
     let personalHistory = JSON.parse(localStorage.getItem('personalHistory')) || [];
     let bestStats = JSON.parse(localStorage.getItem('bestStats')) || null;
-    let mainChart, personalChart;
+    let personalChart;
     
     let speechRate = 1.0;
     let currentUtterance = null;
@@ -712,35 +592,21 @@
       theme: document.getElementById('themeBtn'),
       sun: document.getElementById('sunIcon'),
       moon: document.getElementById('moonIcon'),
-      aiModal: document.getElementById('aiModal'),
-      openAi: document.getElementById('openAiModal'),
-      closeAi: document.getElementById('closeAiModal'),
-      aiTopic: document.getElementById('aiTopic'),
-      aiKeywords: document.getElementById('aiKeywords'),
-      aiSentences: document.getElementById('aiSentences'),
-      aiVoice: document.getElementById('aiVoice'),
+      voiceSelect: document.getElementById('voiceSelect'),
+      voiceRateSelect: document.getElementById('voiceRateSelect'),
       previewVoice: document.getElementById('previewVoice'),
-      generateBtn: document.getElementById('generateAiBtn'),
-      aiResult: document.getElementById('aiResult'),
-      aiRateSelect: document.getElementById('aiRateSelect'),
       modeBtns: () => document.querySelectorAll('.mode-btn'),
       micBox: document.getElementById('micBox'),
       micBtn: document.getElementById('micBtn'),
-      rankBody: document.getElementById('rankBody'),
-      filterBtns: () => document.querySelectorAll('.filter-btn'),
       playerName: document.getElementById('playerName'),
-      onlineStatus: document.getElementById('onlineStatus'),
       mainTabs: () => document.querySelectorAll('.tab'),
       tabContents: () => document.querySelectorAll('.tab-content'),
-      subTabBtns: () => document.querySelectorAll('.sub-tab-btn'),
-      subTabContents: () => document.querySelectorAll('.sub-tab-content'),
       personalStatsRow: document.getElementById('personalStatsRow'),
       personalWPM: document.getElementById('personalWPM'),
       personalAcc: document.getElementById('personalAcc'),
       personalScore: document.getElementById('personalScore'),
       personalSentences: document.getElementById('personalSentences'),
       personalBadge: document.getElementById('personalBadge'),
-      mainChart: document.getElementById('mainChart'),
       personalChart: document.getElementById('personalChart'),
       loginModal: document.getElementById('loginModal'),
       usernameInput: document.getElementById('usernameInput'),
@@ -751,52 +617,6 @@
     };
 
     // === 4. ĐỊNH NGHĨA HÀM ===
-
-    // === TẠO VĂN BẢN AI (SỬA LỖI OBJECT OBJECT) ===
-    async function generateAIText() {
-      const topic = els.aiTopic.value.trim();
-      const keywords = els.aiKeywords.value.trim();
-      const sentences = els.aiSentences.value;
-      const langName = globalLang === 'vi-VN' ? 'Tiếng Việt' : globalLang === 'en-US' ? 'Tiếng Anh' : 'Tiếng Indonesia';
-      
-      let prompt = '';
-      if (keywords) prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu, sử dụng các từ khoá: "${keywords}". Chỉ trả về đoạn văn.`;
-      else if (topic) prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu về chủ đề: "${topic}". Chỉ trả về đoạn văn.`;
-      else prompt = `Viết một đoạn văn ngắn bằng ${langName} gồm đúng ${sentences} câu về chủ đề ngẫu nhiên thú vị. Chỉ trả về đoạn văn.`;
-
-      els.generateBtn.disabled = true;
-      els.generateBtn.textContent = "Đang tạo...";
-      els.aiResult.style.display = 'none';
-
-      try {
-        const res = await fetch(`${PROXY_SERVER_URL}/generate`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: prompt })
-        });
-        
-        const data = await res.json().catch(() => ({})); // Bắt lỗi parse JSON
-
-        if (!res.ok) {
-            // FIX LỖI: Đảm bảo error là string, không phải object
-            const errorText = data.error?.message || data.error || data.message || `Lỗi server (${res.status})`;
-            throw new Error(typeof errorText === 'object' ? JSON.stringify(errorText) : errorText);
-        }
-        
-        const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-        if (!generatedText) throw new Error("Nội dung trả về rỗng.");
-
-        els.text.value = generatedText;
-        els.aiModal.classList.remove('show');
-        alert("Đoạn văn đã được tạo thành công!");
-      } catch (err) {
-        els.aiResult.textContent = `Lỗi: ${err.message}`;
-        els.aiResult.style.display = 'block';
-      } finally {
-        els.generateBtn.disabled = false;
-        els.generateBtn.textContent = "✨ Tạo ngay";
-      }
-    }
 
     // === HỆ THỐNG TÀI KHOẢN ===
     function handleLogin(name) {
@@ -836,76 +656,14 @@
     function setupTabs(tabButtons, tabContents) {
         tabButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                const targetId = btn.dataset.tab || btn.dataset.subtab;
+                const targetId = btn.dataset.tab;
                 tabButtons.forEach(t => t.classList.remove('active'));
                 btn.classList.add('active');
                 tabContents.forEach(c => c.classList.toggle('hidden', c.id !== targetId));
                 
-                if (btn.dataset.tab === 'rankPanel' || targetId === 'globalRank') renderRankTable();
-                if (btn.dataset.tab === 'rankPanel' || targetId === 'personalStats') renderPersonalStats();
+                if (btn.dataset.tab === 'rankPanel') renderPersonalStats();
             });
         });
-    }
-
-    // === BẢNG XẾP HẠNG (SỬA LỖI KẾT NỐI) ===
-    async function loadOnlineRank() {
-      try {
-        const res = await fetch(ONLINE_RANK_URL + '?t=' + Date.now()); 
-        if (!res.ok) throw new Error("Connection failed");
-        const data = await res.json();
-        onlineHistory = data || [];
-        els.onlineStatus.textContent = `Kết quả online (${onlineHistory.length})`;
-        els.onlineStatus.style.color = "var(--success)";
-      } catch (e) {
-        // FIX LỖI: Chuyển sang chế độ Offline thay vì báo lỗi
-        console.log("Chuyển sang chế độ Offline");
-        els.onlineStatus.textContent = "Chế độ Offline (Lưu trên máy)";
-        els.onlineStatus.style.color = "var(--muted)";
-        // Hợp nhất dữ liệu cá nhân để hiển thị tạm
-        onlineHistory = [...personalHistory]; 
-      }
-      renderRankTable();
-    }
-
-    async function saveOnlineScore(entry) {
-      try {
-        await fetch(ONLINE_RANK_URL, {
-          method: "POST",
-          body: JSON.stringify(entry),
-          headers: { "Content-Type": "application/json" }
-        });
-      } catch (e) { /* Bỏ qua lỗi lưu online */ }
-    }
-
-    function renderRankTable(filter = 'all') {
-      const now = new Date();
-      const filtered = onlineHistory.filter(h => {
-        const d = new Date(h.date);
-        if (isNaN(d)) return true; 
-        if (filter === 'day') return d.toDateString() === now.toDateString();
-        if (filter === 'week') {
-            const start = new Date(now); start.setDate(now.getDate() - now.getDay());
-            const end = new Date(start); end.setDate(start.getDate() + 6);
-            return d >= start && d <= end;
-        }
-        if (filter === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-        if (filter === 'year') return d.getFullYear() === now.getFullYear();
-        return true;
-      }).sort((a, b) => b.score - a.score);
-      
-      els.rankBody.innerHTML = filtered.length ? filtered.map((h, i) => `
-        <tr>
-          <td>${i + 1}</td>
-          <td>${h.name || 'Ẩn danh'}</td>
-          <td>${new Date(h.date).toLocaleString('vi')}</td>
-          <td>${h.wpm}</td>
-          <td>${h.acc}%</td>
-          <td>${h.sentences || 0}</td> <td><strong>${h.score}</strong></td>
-          <td><span style="color:#f59e0b; font-weight:700;">${h.badge}</span></td>
-        </tr>
-      `).join('') : '<tr><td colspan="8" class="no-data">Chưa có dữ liệu</td></tr>';
-      
-      els.filterBtns().forEach(btn => btn.classList.toggle('active', btn.dataset.filter === filter));
     }
 
     function renderPersonalStats() {
@@ -937,10 +695,10 @@
     // === GIỌNG ĐỌC ===
     function loadVoices() {
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(globalLang.split('-')[0]));
-      els.aiVoice.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Không có giọng</option>';
+      els.voiceSelect.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Không tìm thấy giọng phù hợp</option>';
       const saved = localStorage.getItem('voice');
       selectedVoice = voices.find(v => v.name === saved) || voices[0];
-      if (selectedVoice) els.aiVoice.value = selectedVoice.name;
+      if (selectedVoice) els.voiceSelect.value = selectedVoice.name;
     }
 
     function speak(text, onWord) {
@@ -958,7 +716,7 @@
       speechSynthesis.speak(currentUtterance);
     }
     
-    // === DỊCH THUẬT (TÁCH 2 TIẾN TRÌNH) ===
+    // === DỊCH THUẬT ===
     // 1. Dịch toàn bộ câu (Chỉ để hiểu ý chính)
     async function translateFull(text, src) {
       if (!text.trim() || globalLang === 'vi-VN') return text;
@@ -969,7 +727,7 @@
       } catch { return text; }
     }
 
-    // 2. Dịch từng từ riêng biệt (Khi di chuột) - FIX LỖI SẮP XẾP TỪ
+    // 2. Dịch từng từ riêng biệt (Khi di chuột)
     async function translateSingleWord(word, targetElement) {
         if (globalLang === 'vi-VN') return;
         const cleanWord = word.replace(/[.,!?;:"()]/g, "").trim().toLowerCase();
@@ -1144,9 +902,7 @@
       const name = playerName.trim() || 'Ẩn danh';
       const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge, sentences: totalSentences };
       
-      saveOnlineScore(entry);
-      
-      onlineHistory.push(entry);
+      // Lưu cục bộ
       personalHistory.push(entry);
       if (personalHistory.length > 10) personalHistory.shift();
       localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
@@ -1159,27 +915,8 @@
       els.level.textContent = badge; els.levelBadge.textContent = badge;
       els.score.textContent = score; els.wpm.textContent = wpm; els.acc.textContent = acc + '%';
       
-      updateMainChart();
-      renderRankTable();
       renderPersonalStats();
       alert(`Hoàn thành!\nTốc độ: ${wpm} WPM\nĐiểm: ${score}\nCấp: ${badge}`);
-    }
-
-    function updateMainChart() {
-      const recent = onlineHistory.slice(0, 10).reverse();
-      const ctx = els.mainChart.getContext('2d');
-      if (mainChart) mainChart.destroy();
-      mainChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: recent.map(h => h.name.substring(0, 10)),
-          datasets: [
-            { label: 'WPM', data: recent.map(h=>h.wpm), backgroundColor: '#f59e0b' },
-            { label: 'Điểm', data: recent.map(h=>h.score), backgroundColor: '#10b981' }
-          ]
-        },
-        options: { responsive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Top 10 Online' } } }
-      });
     }
 
     function initSpeechRecognition() {
@@ -1237,22 +974,14 @@
     });
 
     setupTabs(els.mainTabs(), els.tabContents());
-    setupTabs(els.subTabBtns(), els.subTabContents());
 
-    els.filterBtns().forEach(btn => btn.addEventListener('click', () => renderRankTable(btn.dataset.filter)));
-
-    els.aiVoice.addEventListener('change', () => {
-        const voiceName = els.aiVoice.value;
+    els.voiceSelect.addEventListener('change', () => {
+        const voiceName = els.voiceSelect.value;
         selectedVoice = voices.find(v => v.name === voiceName);
         if (selectedVoice) localStorage.setItem('voice', selectedVoice.name);
     });
     els.previewVoice.addEventListener('click', () => speak(globalLang === 'vi-VN' ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.'));
     speechSynthesis.onvoiceschanged = loadVoices;
-
-    els.generateBtn.addEventListener('click', generateAIText);
-    els.openAi.addEventListener('click', () => { els.aiModal.classList.add('show'); loadVoices(); });
-    els.closeAi.addEventListener('click', () => els.aiModal.classList.remove('show'));
-    els.aiModal.addEventListener('click', e => { if (e.target === els.aiModal) els.aiModal.classList.remove('show'); });
 
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
@@ -1268,7 +997,9 @@
       
       currentIdx = 0; typedWords = 0; correctWords = 0; totalCorrectWords = 0; hintsUsed = 0; totalSentences = segments.length;
       currentMode = document.querySelector('input[name="mode"]:checked').value;
-      speechRate = parseFloat(els.aiRateSelect.value);
+      
+      // Cập nhật lại speedRate từ selector mới
+      speechRate = parseFloat(els.voiceRateSelect.value);
       
       els.modeBtns().forEach(btn => btn.classList.toggle('active', btn.dataset.mode === currentMode));
       
@@ -1316,10 +1047,8 @@
     
     window.addEventListener('load', () => {
       checkLogin();
-      loadOnlineRank(); // Tự động fallback nếu lỗi
       renderPersonalStats();
       loadVoices();
-      setInterval(loadOnlineRank, 60000);
     });
     setTimeout(loadVoices, 300);
   </script>
