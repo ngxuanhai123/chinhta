@@ -1,4 +1,0 @@
-Flask
-flask-cors
-requests
-gunicorn # Dùng để chạy server trên Render
