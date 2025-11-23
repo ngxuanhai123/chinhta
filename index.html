@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HiHi - Luyện Chính Tả (Orange Edition)</title>
+  <title>HiHi - Luyện Chính Tả (Orange Edition - Fixed)</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke.">
   <meta name="theme-color" content="#f97316">
   <link href="https://googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Outfit:wght@400;600;800&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
@@ -12,23 +12,21 @@
   <style>
     :root {
       /* --- MÀU SẮC MỚI: CAM & TRẮNG (DEFAULT) --- */
-      /* Gradient nền: Cam pha trắng/kem nhẹ */
       --bg-gradient: radial-gradient(at 0% 0%, hsla(27, 96%, 90%, 1) 0, transparent 50%), 
                      radial-gradient(at 50% 0%, hsla(35, 100%, 92%, 1) 0, transparent 50%), 
                      radial-gradient(at 100% 0%, hsla(15, 90%, 90%, 1) 0, transparent 50%);
       --bg-color: #fff7ed; /* Orange-50 */
       
       --glass-surface: rgba(255, 255, 255, 0.65);
-      --glass-border: rgba(249, 115, 22, 0.2); /* Viền cam nhạt */
+      --glass-border: rgba(249, 115, 22, 0.2);
       --glass-blur: 20px;
 
-      --text: #431407; /* Màu nâu đậm (contrast tốt với cam) */
-      --text-dim: #9a3412; /* Cam đậm */
+      --text: #431407;
+      --text-dim: #9a3412;
       
-      /* Gradient chủ đạo: Orange -> Red/Amber */
       --primary-gradient: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
       --primary-shadow: rgba(249, 115, 22, 0.4);
-      --primary: #f97316; /* Orange-500 */
+      --primary: #f97316;
       
       --success: #16a34a; 
       --danger: #ef4444;
@@ -47,9 +45,8 @@
       --shadow-glow: 0 0 20px rgba(249, 115, 22, 0.3);
     }
 
-    /* DARK MODE (Vẫn giữ tông cam nhưng nền tối) */
     [data-theme="dark"] {
-      --bg-color: #0f172a; /* Slate-900 */
+      --bg-color: #0f172a;
       --bg-gradient: radial-gradient(at 0% 0%, hsla(27, 70%, 15%, 1) 0, transparent 50%), 
                      radial-gradient(at 100% 0%, hsla(15, 60%, 15%, 1) 0, transparent 50%);
       --glass-surface: rgba(15, 23, 42, 0.75);
@@ -59,9 +56,8 @@
       --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
 
-    /* HOLIDAY MODE (Giáng Sinh) */
     [data-theme*="holiday"] {
-      --primary-gradient: linear-gradient(135deg, #dc2626 0%, #16a34a 100%); /* Đỏ - Xanh */
+      --primary-gradient: linear-gradient(135deg, #dc2626 0%, #16a34a 100%);
       --primary-shadow: rgba(220, 38, 38, 0.4);
       --primary: #dc2626;
       --bg-color: #0f2b1d;
@@ -79,14 +75,13 @@
       --bg-color: #1a0505;
     }
 
-    /* --- RESET & BASE --- */
     * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing: antialiased; }
     
     body {
       font-family: var(--font-main);
       background-color: var(--bg-color);
       background-image: var(--bg-gradient);
-      background-attachment: fixed; /* Fix background scroll */
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
       padding: 20px;
@@ -96,7 +91,6 @@
       transition: background-color 0.5s ease, color 0.3s ease;
     }
 
-    /* BACKGROUND ANIMATION (AURORA - UPDATED COLORS) */
     .aurora-bg {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       z-index: -1; overflow: hidden; pointer-events: none;
@@ -105,7 +99,6 @@
       position: absolute; filter: blur(80px); opacity: 0.5;
       animation: floatBlob 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
     }
-    /* Blob colors updated for Orange theme */
     .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #fb923c; animation-delay: 0s; }
     .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: #fbbf24; animation-delay: -5s; }
     .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: #fca5a5; animation-delay: -10s; }
@@ -122,7 +115,6 @@
       100% { transform: translate(20px, 40px) scale(1.1); }
     }
 
-    /* SNOWFLAKES */
     .snowflake {
       position: fixed; top: -10px; z-index: 999; color: #fff; 
       text-shadow: 0 0 5px rgba(255,255,255,0.8); pointer-events: none;
@@ -131,7 +123,6 @@
     [data-theme*="holiday"] .snowflake { display: block; }
     @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
-    /* LAYOUT CONTAINER */
     .container {
       max-width: 1100px; margin: 0 auto;
       display: flex; flex-direction: column; gap: 32px;
@@ -139,7 +130,6 @@
       padding-top: 40px;
     }
 
-    /* GLASS CARD STYLE */
     .glass-card {
       background: var(--glass-surface);
       backdrop-filter: blur(var(--glass-blur));
@@ -150,7 +140,6 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    /* HEADER */
     header {
       padding: 40px 30px;
       text-align: center;
@@ -181,7 +170,6 @@
     
     @keyframes floatLogo { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px) rotate(2deg)} }
 
-    /* BUTTONS & CONTROLS */
     .theme-toggle-wrapper {
       position: absolute; top: 20px; right: 20px; display: flex; gap: 12px;
     }
@@ -200,7 +188,6 @@
     #holidayBtn { color: #16a34a; }
     [data-theme*="holiday"] #holidayBtn { background: #dc2626; color: #fff; border-color: #fbbf24; }
 
-    /* TABS */
     .tabs {
       display: inline-flex; background: var(--glass-surface);
       padding: 6px; border-radius: 20px; border: 1px solid var(--glass-border);
@@ -218,7 +205,6 @@
       box-shadow: 0 4px 12px var(--primary-shadow);
     }
 
-    /* INPUT NAME */
     .name-box { text-align: center; margin-bottom: 10px; }
     .name-box input {
       background: transparent; border: none; border-bottom: 2px solid var(--glass-border);
@@ -227,7 +213,6 @@
     }
     .name-box input:focus { outline: none; border-color: var(--primary); }
 
-    /* SETUP GRID */
     .setup-grid {
       padding: 40px;
       display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;
@@ -257,7 +242,6 @@
       box-shadow: 0 0 0 4px var(--primary-shadow);
     }
 
-    /* RADIO CUSTOM */
     .radio-group { display: flex; flex-direction: column; gap: 10px; }
     .radio-label {
       display: flex; align-items: center; gap: 12px; padding: 12px;
@@ -270,7 +254,6 @@
     }
     input[type="radio"] { accent-color: var(--primary); width: 18px; height: 18px; }
 
-    /* MAIN BUTTON */
     .start-btn {
       grid-column: 1/-1;
       margin-top: 10px; padding: 20px;
@@ -285,7 +268,6 @@
     .start-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 15px 30px var(--primary-shadow); }
     .start-btn:active { transform: translateY(-1px); }
 
-    /* PRACTICE AREA */
     #practiceArea, #rankPanel { padding: 40px; }
     
     .mode-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
@@ -317,7 +299,8 @@
     [data-theme="dark"] .segment-box { background: rgba(0,0,0,0.2); border-color: var(--text-dim); }
     
     .karaoke-word {
-      padding: 4px 8px; border-radius: 8px; transition: 0.2s; position: relative;
+      padding: 4px 6px; border-radius: 8px; transition: 0.2s; position: relative;
+      display: inline-block; white-space: pre-wrap;
     }
     .karaoke-active {
       background: var(--primary); color: white !important; transform: scale(1.1);
@@ -327,7 +310,7 @@
         position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
         background: #1e293b; color: white; padding: 4px 8px; border-radius: 6px;
         font-size: 0.8rem; opacity: 0; pointer-events: none; transition: 0.2s;
-        white-space: nowrap;
+        white-space: nowrap; z-index: 15;
     }
     .karaoke-word:hover .word-tooltip { opacity: 1; transform: translateX(-50%) translateY(-5px); }
 
@@ -351,7 +334,6 @@
     .correct { color: var(--success); font-weight: 700; }
     .wrong { color: var(--danger); text-decoration: line-through; opacity: 0.7; }
 
-    /* ACTION BUTTONS */
     .action-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
     .action-btn {
       padding: 16px 32px; border-radius: 16px; border: none;
@@ -366,7 +348,6 @@
     .btn-next { background: var(--success); }
     .btn-reset { background: var(--glass-surface); color: var(--text); border: 1px solid var(--glass-border); }
     
-    /* STATS */
     .stats-row {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px;
     }
@@ -377,7 +358,6 @@
     .stat-item h4 { font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
     .stat-item .val { font-size: 1.8rem; font-weight: 800; color: var(--primary); font-family: var(--font-display); }
 
-    /* BADGE & MODAL */
     .level-badge {
       display: inline-block; padding: 8px 24px; border-radius: 30px;
       background: var(--primary-gradient); color: white; font-weight: 700;
@@ -398,7 +378,6 @@
     }
     .modal h3 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 24px; color: var(--primary); }
 
-    /* RESPONSIVE */
     @media (max-width: 768px) {
       .logo h1 { font-size: 2.5rem; }
       .stats-row { grid-template-columns: 1fr 1fr; }
@@ -406,7 +385,6 @@
       #userInput { font-size: 1.2rem; }
     }
 
-    /* UTILS */
     .hidden { display: none !important; }
     .mic-btn {
       width: 70px; height: 70px; border-radius: 50%; background: var(--danger); color: white;
@@ -416,7 +394,6 @@
     .mic-btn.listening { background: var(--success); animation: pulseMic 1.5s infinite; }
     @keyframes pulseMic { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); } 70% { box-shadow: 0 0 0 20px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
 
-    /* SVG Gradients Defs (Hidden visually but used) */
     .svg-defs { width: 0; height: 0; position: absolute; }
   </style>
 </head>
@@ -438,11 +415,6 @@
       </linearGradient>
     </defs>
   </svg>
-
-  <div id="browserWarning" style="display:none; background:#fef3c7; color:#92400e; padding:10px; text-align:center; font-weight:600;">
-    ⚠️ Web chạy tốt nhất trên Chrome/Edge PC
-    <span class="close-warn" onclick="this.parentElement.style.display='none'" style="cursor:pointer; margin-left:10px;">&times;</span>
-  </div>
 
   <div class="container">
     <header class="glass-card">
@@ -516,7 +488,7 @@
 
         <div class="setup-item" style="grid-column: 1/-1;">
           <h3>✍️ Dữ liệu đầu vào</h3>
-          <textarea id="sampleText" rows="4" placeholder="Dán đoạn văn bạn muốn luyện vào đây..."></textarea>
+          <textarea id="sampleText" rows="4" spellcheck="false" placeholder="Dán đoạn văn bạn muốn luyện vào đây...">Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.</textarea>
         </div>
 
         <button class="start-btn" id="startBtn">
@@ -615,7 +587,7 @@
       "Chiến Binh Bàn Phím", "Vua Gõ Chữ", "Thần Tốc", "HiHi Pro", "Ninja Luyện Gõ",
       "Siêu Anh Hùng Gõ", "Chuyên Gia Chính Tả", "Người Bạn Của Chữ", "Đôi Tay Vàng"
     ];
-    const wordCache = {}; // Cache để lưu từ đã dịch
+    const wordCache = {}; 
 
     // === 2. BIẾN TOÀN CỤC ===
     let typedWords = 0;
@@ -739,15 +711,11 @@
         }
     }
 
-    // UPDATED HOLIDAY LOGIC: Only after Dec 10th
     function isHolidaySeason() {
         const now = new Date();
-        const month = now.getMonth(); // 0 = Jan, ..., 11 = Dec
+        const month = now.getMonth(); 
         const date = now.getDate();
-        
-        // Chỉ kích hoạt nếu là tháng 12 VÀ sau ngày 10
         if (month === 11 && date > 10) return true;
-        
         return false;
     }
 
@@ -789,18 +757,13 @@
     function initTheme() {
         if (!localStorage.getItem('baseTheme')) localStorage.setItem('baseTheme', 'light');
 
-        // Logic tự động bật Holiday
         const isHolidayNow = isHolidaySeason();
         if (isHolidayNow) {
-            // Nếu đúng mùa lễ, và chưa set (hoặc người dùng chưa tắt thủ công), ta bật
-            // Tuy nhiên để đơn giản, nếu đúng mùa -> mặc định bật, trừ khi người dùng tắt thủ công (lưu logic phức tạp hơn).
-            // Ở đây ta ưu tiên logic: Vào mùa -> Tự bật 1 lần.
             if (!localStorage.getItem('seasonChecked')) {
                 localStorage.setItem('isHoliday', 'true');
-                localStorage.setItem('seasonChecked', 'true'); // Đánh dấu đã check mùa này
+                localStorage.setItem('seasonChecked', 'true'); 
             }
         } else {
-            // Hết mùa -> Tắt
             if (localStorage.getItem('isHoliday') === 'true' && localStorage.getItem('seasonChecked') === 'true') {
                  localStorage.setItem('isHoliday', 'false');
                  localStorage.removeItem('seasonChecked');
@@ -839,7 +802,6 @@
       if (personalChart) personalChart.destroy();
       const recentHistory = [...personalHistory].reverse();
       
-      // Update Chart Color for Orange Theme
       personalChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -855,12 +817,10 @@
 
     // === GIỌNG ĐỌC ===
     function loadVoices() {
-      // Tìm giọng đọc dựa trên mã ngôn ngữ (vd: 'it' cho it-IT, 'es' cho es-ES)
       const targetCode = globalLang.split('-')[0]; 
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(targetCode));
       
       if (voices.length === 0 && globalLang.startsWith('la')) {
-          // Fallback cho Latin (thường trình duyệt không có voice Latin, dùng tiếng Anh hoặc Ý)
           voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('it') || v.lang.startsWith('en'));
       }
 
@@ -923,7 +883,7 @@
         }
     }
 
-    // === HIỂN THỊ ĐOẠN VĂN ===
+    // === HIỂN THỊ ĐOẠN VĂN (FIXED SPLIT) ===
     async function showSegment() {
       const text = segments[currentIdx];
       els.next.disabled = true;
@@ -955,35 +915,41 @@
       }
 
       const fragment = document.createDocumentFragment();
-      const wordsAndSpace = text.split(/([^\s\w]+|\s+)/).filter(w => w !== ""); 
+      
+      // *** FIX: Tách chuỗi giữ nguyên từ tiếng Việt và dấu câu ***
+      // Sử dụng regex (\s+) để tách dựa trên khoảng trắng nhưng giữ lại khoảng trắng
+      const parts = text.split(/(\s+)/);
       
       let charIndex = 0;
       karaokeWords = [];
 
-      wordsAndSpace.forEach(part => {
-          if (!part.trim() || /^[.,!?;:"()]+$/.test(part)) {
+      parts.forEach(part => {
+          if (!part) return; // Skip empty
+          
+          if (/^\s+$/.test(part)) {
+              // Nếu là khoảng trắng
               fragment.appendChild(document.createTextNode(part));
               charIndex += part.length;
-              return;
-          }
+          } else {
+              // Nếu là từ (có thể dính dấu câu)
+              const span = document.createElement('span');
+              span.className = 'karaoke-word';
+              span.textContent = part;
+              span.dataset.start = charIndex;
+              span.dataset.end = charIndex + part.length;
+              
+              if (globalLang !== 'vi-VN') {
+                  const tooltip = document.createElement('div');
+                  tooltip.className = 'word-tooltip';
+                  tooltip.textContent = "";
+                  span.appendChild(tooltip);
+                  span.addEventListener('mouseenter', () => translateSingleWord(part, tooltip));
+              }
 
-          const span = document.createElement('span');
-          span.className = 'karaoke-word';
-          span.textContent = part;
-          span.dataset.start = charIndex;
-          span.dataset.end = charIndex + part.length;
-          
-          if (globalLang !== 'vi-VN') {
-              const tooltip = document.createElement('div');
-              tooltip.className = 'word-tooltip';
-              tooltip.textContent = "";
-              span.appendChild(tooltip);
-              span.addEventListener('mouseenter', () => translateSingleWord(part, tooltip));
+              karaokeWords.push(span);
+              fragment.appendChild(span);
+              charIndex += part.length;
           }
-
-          karaokeWords.push(span);
-          fragment.appendChild(span);
-          charIndex += part.length;
       });
 
       els.segment.innerHTML = '';
@@ -996,38 +962,71 @@
 
     function highlightKaraoke(charIndex) {
       karaokeWords.forEach(w => w.classList.remove('karaoke-active'));
-      const word = karaokeWords.find(w => charIndex >= w.dataset.start && charIndex < w.dataset.end);
+      // Logic: charIndex của giọng đọc AI nằm trong khoảng start-end của span
+      const word = karaokeWords.find(w => {
+          const start = parseInt(w.dataset.start);
+          const end = parseInt(w.dataset.end);
+          // Cho phép sai số nhỏ hoặc match đầu từ
+          return charIndex >= start && charIndex < end;
+      });
       if (word) word.classList.add('karaoke-active');
     }
 
+    // Hàm chuẩn hóa chuỗi để so sánh
     function normalizeText(text) {
-        return text.trim().replace(/[.,!?:;'"“”()[\]{}]/g, '').replace(/\s+/g, ' ').toLowerCase();
+        return text.trim().replace(/[.,!?:;'"“”()[\]{}-]/g, '').replace(/\s+/g, ' ').toLowerCase();
     }
 
-    // === XỬ LÝ GÕ PHÍM ===
+    // === XỬ LÝ GÕ PHÍM & FEEDBACK ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
-      const oWords = normalizeText(orig).split(/\s+/).filter(w => w);
-      const iWords = normalizeText(input.replace(/ $/, ' \u00A0')).split(/\s+/).filter(w => w);
+
+      // Tách từ để so sánh từng từ một
+      const oWords = orig.split(/\s+/).filter(w => w);
+      const iWords = input.replace(/ $/, ' \u00A0').split(/\s+/).filter(w => w);
       
       let html = '', correct = 0;
+      
       iWords.forEach((w, i) => {
-        if (i >= oWords.length) html += `<span class="wrong">${w}</span> `;
-        else if (w === oWords[i]) { correct++; html += `<span class="correct">${w}</span> `; }
-        else html += `<span class="wrong">${w}</span> `;
+        if (i >= oWords.length) {
+            html += `<span class="wrong">${w}</span> `;
+        } else {
+            // So sánh phiên bản "sạch" (không dấu câu)
+            const cleanTarget = normalizeText(oWords[i]);
+            const cleanInput = normalizeText(w);
+            
+            if (cleanInput === cleanTarget) {
+                correct++;
+                html += `<span class="correct">${w}</span> `;
+            } else {
+                html += `<span class="wrong">${w}</span> `;
+            }
+        }
       });
+
       correctWords = correct;
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
-      const isMatch = normalizeText(input) === normalizeText(orig);
-      els.next.disabled = !isMatch;
-      els.input.style.borderColor = isMatch ? 'var(--success)' : '';
-      els.input.style.boxShadow = isMatch ? '0 0 0 4px rgba(16,185,129,0.25)' : '';
+      // Điều kiện hoàn thành: Số từ đúng = số từ gốc và không còn từ sai thừa
+      const isMatchLength = oWords.length === iWords.length;
+      // So sánh toàn bộ chuỗi đã chuẩn hóa
+      const isContentMatch = normalizeText(input) === normalizeText(orig);
+
+      if (isContentMatch) {
+          els.next.disabled = false;
+          els.input.style.borderColor = 'var(--success)';
+          els.input.style.boxShadow = '0 0 0 4px rgba(16,185,129,0.25)';
+      } else {
+          els.next.disabled = true;
+          els.input.style.borderColor = '';
+          els.input.style.boxShadow = '';
+      }
     }
 
     function next() {
-      const wordsInSegment = normalizeText(segments[currentIdx]).split(/\s+/).filter(w => w).length;
+      // Đếm số từ dựa trên khoảng trắng
+      const wordsInSegment = segments[currentIdx].trim().split(/\s+/).length;
       typedWords += wordsInSegment;
       totalCorrectWords += correctWords;
       currentIdx++;
@@ -1087,10 +1086,15 @@
       recognition.interimResults = false;
       
       recognition.onresult = (e) => {
-        const transcript = normalizeText(e.results[0][0].transcript);
-        const target = normalizeText(segments[currentIdx]);
-        const wordsTarget = target.split(/\s+/).filter(w => w);
-        const wordsSaid = transcript.split(/\s+/).filter(w => w);
+        const transcript = e.results[0][0].transcript;
+        const target = segments[currentIdx];
+        
+        // Normalize cả 2 để so sánh
+        const normTrans = normalizeText(transcript);
+        const normTarget = normalizeText(target);
+        
+        const wordsTarget = normTarget.split(/\s+/).filter(w => w);
+        const wordsSaid = normTrans.split(/\s+/).filter(w => w);
         
         let correct = 0;
         const feedback = wordsSaid.map((w, i) => {
@@ -1101,9 +1105,14 @@
         
         correctWords = correct;
         els.feedback.innerHTML = feedback || '<em>Đang nghe...</em>';
-        const isMatch = (correct === wordsTarget.length) && (wordsSaid.length === wordsTarget.length);
-        els.next.disabled = !isMatch;
-        if(isMatch) els.feedback.innerHTML += "<br><em>(Tuyệt vời! Nhấn 'Tiếp theo')</em>";
+        
+        // So sánh độ dài và nội dung
+        const isMatch = (wordsSaid.length >= wordsTarget.length * 0.8) && (correct / wordsTarget.length > 0.8);
+        
+        if (isMatch || normTrans === normTarget) {
+            els.next.disabled = false;
+            els.feedback.innerHTML += "<br><em>(Tuyệt vời! Nhấn 'Tiếp theo')</em>";
+        }
       };
       
       recognition.onerror = () => {
@@ -1145,6 +1154,7 @@
     els.start.addEventListener('click', () => {
       const text = els.text.value.trim();
       if (!text) return alert('Nhập đoạn văn!');
+      // Tách câu: Tách bằng dấu chấm/xuống dòng nhưng giữ lại cấu trúc
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       
@@ -1168,11 +1178,16 @@
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (!els.next.disabled) next(); } });
     els.hint.addEventListener('click', () => {
-      const words = normalizeText(segments[currentIdx]).split(/\s+/).filter(w => w);
-      const typed = normalizeText(els.input.value).split(/\s+/).filter(w => w);
-      if (typed.length < words.length) {
-        els.feedback.innerHTML += ` <span style="color:var(--info); font-weight:700;">→ ${words[typed.length]}</span>`;
+      // Logic gợi ý: Lấy từ tiếp theo dựa trên số từ đã nhập
+      const origWords = segments[currentIdx].split(/\s+/).filter(w => w);
+      const typedInput = els.input.value.trim();
+      const typedCount = typedInput ? typedInput.split(/\s+/).length : 0;
+
+      if (typedCount < origWords.length) {
+        const nextWord = origWords[typedCount];
+        els.feedback.innerHTML += ` <span style="color:var(--info); font-weight:700;">→ ${nextWord}</span>`;
         hintsUsed++;
+        els.input.focus();
       }
     });
     
@@ -1201,7 +1216,7 @@
       renderPersonalStats();
       loadVoices();
     });
-    // Fix: Gọi lại loadVoices lần nữa để đảm bảo Chrome load kịp danh sách voice
+    
     setTimeout(loadVoices, 300);
     setTimeout(loadVoices, 1000);
   </script>
