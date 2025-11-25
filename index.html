@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HiHi - Luyện Chính Tả (Multi-Lang Final)</title>
+  <title>HiHi - Luyện Chính Tả (Extended Library)</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke.">
   <meta name="theme-color" content="#f97316">
   <link href="https://googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Outfit:wght@400;600;800&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
@@ -32,6 +32,8 @@
       --danger: #ef4444;
       --warning: #f59e0b;
       --info: #0ea5e9;
+      --purple: #8b5cf6;
+      --purple-shadow: rgba(139, 92, 246, 0.4);
 
       --card-radius: 24px;
       --input-radius: 16px;
@@ -186,6 +188,7 @@
     
     @keyframes floatLogo { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px) rotate(2deg)} }
 
+    /* --- ICON BUTTON ANIMATIONS --- */
     .theme-toggle-wrapper {
       position: absolute; top: 20px; right: 20px; display: flex; gap: 12px;
     }
@@ -197,7 +200,20 @@
       transition: 0.3s; box-shadow: var(--shadow-sm);
       font-size: 1.2rem;
     }
-    .icon-btn:hover { transform: scale(1.1); background: var(--text); color: var(--bg-color); }
+    
+    /* New Animation: Swing/Wiggle on Hover */
+    @keyframes iconSwing {
+        0% { transform: rotate(0deg); }
+        20% { transform: rotate(15deg); }
+        40% { transform: rotate(-10deg); }
+        60% { transform: rotate(5deg); }
+        80% { transform: rotate(-5deg); }
+        100% { transform: rotate(0deg); }
+    }
+    .icon-btn:hover {
+        background: var(--text); color: var(--bg-color);
+        animation: iconSwing 0.6s ease;
+    }
     
     #logoutBtn { color: var(--danger); }
     #logoutBtn:hover { background: var(--danger); color: white; }
@@ -239,7 +255,8 @@
     }
     .setup-item h3 {
       font-size: 1.1rem; margin-bottom: 16px; color: var(--primary);
-      display: flex; align-items: center; gap: 8px; font-weight: 700;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700;
+      flex-wrap: wrap;
     }
     
     select, textarea, input[type="text"] {
@@ -282,13 +299,23 @@
     }
     .start-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 15px 30px var(--primary-shadow); }
     .start-btn:active { transform: translateY(-1px); }
+    /* Animation for Start Button Icon */
+    .start-btn svg { transition: transform 0.3s ease; }
+    .start-btn:hover svg { transform: translateX(5px) scale(1.1); }
 
-    .reset-text-btn {
-        margin-top: 8px; font-size: 0.85rem; color: var(--info); 
-        background: transparent; border: none; cursor: pointer; text-decoration: underline;
-        display: none; /* Hiện khi người dùng đã sửa text */
+    .btn-small-action {
+        font-size: 0.85rem; padding: 6px 12px; border-radius: 10px; cursor: pointer; border: none; font-weight: 600; transition: 0.2s;
+        display: inline-flex; align-items: center; gap: 5px;
     }
-    .reset-text-btn:hover { color: var(--primary); }
+    .reset-text-btn { color: var(--info); background: rgba(14, 165, 233, 0.1); display: none; }
+    .reset-text-btn:hover { background: rgba(14, 165, 233, 0.2); }
+
+    .random-text-btn {
+        background: var(--purple); color: white; box-shadow: 0 4px 10px var(--purple-shadow);
+        animation: pulsePurple 2s infinite;
+    }
+    .random-text-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px var(--purple-shadow); }
+    @keyframes pulsePurple { 0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); } 70% { box-shadow: 0 0 0 6px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
 
     #practiceArea, #rankPanel { padding: 40px; }
     
@@ -510,12 +537,15 @@
 
         <div class="setup-item" style="grid-column: 1/-1;">
           <h3>
-            ✍️ Dữ liệu đầu vào
-            <button id="resetTextBtn" class="reset-text-btn">🔄 Khôi phục mẫu</button>
+            <span>✍️ Dữ liệu đầu vào</span>
+            <div style="display:flex; gap:10px;">
+                <button id="randomTextBtn" class="btn-small-action random-text-btn">🎲 Bài mẫu ngẫu nhiên</button>
+                <button id="resetTextBtn" class="btn-small-action reset-text-btn">🔄 Hoàn tác</button>
+            </div>
           </h3>
-          <textarea id="sampleText" rows="4" spellcheck="false" placeholder="Nhập hoặc dán đoạn văn bạn muốn luyện vào đây..."></textarea>
+          <textarea id="sampleText" rows="6" spellcheck="false" placeholder="Nhấn nút 'Bài mẫu ngẫu nhiên' để lấy bài văn mẫu hoặc tự nhập nội dung của bạn..."></textarea>
           <div style="font-size:0.85rem; color:var(--text-dim); margin-top:5px; font-style:italic;">
-             *Gợi ý: Nếu bạn tự nhập văn bản, hệ thống sẽ giữ nguyên nội dung của bạn khi đổi ngôn ngữ.
+             **** Dữ liệu mẫu chứa nhiều bài thơ/văn kinh điển trong SGK và văn học thế giới.
           </div>
         </div>
 
@@ -605,19 +635,71 @@
     </div>
 
     <footer style="text-align:center; margin-top:40px; color:var(--text-dim); font-size:0.9rem;">
-      <p>© 2026 HiHi App. Fixed Edition</p>
+      <p>©<footer class="app-footer">
+        HiHi App <span class="heart-icon">❤️</span> được Hải làm từ cả trái tim.
+       </footer></p>
     </footer>
   </div>
 
   <script>
-    // === 1. DỮ LIỆU MẪU ĐA NGÔN NGỮ ===
-    const SAMPLE_TEXTS = {
-        'vi-VN': "Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.",
-        'en-US': "The quick brown fox jumps over the lazy dog. Success is not final, failure is not fatal: it is the courage to continue that counts.",
-        'id-ID': "Bhinneka Tunggal Ika adalah semboyan bangsa Indonesia yang tertulis pada lambang negara Garuda Pancasila. Maknanya adalah berbeda-beda tetapi tetap satu.",
-        'es-ES': "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero.",
-        'it-IT': "Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura, ché la diritta via era smarrita. Ahi quanto a dir qual era è cosa dura.",
-        'la-VA': "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    // === 1. THƯ VIỆN DỮ LIỆU ĐA NGÔN NGỮ KHỔNG LỒ ===
+    const SAMPLE_LIBRARY = {
+        'vi-VN': [
+          "Sông Mã xa rồi Tây Tiến ơi! Nhớ về rừng núi, nhớ chơi vơi. Sài Khao sương lấp đoàn quân mỏi, Mường Lát hoa về trong đêm hơi.", // Tây Tiến
+            "Mình về mình có nhớ ta? Mười lăm năm ấy thiết tha mặn nồng. Mình về mình có nhớ không, Nhìn cây nhớ núi, nhìn sông nhớ nguồn?", // Việt Bắc
+            "Bỗng nhận ra hương ổi, Phả vào trong gió se, Sương chùng chình qua ngõ, Hình như thu đã về.", // Sang Thu
+            "Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.", // Truyện Kiều
+            "Sông núi nước Nam vua Nam ở. Rành rành định phận tại sách trời. Cớ sao lũ giặc sang xâm phạm? Chúng bay sẽ bị đánh tơi bời.", // Nam Quốc Sơn Hà
+            "Thân em vừa trắng lại vừa tròn. Bảy nổi ba chìm với nước non. Rắn nát mặc dầu tay kẻ nặn. Mà em vẫn giữ tấm lòng son.", // Bánh Trôi Nước
+            "Mỗi năm hoa đào nở. Lại thấy ông đồ già. Bày mực tàu giấy đỏ. Bên phố đông người qua.", // Ông Đồ
+            "Quê hương là chùm khế ngọt. Cho con trèo hái mỗi ngày. Quê hương là đường đi học. Con về rợp bướm vàng bay.", // Quê Hương
+            "Bước tới Đèo Ngang bóng xế tà. Cỏ cây chen đá lá chen hoa. Lom khom dưới núi tiêm vài chú. Lác đác bên sông chợ mấy nhà.", // Qua Đèo Ngang
+            "Sao anh không về chơi thôn Vĩ? Nhìn nắng hàng cau nắng mới lên. Vườn ai mướt quá xanh như ngọc, Lá trúc che ngang mặt chữ điền.", // Đây Thôn Vĩ Dạ
+            "Công cha như núi Thái Sơn. Nghĩa mẹ như nước trong nguồn chảy ra. Một lòng thờ mẹ kính cha. Cho tròn chữ hiếu mới là đạo con.", // Ca dao
+            "Mặt trời xuống biển như hòn lửa. Sóng đã cài then đêm sập cửa. Đoàn thuyền đánh cá lại ra khơi. Câu hát căng buồm cùng gió khơi.", // Đoàn thuyền đánh cá
+            "Việt Nam đất nước ta ơi. Mênh mông biển lúa đâu trời đẹp hơn. Cánh cò bay lả rập rờn. Mây mờ che đỉnh Trường Sơn sớm chiều.", // Việt Nam quê hương ta
+            "Anh đi anh nhớ quê nhà. Nhớ canh rau muống nhớ cà dầm tương. Nhớ ai dãi nắng dầm sương. Nhớ ai tát nước bên đường hôm nao.", // Ca dao
+            "Em cầm tờ lịch cũ, Ngày hôm qua đâu rồi? Ra ngoài sân hỏi bố, Xoa đầu em bố cười.." //
+        ],
+        'en-US': [
+            "The quick brown fox jumps over the lazy dog. Success is not final, failure is not fatal: it is the courage to continue that counts.",
+            "Two roads diverged in a yellow wood, and sorry I could not travel both. And be one traveler, long I stood and looked down one as far as I could.", // The Road Not Taken
+            "I wandered lonely as a cloud that floats on high o'er vales and hills, when all at once I saw a crowd, a host, of golden daffodils.", // Daffodils
+            "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune.", // Hamlet
+            "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.", // Pride and Prejudice
+            "I have a dream that one day this nation will rise up and live out the true meaning of its creed: We hold these truths to be self-evident, that all men are created equal.", // MLK
+            "All the world's a stage, and all the men and women merely players. They have their exits and their entrances.", // As You Like It
+            "Hope is the thing with feathers that perches in the soul, and sings the tune without the words, and never stops at all." // Emily Dickinson
+        ],
+        'id-ID': [
+            "Bhinneka Tunggal Ika adalah semboyan bangsa Indonesia yang tertulis pada lambang negara Garuda Pancasila. Maknanya adalah berbeda-beda tetapi tetap satu.",
+            "Kami putra dan putri Indonesia, mengaku bertumpah darah yang satu, tanah air Indonesia. Kami putra dan putri Indonesia, mengaku berbangsa yang satu, bangsa Indonesia.", // Sumpah Pemuda
+            "Aku. Kalau sampai waktuku, 'Ku mau tak seorang 'kan merayu. Tidak juga kau. Tak perlu sedu sedan itu.", // Chairil Anwar - Aku
+            "Bangsa yang besar adalah bangsa yang menghormati jasa pahlawannya. Perjuangan melawan penjajah memang sulit, namun perjuangan melawan bangsamu sendiri adalah lebih sulit.", // Soekarno
+            "Di timur matahari mulai bercahaya. Bangun dan berdiri kawan semua. Marilah mengatur barisan kita. Seluruh pemuda Indonesia.",
+            "Tut Wuri Handayani. Di depan memberi contoh, di tengah memberi semangat, di belakang memberi dorongan." // Ki Hajar Dewantara
+        ],
+        'es-ES': [
+            "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero.", // Don Quijote
+            "Caminante, no hay camino, se hace camino al andar. Al andar se hace el camino, y al volver la vista atrás se ve la senda que nunca se ha de volver a pisar.", // Antonio Machado
+            "Puedo escribir los versos más tristes esta noche. Escribir, por ejemplo: 'La noche está estrellada, y tiritan, azules, los astros, a lo lejos'.", // Pablo Neruda
+            "Verde que te quiero verde. Verde viento. Verdes ramas. El barco sobre la mar y el caballo en la montaña.", // Federico García Lorca
+            "La vida es sueño, y los sueños, sueños son." // Calderón de la Barca
+        ],
+        'it-IT': [
+            "Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura, ché la diritta via era smarrita.", // Dante - Inferno
+            "L'amor che move il sole e l'altre stelle.", // Dante - Paradiso
+            "Quel ramo del lago di Como, che volge a mezzogiorno, tra due catene non interrotte di monti, tutto a seni e a golfi.", // I Promessi Sposi
+            "E il naufragar m'è dolce in questo mare.", // L'Infinito - Leopardi
+            "La vita è bella. Ricordati di essere felice."
+        ],
+        'la-VA': [
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "Veni, vidi, vici. Alea iacta est. Carpe diem, quam minimum credula postero.", // Caesar & Horace
+            "Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora.", // Aeneid
+            "Per aspera ad astra. Cogito, ergo sum. Errare humanum est, perseverare autem diabolicum.",
+            "Tempus fugit. Memento mori. Amor vincit omnia."
+        ]
     };
 
     // === 2. CẤU HÌNH & BIẾN ===
@@ -653,13 +735,14 @@
     let startTime = 0;
     let timer = null;
     
-    let userHasEditedText = false; // Flag kiểm tra người dùng đã sửa text chưa
+    let userHasEditedText = false; 
 
     // === 3. CHỌN PHẦN TỬ (DOM) ===
     const els = {
       lang: document.getElementById('globalLang'),
       text: document.getElementById('sampleText'),
       resetTextBtn: document.getElementById('resetTextBtn'),
+      randomTextBtn: document.getElementById('randomTextBtn'), // Nút mới
       start: document.getElementById('startBtn'),
       segment: document.getElementById('currentSegment'),
       input: document.getElementById('userInput'),
@@ -983,12 +1066,12 @@
       if (word) word.classList.add('karaoke-active');
     }
 
-    // Hàm chuẩn hóa chuỗi để so sánh (Cải tiến)
+    // Hàm chuẩn hóa chuỗi để so sánh
     function normalizeText(text) {
         if (!text) return "";
         return text.trim()
-                   .replace(/[.,!?:;'"“”()[\]{}]/g, '') // Loại bỏ dấu câu
-                   .replace(/\s+/g, ' ') // Gộp khoảng trắng
+                   .replace(/[.,!?:;'"“”()[\]{}]/g, '')
+                   .replace(/\s+/g, ' ') 
                    .toLowerCase();
     }
 
@@ -1021,7 +1104,7 @@
       correctWords = correct;
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
-      // Điều kiện hoàn thành (so sánh chuỗi đã chuẩn hóa)
+      // Điều kiện hoàn thành
       const isContentMatch = normalizeText(input) === normalizeText(orig);
 
       if (isContentMatch) {
@@ -1091,9 +1174,9 @@
       
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
       recognition = new SpeechRecognition();
-      recognition.lang = globalLang; // Quan trọng: Cập nhật ngôn ngữ
-      recognition.continuous = false; // Ngắt từng câu để chính xác hơn
-      recognition.interimResults = true; // Hiện kết quả tạm thời
+      recognition.lang = globalLang;
+      recognition.continuous = false;
+      recognition.interimResults = true;
       
       recognition.onresult = (e) => {
         let finalTranscript = '';
@@ -1110,18 +1193,15 @@
         const target = segments[currentIdx];
         const displaySafe = finalTranscript || interimTranscript;
 
-        // Feedback trực quan
         els.feedback.innerHTML = `<span style="color:var(--primary)">${displaySafe}</span>`;
 
         if (finalTranscript) {
              const normTrans = normalizeText(finalTranscript);
              const normTarget = normalizeText(target);
              
-             // So sánh độ tương đồng
              if (normTrans === normTarget || normTrans.includes(normTarget)) {
                  els.feedback.innerHTML = `<span class="correct">${finalTranscript}</span> (Chính xác!)`;
                  els.next.disabled = false;
-                 // Tự động next sau 1s nếu đúng
                  setTimeout(next, 1000);
              } else {
                  els.feedback.innerHTML = `<span class="wrong">${finalTranscript}</span> (Thử lại)`;
@@ -1139,10 +1219,18 @@
       recognition.onend = () => { 
           els.micBtn.classList.remove('listening'); 
           isListening = false;
-          // Nếu chưa xong và đang ở chế độ đọc, có thể tự bật lại nếu muốn (optional)
       };
       
       return true;
+    }
+
+    // === HÀM LẤY TEXT NGẪU NHIÊN ===
+    function setRandomText() {
+        const library = SAMPLE_LIBRARY[globalLang] || SAMPLE_LIBRARY['vi-VN'];
+        const randomText = library[Math.floor(Math.random() * library.length)];
+        els.text.value = randomText;
+        userHasEditedText = false;
+        els.resetTextBtn.style.display = 'none';
     }
 
     // === 5. SỰ KIỆN ===
@@ -1170,31 +1258,40 @@
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
       localStorage.setItem('lang', globalLang);
-      
-      // Nếu user chưa sửa text, tự động đổi text mẫu
-      if (!userHasEditedText) {
-          els.text.value = SAMPLE_TEXTS[globalLang] || "";
-      }
+      // Đã loại bỏ setRandomText() tại đây theo yêu cầu
       loadVoices();
     });
 
     // Phát hiện người dùng tự sửa text
     els.text.addEventListener('input', () => {
         userHasEditedText = true;
-        els.resetTextBtn.style.display = 'inline-block';
+        els.resetTextBtn.style.display = 'inline-flex';
     });
 
-    // Nút khôi phục text mẫu
+    // Nút khôi phục text cũ (chỉ hiện khi đã sửa)
     els.resetTextBtn.addEventListener('click', () => {
-        userHasEditedText = false;
-        els.text.value = SAMPLE_TEXTS[globalLang] || "";
+        // Thực tế ở phiên bản này, nó sẽ clear hoặc set về giá trị cũ
+        // Để đơn giản, ta sẽ cho nó clear đi để người dùng chọn Ngẫu nhiên lại
+        els.text.value = '';
         els.resetTextBtn.style.display = 'none';
         els.text.focus();
     });
 
+    // Nút lấy text ngẫu nhiên (Mới)
+    els.randomTextBtn.addEventListener('click', () => {
+        setRandomText();
+        // Hiệu ứng nhẹ
+        els.text.style.transition = 'none';
+        els.text.style.backgroundColor = 'var(--purple-shadow)';
+        setTimeout(() => {
+            els.text.style.transition = '0.3s';
+            els.text.style.backgroundColor = '';
+        }, 200);
+    });
+
     els.start.addEventListener('click', () => {
       const text = els.text.value.trim();
-      if (!text) return alert('Nhập đoạn văn!');
+      if (!text) return alert('Vui lòng nhập đoạn văn hoặc nhấn nút "🎲 Bài mẫu ngẫu nhiên"!');
       // Tách câu thông minh hơn
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
@@ -1211,7 +1308,7 @@
       
       document.getElementById('setupPanel').classList.add('hidden');
       document.getElementById('practiceArea').classList.remove('hidden');
-      initSpeechRecognition(); // Khởi tạo lại mic với ngôn ngữ mới
+      initSpeechRecognition(); 
       showSegment();
     });
 
@@ -1252,7 +1349,7 @@
               els.feedback.innerHTML = '<em>Đang nghe... Hãy đọc to!</em>'; 
           } catch(e) {
               console.error(e);
-              initSpeechRecognition(); // Thử khởi tạo lại nếu lỗi
+              initSpeechRecognition(); 
           }
       }
     });
@@ -1260,7 +1357,8 @@
     // === 6. KHỞI CHẠY ===
     initTheme(); 
     els.lang.value = globalLang;
-    els.text.value = SAMPLE_TEXTS[globalLang] || SAMPLE_TEXTS['vi-VN']; // Set text ban đầu
+    
+    // Đã loại bỏ việc tự động điền text khi vào trang
     
     window.addEventListener('load', () => {
       checkLogin();
@@ -1270,4 +1368,3 @@
   </script>
 </body>
 </html>
-
