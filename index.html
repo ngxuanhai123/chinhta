@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HiHi - Luyện Chính Tả (Orange Edition - Fixed)</title>
+  <title>HiHi - Luyện Chính Tả (Multi-Lang Final)</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke.">
   <meta name="theme-color" content="#f97316">
   <link href="https://googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Outfit:wght@400;600;800&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
@@ -12,14 +12,14 @@
   <style>
     :root {
       /* --- MÀU SẮC MỚI: CAM & TRẮNG (DEFAULT) --- */
-      --bg-gradient: radial-gradient(at 0% 0%, hsla(27, 96%, 90%, 1) 0, transparent 50%), 
-                     radial-gradient(at 50% 0%, hsla(35, 100%, 92%, 1) 0, transparent 50%), 
-                     radial-gradient(at 100% 0%, hsla(15, 90%, 90%, 1) 0, transparent 50%);
-      --bg-color: #fff7ed; /* Orange-50 */
+      --bg-gradient: radial-gradient(at 0% 0%, hsla(27, 96%, 95%, 1) 0, transparent 50%), 
+                     radial-gradient(at 50% 100%, hsla(35, 100%, 96%, 1) 0, transparent 50%), 
+                     radial-gradient(at 100% 0%, hsla(15, 90%, 95%, 1) 0, transparent 50%);
+      --bg-color: #fffbf7; /* Nhẹ nhàng hơn */
       
-      --glass-surface: rgba(255, 255, 255, 0.65);
-      --glass-border: rgba(249, 115, 22, 0.2);
-      --glass-blur: 20px;
+      --glass-surface: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(249, 115, 22, 0.25);
+      --glass-blur: 24px;
 
       --text: #431407;
       --text-dim: #9a3412;
@@ -45,34 +45,48 @@
       --shadow-glow: 0 0 20px rgba(249, 115, 22, 0.3);
     }
 
+    /* --- DARK MODE --- */
     [data-theme="dark"] {
       --bg-color: #0f172a;
-      --bg-gradient: radial-gradient(at 0% 0%, hsla(27, 70%, 15%, 1) 0, transparent 50%), 
-                     radial-gradient(at 100% 0%, hsla(15, 60%, 15%, 1) 0, transparent 50%);
-      --glass-surface: rgba(15, 23, 42, 0.75);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text: #fff7ed;
-      --text-dim: #fdba74;
-      --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      --bg-gradient: radial-gradient(at 0% 0%, hsla(222, 47%, 11%, 1) 0, transparent 50%), 
+                     radial-gradient(at 100% 100%, hsla(222, 47%, 15%, 1) 0, transparent 50%);
+      --glass-surface: rgba(30, 41, 59, 0.85); /* Đậm hơn để dễ đọc chữ */
+      --glass-border: rgba(255, 255, 255, 0.15);
+      
+      --text: #f1f5f9;
+      --text-dim: #94a3b8;
+      
+      --primary: #fb923c; /* Cam sáng hơn trên nền tối */
+      --primary-gradient: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+      
+      --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
     }
 
+    /* --- HOLIDAY BASE --- */
     [data-theme*="holiday"] {
-      --primary-gradient: linear-gradient(135deg, #dc2626 0%, #16a34a 100%);
-      --primary-shadow: rgba(220, 38, 38, 0.4);
-      --primary: #dc2626;
-      --bg-color: #0f2b1d;
+      --primary-gradient: linear-gradient(135deg, #d42f2f 0%, #108538 100%); /* Đỏ sang Xanh */
+      --primary-shadow: rgba(212, 47, 47, 0.4);
+      --primary: #d42f2f;
       --font-display: 'Mountains of Christmas', cursive;
-      --text: #f0fdf4;
-      --text-dim: #86efac;
     }
+
+    /* Holiday Light */
     [data-theme="holiday"] {
+      --bg-color: #fef2f2;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #fee2e2 0%, transparent 60%);
       --glass-surface: rgba(255, 255, 255, 0.9);
-      --text: #14532d;
+      --glass-border: rgba(220, 38, 38, 0.2);
+      --text: #14532d; /* Xanh lá đậm */
+      --text-dim: #b91c1c; /* Đỏ đậm */
     }
+
+    /* Holiday Dark */
     [data-theme="holiday-dark"] {
-      --glass-surface: rgba(20, 10, 10, 0.8);
-      --text: #ffe4e6;
       --bg-color: #1a0505;
+      --glass-surface: rgba(40, 10, 10, 0.85);
+      --glass-border: rgba(255, 215, 0, 0.2); /* Vàng gold */
+      --text: #ffe4e6;
+      --text-dim: #fca5a5;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing: antialiased; }
@@ -91,6 +105,7 @@
       transition: background-color 0.5s ease, color 0.3s ease;
     }
 
+    /* Aurora Background Effect */
     .aurora-bg {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       z-index: -1; overflow: hidden; pointer-events: none;
@@ -103,12 +118,13 @@
     .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: #fbbf24; animation-delay: -5s; }
     .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: #fca5a5; animation-delay: -10s; }
     
-    [data-theme*="holiday"] .blob-1 { background: #dc2626; }
-    [data-theme*="holiday"] .blob-2 { background: #16a34a; }
-    [data-theme*="holiday"] .blob-3 { background: #fbbf24; }
-    [data-theme="dark"] .blob-1 { background: #7c2d12; opacity: 0.3; }
-    [data-theme="dark"] .blob-2 { background: #9a3412; opacity: 0.3; }
-    [data-theme="dark"] .blob-3 { background: #451a03; opacity: 0.3; }
+    [data-theme*="holiday"] .blob-1 { background: #dc2626; opacity: 0.4; }
+    [data-theme*="holiday"] .blob-2 { background: #15803d; opacity: 0.4; }
+    [data-theme*="holiday"] .blob-3 { background: #fbbf24; opacity: 0.3; } /* Gold */
+    
+    [data-theme="dark"] .blob-1 { background: #7c2d12; opacity: 0.2; }
+    [data-theme="dark"] .blob-2 { background: #9a3412; opacity: 0.2; }
+    [data-theme="dark"] .blob-3 { background: #451a03; opacity: 0.2; }
 
     @keyframes floatBlob {
       0% { transform: translate(0, 0) scale(1); }
@@ -186,7 +202,7 @@
     #logoutBtn { color: var(--danger); }
     #logoutBtn:hover { background: var(--danger); color: white; }
     #holidayBtn { color: #16a34a; }
-    [data-theme*="holiday"] #holidayBtn { background: #dc2626; color: #fff; border-color: #fbbf24; }
+    [data-theme*="holiday"] #holidayBtn { background: #d42f2f; color: #fff; border-color: #fbbf24; }
 
     .tabs {
       display: inline-flex; background: var(--glass-surface);
@@ -225,16 +241,15 @@
       font-size: 1.1rem; margin-bottom: 16px; color: var(--primary);
       display: flex; align-items: center; gap: 8px; font-weight: 700;
     }
-    .setup-item h3 svg { width: 20px; fill: var(--primary); }
-
+    
     select, textarea, input[type="text"] {
       width: 100%; padding: 14px 16px;
       border: 2px solid var(--glass-border); border-radius: var(--input-radius);
-      background: rgba(255,255,255,0.5); color: #0f172a; 
+      background: rgba(255,255,255,0.6); color: var(--text); 
       font-family: var(--font-main); font-size: 1rem; transition: 0.3s;
     }
     [data-theme="dark"] select, [data-theme="dark"] textarea, [data-theme="dark"] input[type="text"] {
-       background: rgba(0,0,0,0.3); color: #fff; border-color: rgba(255,255,255,0.1);
+       background: rgba(0,0,0,0.3); color: #fff; border-color: rgba(255,255,255,0.2);
     }
 
     select:focus, textarea:focus, input[type="text"]:focus {
@@ -246,7 +261,7 @@
     .radio-label {
       display: flex; align-items: center; gap: 12px; padding: 12px;
       border-radius: 12px; cursor: pointer; transition: 0.2s;
-      border: 1px solid transparent;
+      border: 1px solid transparent; color: var(--text);
     }
     .radio-label:hover { background: rgba(249, 115, 22, 0.1); }
     .radio-label:has(input:checked) {
@@ -268,9 +283,16 @@
     .start-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 15px 30px var(--primary-shadow); }
     .start-btn:active { transform: translateY(-1px); }
 
+    .reset-text-btn {
+        margin-top: 8px; font-size: 0.85rem; color: var(--info); 
+        background: transparent; border: none; cursor: pointer; text-decoration: underline;
+        display: none; /* Hiện khi người dùng đã sửa text */
+    }
+    .reset-text-btn:hover { color: var(--primary); }
+
     #practiceArea, #rankPanel { padding: 40px; }
     
-    .mode-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .mode-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
     .mode-btn {
       padding: 8px 20px; border-radius: 30px; border: 1px solid var(--glass-border);
       background: transparent; color: var(--text); font-weight: 600; cursor: pointer;
@@ -374,7 +396,7 @@
     .modal-content {
       background: var(--bg-color); border: 1px solid var(--glass-border);
       padding: 40px; border-radius: 32px; width: 90%; max-width: 450px;
-      text-align: center; box-shadow: var(--shadow-lg);
+      text-align: center; box-shadow: var(--shadow-lg); color: var(--text);
     }
     .modal h3 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 24px; color: var(--primary); }
 
@@ -432,7 +454,7 @@
         <svg viewBox="0 0 24 24">
           <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
         </svg>
-        <h1>HiHi<span style="font-size:0.4em; vertical-align: super; opacity: 0.8;">2026</span></h1>
+        <h1>HiHi<span style="font-size:0.4em; vertical-align: super; opacity: 0.8;">Final</span></h1>
       </div>
       <p class="tagline">Luyện chính tả & ngoại ngữ phong cách mới 🚀</p>
     </header>
@@ -451,12 +473,12 @@
         <div class="setup-item">
           <h3>🌍 Ngôn ngữ</h3>
           <select id="globalLang">
-            <option value="vi-VN">Tiếng Việt (Gốc)</option>
-            <option value="en-US">Tiếng Anh → Việt</option>
-            <option value="id-ID">Tiếng Indonesia → Việt</option>
-            <option value="es-ES">Tiếng Tây Ban Nha → Việt</option>
-            <option value="it-IT">Tiếng Ý → Việt</option>
-            <option value="la-VA">Tiếng Latin → Việt</option>
+            <option value="vi-VN">Tiếng Việt (Truyện Kiều)</option>
+            <option value="en-US">Tiếng Anh (Mỹ)</option>
+            <option value="id-ID">Tiếng Indonesia</option>
+            <option value="es-ES">Tiếng Tây Ban Nha</option>
+            <option value="it-IT">Tiếng Ý</option>
+            <option value="la-VA">Tiếng Latin</option>
           </select>
         </div>
 
@@ -487,8 +509,14 @@
         </div>
 
         <div class="setup-item" style="grid-column: 1/-1;">
-          <h3>✍️ Dữ liệu đầu vào</h3>
-          <textarea id="sampleText" rows="4" spellcheck="false" placeholder="Dán đoạn văn bạn muốn luyện vào đây...">Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.</textarea>
+          <h3>
+            ✍️ Dữ liệu đầu vào
+            <button id="resetTextBtn" class="reset-text-btn">🔄 Khôi phục mẫu</button>
+          </h3>
+          <textarea id="sampleText" rows="4" spellcheck="false" placeholder="Nhập hoặc dán đoạn văn bạn muốn luyện vào đây..."></textarea>
+          <div style="font-size:0.85rem; color:var(--text-dim); margin-top:5px; font-style:italic;">
+             *Gợi ý: Nếu bạn tự nhập văn bản, hệ thống sẽ giữ nguyên nội dung của bạn khi đổi ngôn ngữ.
+          </div>
         </div>
 
         <button class="start-btn" id="startBtn">
@@ -577,19 +605,28 @@
     </div>
 
     <footer style="text-align:center; margin-top:40px; color:var(--text-dim); font-size:0.9rem;">
-      <p>© 2026 HiHi App. Made with ❤️ & ✨</p>
+      <p>© 2026 HiHi App. Fixed Edition</p>
     </footer>
   </div>
 
   <script>
-    // === 1. HẰNG SỐ & CẤU HÌNH ===
+    // === 1. DỮ LIỆU MẪU ĐA NGÔN NGỮ ===
+    const SAMPLE_TEXTS = {
+        'vi-VN': "Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.",
+        'en-US': "The quick brown fox jumps over the lazy dog. Success is not final, failure is not fatal: it is the courage to continue that counts.",
+        'id-ID': "Bhinneka Tunggal Ika adalah semboyan bangsa Indonesia yang tertulis pada lambang negara Garuda Pancasila. Maknanya adalah berbeda-beda tetapi tetap satu.",
+        'es-ES': "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero.",
+        'it-IT': "Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura, ché la diritta via era smarrita. Ahi quanto a dir qual era è cosa dura.",
+        'la-VA': "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    };
+
+    // === 2. CẤU HÌNH & BIẾN ===
     const coolNicknames = [
       "Chiến Binh Bàn Phím", "Vua Gõ Chữ", "Thần Tốc", "HiHi Pro", "Ninja Luyện Gõ",
       "Siêu Anh Hùng Gõ", "Chuyên Gia Chính Tả", "Người Bạn Của Chữ", "Đôi Tay Vàng"
     ];
     const wordCache = {}; 
 
-    // === 2. BIẾN TOÀN CỤC ===
     let typedWords = 0;
     let correctWords = 0;
     let totalCorrectWords = 0;
@@ -615,11 +652,14 @@
     let currentIdx = 0;
     let startTime = 0;
     let timer = null;
+    
+    let userHasEditedText = false; // Flag kiểm tra người dùng đã sửa text chưa
 
     // === 3. CHỌN PHẦN TỬ (DOM) ===
     const els = {
       lang: document.getElementById('globalLang'),
       text: document.getElementById('sampleText'),
+      resetTextBtn: document.getElementById('resetTextBtn'),
       start: document.getElementById('startBtn'),
       segment: document.getElementById('currentSegment'),
       input: document.getElementById('userInput'),
@@ -711,14 +751,6 @@
         }
     }
 
-    function isHolidaySeason() {
-        const now = new Date();
-        const month = now.getMonth(); 
-        const date = now.getDate();
-        if (month === 11 && date > 10) return true;
-        return false;
-    }
-
     function applyTheme(themeMode) {
         const body = document.body;
         const isDarkPreferred = localStorage.getItem('baseTheme') === 'dark';
@@ -756,20 +788,6 @@
 
     function initTheme() {
         if (!localStorage.getItem('baseTheme')) localStorage.setItem('baseTheme', 'light');
-
-        const isHolidayNow = isHolidaySeason();
-        if (isHolidayNow) {
-            if (!localStorage.getItem('seasonChecked')) {
-                localStorage.setItem('isHoliday', 'true');
-                localStorage.setItem('seasonChecked', 'true'); 
-            }
-        } else {
-            if (localStorage.getItem('isHoliday') === 'true' && localStorage.getItem('seasonChecked') === 'true') {
-                 localStorage.setItem('isHoliday', 'false');
-                 localStorage.removeItem('seasonChecked');
-            }
-        }
-        
         const isHoliday = localStorage.getItem('isHoliday') === 'true';
         const base = localStorage.getItem('baseTheme');
         applyTheme(isHoliday ? 'holiday' : base);
@@ -783,7 +801,6 @@
                 tabButtons.forEach(t => t.classList.remove('active'));
                 btn.classList.add('active');
                 tabContents.forEach(c => c.classList.toggle('hidden', c.id !== targetId));
-                
                 if (btn.dataset.tab === 'rankPanel') renderPersonalStats();
             });
         });
@@ -820,8 +837,9 @@
       const targetCode = globalLang.split('-')[0]; 
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(targetCode));
       
-      if (voices.length === 0 && globalLang.startsWith('la')) {
-          voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('it') || v.lang.startsWith('en'));
+      // Fallback
+      if (voices.length === 0 && (globalLang.startsWith('la') || globalLang.startsWith('id'))) {
+          voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') || v.lang.startsWith('es') || v.lang.startsWith('it'));
       }
 
       els.voiceSelect.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Không tìm thấy giọng phù hợp</option>';
@@ -883,7 +901,7 @@
         }
     }
 
-    // === HIỂN THỊ ĐOẠN VĂN (FIXED SPLIT) ===
+    // === HIỂN THỊ ĐOẠN VĂN ===
     async function showSegment() {
       const text = segments[currentIdx];
       els.next.disabled = true;
@@ -915,23 +933,18 @@
       }
 
       const fragment = document.createDocumentFragment();
-      
-      // *** FIX: Tách chuỗi giữ nguyên từ tiếng Việt và dấu câu ***
-      // Sử dụng regex (\s+) để tách dựa trên khoảng trắng nhưng giữ lại khoảng trắng
       const parts = text.split(/(\s+)/);
       
       let charIndex = 0;
       karaokeWords = [];
 
       parts.forEach(part => {
-          if (!part) return; // Skip empty
+          if (!part) return;
           
           if (/^\s+$/.test(part)) {
-              // Nếu là khoảng trắng
               fragment.appendChild(document.createTextNode(part));
               charIndex += part.length;
           } else {
-              // Nếu là từ (có thể dính dấu câu)
               const span = document.createElement('span');
               span.className = 'karaoke-word';
               span.textContent = part;
@@ -962,19 +975,21 @@
 
     function highlightKaraoke(charIndex) {
       karaokeWords.forEach(w => w.classList.remove('karaoke-active'));
-      // Logic: charIndex của giọng đọc AI nằm trong khoảng start-end của span
       const word = karaokeWords.find(w => {
           const start = parseInt(w.dataset.start);
           const end = parseInt(w.dataset.end);
-          // Cho phép sai số nhỏ hoặc match đầu từ
           return charIndex >= start && charIndex < end;
       });
       if (word) word.classList.add('karaoke-active');
     }
 
-    // Hàm chuẩn hóa chuỗi để so sánh
+    // Hàm chuẩn hóa chuỗi để so sánh (Cải tiến)
     function normalizeText(text) {
-        return text.trim().replace(/[.,!?:;'"“”()[\]{}-]/g, '').replace(/\s+/g, ' ').toLowerCase();
+        if (!text) return "";
+        return text.trim()
+                   .replace(/[.,!?:;'"“”()[\]{}]/g, '') // Loại bỏ dấu câu
+                   .replace(/\s+/g, ' ') // Gộp khoảng trắng
+                   .toLowerCase();
     }
 
     // === XỬ LÝ GÕ PHÍM & FEEDBACK ===
@@ -982,7 +997,6 @@
       const orig = segments[currentIdx];
       const input = els.input.value;
 
-      // Tách từ để so sánh từng từ một
       const oWords = orig.split(/\s+/).filter(w => w);
       const iWords = input.replace(/ $/, ' \u00A0').split(/\s+/).filter(w => w);
       
@@ -992,7 +1006,6 @@
         if (i >= oWords.length) {
             html += `<span class="wrong">${w}</span> `;
         } else {
-            // So sánh phiên bản "sạch" (không dấu câu)
             const cleanTarget = normalizeText(oWords[i]);
             const cleanInput = normalizeText(w);
             
@@ -1008,9 +1021,7 @@
       correctWords = correct;
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
-      // Điều kiện hoàn thành: Số từ đúng = số từ gốc và không còn từ sai thừa
-      const isMatchLength = oWords.length === iWords.length;
-      // So sánh toàn bộ chuỗi đã chuẩn hóa
+      // Điều kiện hoàn thành (so sánh chuỗi đã chuẩn hóa)
       const isContentMatch = normalizeText(input) === normalizeText(orig);
 
       if (isContentMatch) {
@@ -1025,7 +1036,6 @@
     }
 
     function next() {
-      // Đếm số từ dựa trên khoảng trắng
       const wordsInSegment = segments[currentIdx].trim().split(/\s+/).length;
       typedWords += wordsInSegment;
       totalCorrectWords += correctWords;
@@ -1081,46 +1091,57 @@
       
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
       recognition = new SpeechRecognition();
-      recognition.lang = globalLang;
-      recognition.continuous = false;
-      recognition.interimResults = false;
+      recognition.lang = globalLang; // Quan trọng: Cập nhật ngôn ngữ
+      recognition.continuous = false; // Ngắt từng câu để chính xác hơn
+      recognition.interimResults = true; // Hiện kết quả tạm thời
       
       recognition.onresult = (e) => {
-        const transcript = e.results[0][0].transcript;
+        let finalTranscript = '';
+        let interimTranscript = '';
+        
+        for (let i = e.resultIndex; i < e.results.length; ++i) {
+             if (e.results[i].isFinal) {
+               finalTranscript += e.results[i][0].transcript;
+             } else {
+               interimTranscript += e.results[i][0].transcript;
+             }
+        }
+        
         const target = segments[currentIdx];
-        
-        // Normalize cả 2 để so sánh
-        const normTrans = normalizeText(transcript);
-        const normTarget = normalizeText(target);
-        
-        const wordsTarget = normTarget.split(/\s+/).filter(w => w);
-        const wordsSaid = normTrans.split(/\s+/).filter(w => w);
-        
-        let correct = 0;
-        const feedback = wordsSaid.map((w, i) => {
-          if (i >= wordsTarget.length) return `<span class="wrong">${w}</span>`;
-          if (w === wordsTarget[i]) { correct++; return `<span class="correct">${w}</span>`; }
-          return `<span class="wrong">${w}</span>`;
-        }).join(' ');
-        
-        correctWords = correct;
-        els.feedback.innerHTML = feedback || '<em>Đang nghe...</em>';
-        
-        // So sánh độ dài và nội dung
-        const isMatch = (wordsSaid.length >= wordsTarget.length * 0.8) && (correct / wordsTarget.length > 0.8);
-        
-        if (isMatch || normTrans === normTarget) {
-            els.next.disabled = false;
-            els.feedback.innerHTML += "<br><em>(Tuyệt vời! Nhấn 'Tiếp theo')</em>";
+        const displaySafe = finalTranscript || interimTranscript;
+
+        // Feedback trực quan
+        els.feedback.innerHTML = `<span style="color:var(--primary)">${displaySafe}</span>`;
+
+        if (finalTranscript) {
+             const normTrans = normalizeText(finalTranscript);
+             const normTarget = normalizeText(target);
+             
+             // So sánh độ tương đồng
+             if (normTrans === normTarget || normTrans.includes(normTarget)) {
+                 els.feedback.innerHTML = `<span class="correct">${finalTranscript}</span> (Chính xác!)`;
+                 els.next.disabled = false;
+                 // Tự động next sau 1s nếu đúng
+                 setTimeout(next, 1000);
+             } else {
+                 els.feedback.innerHTML = `<span class="wrong">${finalTranscript}</span> (Thử lại)`;
+             }
         }
       };
       
-      recognition.onerror = () => {
-        els.feedback.innerHTML = `<em>Lỗi mic. Nhấn lại.</em>`;
+      recognition.onerror = (e) => {
+        console.error(e);
+        els.feedback.innerHTML = `<em>Lỗi mic (${e.error}). Hãy nhấn lại.</em>`;
         els.micBtn.classList.remove('listening');
         isListening = false;
       };
-      recognition.onend = () => { els.micBtn.classList.remove('listening'); isListening = false; };
+      
+      recognition.onend = () => { 
+          els.micBtn.classList.remove('listening'); 
+          isListening = false;
+          // Nếu chưa xong và đang ở chế độ đọc, có thể tự bật lại nếu muốn (optional)
+      };
+      
       return true;
     }
 
@@ -1145,22 +1166,41 @@
     els.previewVoice.addEventListener('click', () => speak(globalLang === 'vi-VN' ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.'));
     speechSynthesis.onvoiceschanged = loadVoices;
 
+    // Logic Đổi ngôn ngữ & Xử lý Textarea
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
       localStorage.setItem('lang', globalLang);
-      location.reload();
+      
+      // Nếu user chưa sửa text, tự động đổi text mẫu
+      if (!userHasEditedText) {
+          els.text.value = SAMPLE_TEXTS[globalLang] || "";
+      }
+      loadVoices();
+    });
+
+    // Phát hiện người dùng tự sửa text
+    els.text.addEventListener('input', () => {
+        userHasEditedText = true;
+        els.resetTextBtn.style.display = 'inline-block';
+    });
+
+    // Nút khôi phục text mẫu
+    els.resetTextBtn.addEventListener('click', () => {
+        userHasEditedText = false;
+        els.text.value = SAMPLE_TEXTS[globalLang] || "";
+        els.resetTextBtn.style.display = 'none';
+        els.text.focus();
     });
 
     els.start.addEventListener('click', () => {
       const text = els.text.value.trim();
       if (!text) return alert('Nhập đoạn văn!');
-      // Tách câu: Tách bằng dấu chấm/xuống dòng nhưng giữ lại cấu trúc
+      // Tách câu thông minh hơn
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       
       currentIdx = 0; typedWords = 0; correctWords = 0; totalCorrectWords = 0; hintsUsed = 0; totalSentences = segments.length;
       currentMode = document.querySelector('input[name="mode"]:checked').value;
-      
       speechRate = parseFloat(els.voiceRateSelect.value);
       
       els.modeBtns().forEach(btn => btn.classList.toggle('active', btn.dataset.mode === currentMode));
@@ -1171,14 +1211,13 @@
       
       document.getElementById('setupPanel').classList.add('hidden');
       document.getElementById('practiceArea').classList.remove('hidden');
-      initSpeechRecognition();
+      initSpeechRecognition(); // Khởi tạo lại mic với ngôn ngữ mới
       showSegment();
     });
 
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (!els.next.disabled) next(); } });
     els.hint.addEventListener('click', () => {
-      // Logic gợi ý: Lấy từ tiếp theo dựa trên số từ đã nhập
       const origWords = segments[currentIdx].split(/\s+/).filter(w => w);
       const typedInput = els.input.value.trim();
       const typedCount = typedInput ? typedInput.split(/\s+/).length : 0;
@@ -1202,23 +1241,32 @@
     }));
 
     els.micBtn.addEventListener('click', () => {
-      if (!recognition && !initSpeechRecognition()) return;
-      if (isListening) recognition.stop();
-      else { recognition.start(); els.micBtn.classList.add('listening'); isListening = true; els.feedback.innerHTML = '<em>Đang nghe... Hãy đọc to!</em>'; }
+      if (!recognition) initSpeechRecognition();
+      if (isListening) {
+          recognition.stop();
+      } else { 
+          try {
+              recognition.start(); 
+              els.micBtn.classList.add('listening'); 
+              isListening = true; 
+              els.feedback.innerHTML = '<em>Đang nghe... Hãy đọc to!</em>'; 
+          } catch(e) {
+              console.error(e);
+              initSpeechRecognition(); // Thử khởi tạo lại nếu lỗi
+          }
+      }
     });
 
     // === 6. KHỞI CHẠY ===
     initTheme(); 
     els.lang.value = globalLang;
+    els.text.value = SAMPLE_TEXTS[globalLang] || SAMPLE_TEXTS['vi-VN']; // Set text ban đầu
     
     window.addEventListener('load', () => {
       checkLogin();
       renderPersonalStats();
       loadVoices();
     });
-    
-    setTimeout(loadVoices, 300);
-    setTimeout(loadVoices, 1000);
   </script>
 </body>
 </html>
