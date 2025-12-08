@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HiHi - Aurora Edition</title>
-  <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke.">
+  <title>HiHi - Aurora Edition (Online)</title>
+  <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke, bảng xếp hạng online.">
   <meta name="theme-color" content="#0f172a">
   <link href="https://googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -228,14 +228,14 @@
       box-shadow: 0 4px 15px var(--primary-shadow);
     }
 
-    .name-box { text-align: center; margin-bottom: 10px; }
-    .name-box input {
-      background: transparent; border: none; border-bottom: 2px solid var(--glass-border);
-      text-align: center; font-size: 1.4rem; color: var(--text); font-weight: 700;
-      width: 300px; padding: 8px; font-family: var(--font-display);
-      text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    .user-info-bar { 
+        text-align: center; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;
     }
-    .name-box input:focus { outline: none; border-color: var(--primary); }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--primary); }
+    .name-display {
+      font-size: 1.2rem; color: var(--text); font-weight: 700;
+      font-family: var(--font-display); text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
 
     /* Inputs & Setup */
     .setup-grid {
@@ -441,6 +441,15 @@
     }
     .modal h3 { font-family: var(--font-display); font-size: 2rem; margin-bottom: 24px; color: var(--primary); text-shadow: 0 0 10px var(--primary-shadow); }
 
+    /* Login Google Btn */
+    .btn-google {
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        background: white; color: #333; width: 100%; padding: 12px;
+        border-radius: 30px; border: none; font-weight: 600; cursor: pointer;
+        transition: 0.3s; margin-bottom: 16px; font-family: var(--font-main);
+    }
+    .btn-google:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
+
     .mic-btn {
       width: 80px; height: 80px; border-radius: 50%; 
       background: rgba(255,255,255,0.05); color: var(--text);
@@ -454,6 +463,23 @@
         animation: pulseMic 1.5s infinite; 
     }
     @keyframes pulseMic { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 25px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+    /* Leaderboard Table */
+    .leaderboard-table {
+        width: 100%; border-collapse: collapse; margin-top: 20px;
+        color: var(--text); font-size: 0.95rem;
+    }
+    .leaderboard-table th {
+        text-align: left; padding: 12px; color: var(--text-dim); border-bottom: 1px solid var(--glass-border);
+        text-transform: uppercase; font-size: 0.8rem;
+    }
+    .leaderboard-table td {
+        padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle;
+    }
+    .rank-num { font-weight: 800; color: var(--primary); font-family: var(--font-display); font-size: 1.2rem; width: 40px; }
+    .lb-user { display: flex; align-items: center; gap: 10px; }
+    .lb-avatar { width: 30px; height: 30px; border-radius: 50%; background: #333; }
+    .lb-score { font-weight: 700; color: var(--success); }
 
     @media (max-width: 768px) {
       .logo h1 { font-size: 2.5rem; }
@@ -503,18 +529,19 @@
         <svg viewBox="0 0 24 24">
           <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
         </svg>
-        <h1>HiHi<span style="font-size:0.4em; vertical-align: super; opacity: 0.8;">Aurora</span></h1>
+        <h1>HiHi<span style="font-size:0.4em; vertical-align: super; opacity: 0.8;">Online</span></h1>
       </div>
-      <p class="tagline">Luyện chính tả & ngoại ngữ không gian ảo ✨</p>
+      <p class="tagline">Luyện chính tả & ngoại ngữ - Bảng vàng vinh danh ✨</p>
     </header>
 
     <div class="tabs">
       <button class="tab active" data-tab="setupPanel">Luyện Tập</button>
-      <button class="tab" data-tab="rankPanel">Thống Kê</button>
+      <button class="tab" data-tab="rankPanel">Thống Kê & BXH</button>
     </div>
 
-    <div class="name-box">
-      <input type="text" id="playerName" placeholder="Nhập tên của bạn..." maxlength="20" readonly />
+    <div class="user-info-bar">
+      <img id="userAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" class="user-avatar" alt="User">
+      <span class="name-display" id="playerNameDisplay">Khách (Chưa đăng nhập)</span>
     </div>
 
     <div id="setupPanel" class="tab-content glass-card">
@@ -579,29 +606,58 @@
     </div>
 
     <div id="rankPanel" class="tab-content glass-card hidden">
-      <h2 style="text-align:center; color:var(--primary); font-family:var(--font-display); text-shadow:0 0 10px var(--primary);">Thành Tích Cá Nhân</h2>
-      <div id="personalStats">
-        <div class="stats-row" id="personalStatsRow">
-          <div class="stat-item"><h4>WPM Max</h4><div class="val" id="personalWPM">0</div></div>
-          <div class="stat-item"><h4>Chính xác</h4><div class="val" id="personalAcc">0%</div></div>
-          <div class="stat-item"><h4>Số câu</h4><div class="val" id="personalSentences">0</div></div> 
-          <div class="stat-item"><h4>Điểm cao</h4><div class="val"id="personalScore">0</div></div>
+        <h2 style="text-align:center; color:var(--primary); font-family:var(--font-display); text-shadow:0 0 10px var(--primary); margin-bottom: 20px;">Thành Tích Cá Nhân</h2>
+        <div id="personalStats">
+          <div class="stats-row" id="personalStatsRow">
+            <div class="stat-item"><h4>WPM Max</h4><div class="val" id="personalWPM">0</div></div>
+            <div class="stat-item"><h4>Chính xác</h4><div class="val" id="personalAcc">0%</div></div>
+            <div class="stat-item"><h4>Số câu</h4><div class="val" id="personalSentences">0</div></div> 
+            <div class="stat-item"><h4>Điểm cao</h4><div class="val"id="personalScore">0</div></div>
+          </div>
+          <div style="text-align:center; margin-top:20px;"><span class="level-badge" id="personalBadge">Hạng: Tân binh</span></div>
+          <div style="margin-top: 30px; padding:20px; background:rgba(255,255,255,0.05); border-radius:20px; border:1px solid var(--glass-border);">
+               <canvas id="personalChart"></canvas>
+          </div>
         </div>
-        <div style="text-align:center; margin-top:20px;"><span class="level-badge" id="personalBadge">Hạng: Tân binh</span></div>
-        <div style="margin-top: 40px; padding:20px; background:rgba(255,255,255,0.05); border-radius:20px; border:1px solid var(--glass-border);">
-             <canvas id="personalChart"></canvas>
+
+        <h2 style="text-align:center; color:var(--warning); font-family:var(--font-display); text-shadow:0 0 10px var(--warning); margin-top: 60px;">🏆 Bảng Xếp Hạng Thế Giới</h2>
+        <div id="loadingLeaderboard" style="text-align:center; padding:20px; color:var(--text-dim);">Đang tải dữ liệu...</div>
+        <div style="overflow-x:auto;">
+            <table class="leaderboard-table" id="leaderboardTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Thành viên</th>
+                        <th>WPM</th>
+                        <th>Chính xác</th>
+                        <th>Điểm</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    </tbody>
+            </table>
         </div>
-      </div>
     </div>
 
     <div class="modal" id="loginModal">
       <div class="modal-content">
         <h3>Xin chào! 👋</h3>
-        <p style="margin-bottom:20px; color:var(--text-dim);">Nhập tên để lưu lại chiến tích nhé.</p>
-        <input type="text" id="usernameInput" placeholder="Tên của bạn..." maxlength="20" style="margin-bottom:20px; text-align:center;" />
+        <p style="margin-bottom:24px; color:var(--text-dim);">Đăng nhập để lưu thành tích và đua top server.</p>
+        
+        <button id="googleLoginBtn" class="btn-google">
+           <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+           Đăng nhập với Google
+        </button>
+
+        <div style="position:relative; margin: 20px 0;">
+            <hr style="border:0; border-top:1px solid var(--glass-border);">
+            <span style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#131d33; padding:0 10px; font-size:0.8rem; color:var(--text-dim);">Hoặc</span>
+        </div>
+
+        <input type="text" id="usernameInput" placeholder="Nhập tên khách..." maxlength="20" style="margin-bottom:20px; text-align:center;" />
+        
         <div style="display:flex; gap:10px;">
-          <button class="action-btn btn-reset" id="skipLoginBtn" style="flex:1; justify-content:center;">Bỏ qua</button>
-          <button class="action-btn btn-next" id="loginBtn" style="flex:1; justify-content:center; background:var(--primary-gradient);">Vào ngay</button>
+          <button class="action-btn btn-reset" id="skipLoginBtn" style="flex:1; justify-content:center;">Chơi ngay</button>
         </div>
       </div>
     </div>
@@ -657,76 +713,288 @@
     </div>
 
     <footer style="text-align:center; margin-top:40px; color:var(--text-dim); font-size:0.9rem; padding-bottom: 20px;">
-        HiHi App <span class="heart-icon">❤️</span> được Hải làm từ cả trái tim.
+        HiHi Online <span class="heart-icon">❤️</span> được Hải làm từ cả trái tim.
     </footer>
   </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getDatabase, ref, set, push, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // --- CONFIG FIREBASE CỦA BẠN ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBWknPoFq6ny8F_CpeYMu_3N6QEVM3s9Pc",
+      authDomain: "xh-chinhta.firebaseapp.com",
+      databaseURL: "https://xh-chinhta-default-rtdb.firebaseio.com",
+      projectId: "xh-chinhta",
+      storageBucket: "xh-chinhta.firebasestorage.app",
+      messagingSenderId: "535611478192",
+      appId: "1:535611478192:web:c45475177c8dcef8ef6b75",
+      measurementId: "G-NCC6MG2HMM"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    const provider = new GoogleAuthProvider();
+
+    // --- GLOBAL VARIABLES CHO APP ---
+    window.currentUser = null; // Biến global để logic cũ truy cập
+    window.authObj = auth; // Expose để dùng ở hàm logout
+    window.dbObj = db;
+    
+    // UI Elements for Auth
+    const loginModal = document.getElementById('loginModal');
+    const googleBtn = document.getElementById('googleLoginBtn');
+    const skipBtn = document.getElementById('skipLoginBtn');
+    const guestInput = document.getElementById('usernameInput');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutWrapper = document.getElementById('logoutBtnWrapper');
+    const userAvatar = document.getElementById('userAvatar');
+    const nameDisplay = document.getElementById('playerNameDisplay');
+    const lbBody = document.getElementById('leaderboardBody');
+    const loadingLb = document.getElementById('loadingLeaderboard');
+
+    // --- AUTH LOGIC ---
+    // 1. Theo dõi trạng thái đăng nhập
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Đã đăng nhập
+            window.currentUser = {
+                uid: user.uid,
+                name: user.displayName,
+                photo: user.photoURL,
+                isAnonymous: false
+            };
+            updateUserUI(window.currentUser);
+            loginModal.classList.remove('show');
+            loadLeaderboard(); // Load BXH khi vào
+        } else {
+            // Chưa đăng nhập (hoặc đã logout)
+            // Kiểm tra xem có đang chơi chế độ khách không
+            const guest = localStorage.getItem('hihiGuest');
+            if (guest) {
+                window.currentUser = JSON.parse(guest);
+                updateUserUI(window.currentUser);
+                loginModal.classList.remove('show');
+                loadLeaderboard();
+            } else {
+                window.currentUser = null;
+                updateUserUI(null);
+                loginModal.classList.add('show');
+            }
+        }
+    });
+
+    // 2. Hàm Login Google
+    googleBtn.addEventListener('click', () => {
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                // Thành công -> onAuthStateChanged sẽ chạy
+                console.log("Logged in:", result.user.displayName);
+                localStorage.removeItem('hihiGuest'); // Xóa chế độ khách cũ nếu có
+            }).catch((error) => {
+                console.error(error);
+                alert("Lỗi đăng nhập: " + error.message);
+            });
+    });
+
+    // 3. Hàm Chơi Khách (Skip)
+    skipBtn.addEventListener('click', () => {
+        const name = guestInput.value.trim() || "Khách Ẩn Danh";
+        const guestUser = {
+            uid: 'guest_' + Date.now(),
+            name: name,
+            photo: null,
+            isAnonymous: true
+        };
+        localStorage.setItem('hihiGuest', JSON.stringify(guestUser));
+        window.currentUser = guestUser;
+        updateUserUI(guestUser);
+        loginModal.classList.remove('show');
+        loadLeaderboard();
+    });
+
+    // 4. Hàm Logout
+    logoutBtn.addEventListener('click', () => {
+        if (auth.currentUser) {
+            signOut(auth).then(() => {
+                console.log("Signed out");
+                window.location.reload();
+            });
+        } else {
+            // Nếu là khách thì clear storage và reload
+            localStorage.removeItem('hihiGuest');
+            window.location.reload();
+        }
+    });
+
+    function updateUserUI(user) {
+        if (user) {
+            nameDisplay.textContent = user.name;
+            if (user.photo) userAvatar.src = user.photo;
+            logoutWrapper.classList.remove('hidden');
+        } else {
+            nameDisplay.textContent = "Chưa đăng nhập";
+            logoutWrapper.classList.add('hidden');
+        }
+    }
+
+    // --- DATABASE LOGIC (LEADERBOARD) ---
+    
+    // Hàm lưu điểm (Gọi khi kết thúc game)
+    window.saveScoreToFirebase = function(scoreData) {
+        if (!window.currentUser) return;
+        const user = window.currentUser;
+        
+        // Chỉ lưu lên server nếu là người dùng thật (để tránh spam từ khách)
+        // Hoặc bạn có thể cho phép khách lưu nhưng prefix tên là [Guest]
+        
+        if (user.isAnonymous) {
+            console.log("Khách chơi, không lưu database để tránh rác.");
+            return;
+        }
+
+        // Cấu trúc: leaderboard/{uid} -> Chỉ lưu điểm cao nhất của user đó
+        const userScoreRef = ref(db, 'leaderboard/' + user.uid);
+        
+        // Kiểm tra xem điểm mới có cao hơn điểm cũ không thì mới update (logic đơn giản ở client, tốt nhất là cloud function)
+        // Ở đây ta dùng set luôn, nhưng thực tế nên đọc về so sánh. 
+        // Để đơn giản cho bài tập này: Ta sẽ lưu nếu điểm cao.
+        
+        // Đọc điểm cũ
+        // Lưu ý: Cách này hơi chậm 1 nhịp, nhưng đơn giản.
+        // Ta sẽ dùng update nếu score mới > score cũ
+        
+        // Tạm thời ta set luôn để đảm bảo dữ liệu mới nhất được lên. 
+        // Cải tiến: Chỉ set nếu score > currentDbScore.
+        
+        set(userScoreRef, {
+            name: user.name,
+            photo: user.photo,
+            score: scoreData.score,
+            wpm: scoreData.wpm,
+            acc: scoreData.acc,
+            date: Date.now()
+        }).then(() => console.log("Score saved!"));
+    }
+
+    // Hàm tải BXH
+    function loadLeaderboard() {
+        const lbRef = query(ref(db, 'leaderboard'), orderByChild('score'), limitToLast(10));
+        
+        onValue(lbRef, (snapshot) => {
+            loadingLb.style.display = 'none';
+            lbBody.innerHTML = '';
+            
+            const data = [];
+            snapshot.forEach(child => {
+                data.push(child.val());
+            });
+            
+            // Firebase trả về tăng dần, ta cần giảm dần (điểm cao nhất lên đầu)
+            data.reverse();
+            
+            if (data.length === 0) {
+                lbBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có dữ liệu</td></tr>';
+                return;
+            }
+
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                const photoHtml = item.photo 
+                    ? `<img src="${item.photo}" class="lb-avatar">` 
+                    : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;">${item.name.charAt(0)}</div>`;
+                
+                let rankColor = '#fff';
+                if(index === 0) rankColor = '#fbbf24'; // Vàng
+                else if(index === 1) rankColor = '#94a3b8'; // Bạc
+                else if(index === 2) rankColor = '#b45309'; // Đồng
+
+                tr.innerHTML = `
+                    <td class="rank-num" style="color:${rankColor}">${index + 1}</td>
+                    <td>
+                        <div class="lb-user">
+                            ${photoHtml}
+                            <span>${item.name}</span>
+                        </div>
+                    </td>
+                    <td>${item.wpm}</td>
+                    <td>${item.acc}%</td>
+                    <td class="lb-score">${item.score}</td>
+                `;
+                lbBody.appendChild(tr);
+            });
+        });
+    }
+
+  </script>
 
   <script>
     // === 1. THƯ VIỆN DỮ LIỆU ĐA NGÔN NGỮ KHỔNG LỒ ===
     const SAMPLE_LIBRARY = {
         'vi-VN': [
-          "Sông Mã xa rồi Tây Tiến ơi! Nhớ về rừng núi, nhớ chơi vơi. Sài Khao sương lấp đoàn quân mỏi, Mường Lát hoa về trong đêm hơi.", // Tây Tiến
-            "Mình về mình có nhớ ta? Mười lăm năm ấy thiết tha mặn nồng. Mình về mình có nhớ không, Nhìn cây nhớ núi, nhìn sông nhớ nguồn?", // Việt Bắc
-            "Bỗng nhận ra hương ổi, Phả vào trong gió se, Sương chùng chình qua ngõ, Hình như thu đã về.", // Sang Thu
-            "Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.", // Truyện Kiều
-            "Sông núi nước Nam vua Nam ở. Rành rành định phận tại sách trời. Cớ sao lũ giặc sang xâm phạm? Chúng bay sẽ bị đánh tơi bời.", // Nam Quốc Sơn Hà
-            "Thân em vừa trắng lại vừa tròn. Bảy nổi ba chìm với nước non. Rắn nát mặc dầu tay kẻ nặn. Mà em vẫn giữ tấm lòng son.", // Bánh Trôi Nước
-            "Mỗi năm hoa đào nở. Lại thấy ông đồ già. Bày mực tàu giấy đỏ. Bên phố đông người qua.", // Ông Đồ
-            "Quê hương là chùm khế ngọt. Cho con trèo hái mỗi ngày. Quê hương là đường đi học. Con về rợp bướm vàng bay.", // Quê Hương
-            "Bước tới Đèo Ngang bóng xế tà. Cỏ cây chen đá lá chen hoa. Lom khom dưới núi tiêm vài chú. Lác đác bên sông chợ mấy nhà.", // Qua Đèo Ngang
-            "Sao anh không về chơi thôn Vĩ? Nhìn nắng hàng cau nắng mới lên. Vườn ai mướt quá xanh như ngọc, Lá trúc che ngang mặt chữ điền.", // Đây Thôn Vĩ Dạ
-            "Công cha như núi Thái Sơn. Nghĩa mẹ như nước trong nguồn chảy ra. Một lòng thờ mẹ kính cha. Cho tròn chữ hiếu mới là đạo con.", // Ca dao
-            "Mặt trời xuống biển như hòn lửa. Sóng đã cài then đêm sập cửa. Đoàn thuyền đánh cá lại ra khơi. Câu hát căng buồm cùng gió khơi.", // Đoàn thuyền đánh cá
-            "Việt Nam đất nước ta ơi. Mênh mông biển lúa đâu trời đẹp hơn. Cánh cò bay lả rập rờn. Mây mờ che đỉnh Trường Sơn sớm chiều.", // Việt Nam quê hương ta
-            "Anh đi anh nhớ quê nhà. Nhớ canh rau muống nhớ cà dầm tương. Nhớ ai dãi nắng dầm sương. Nhớ ai tát nước bên đường hôm nao.", // Ca dao
-            "Em cầm tờ lịch cũ, Ngày hôm qua đâu rồi? Ra ngoài sân hỏi bố, Xoa đầu em bố cười.." //
+          "Sông Mã xa rồi Tây Tiến ơi! Nhớ về rừng núi, nhớ chơi vơi. Sài Khao sương lấp đoàn quân mỏi, Mường Lát hoa về trong đêm hơi.", 
+            "Mình về mình có nhớ ta? Mười lăm năm ấy thiết tha mặn nồng. Mình về mình có nhớ không, Nhìn cây nhớ núi, nhìn sông nhớ nguồn?", 
+            "Bỗng nhận ra hương ổi, Phả vào trong gió se, Sương chùng chình qua ngõ, Hình như thu đã về.",
+            "Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.", 
+            "Sông núi nước Nam vua Nam ở. Rành rành định phận tại sách trời. Cớ sao lũ giặc sang xâm phạm? Chúng bay sẽ bị đánh tơi bời.",
+            "Thân em vừa trắng lại vừa tròn. Bảy nổi ba chìm với nước non. Rắn nát mặc dầu tay kẻ nặn. Mà em vẫn giữ tấm lòng son.",
+            "Mỗi năm hoa đào nở. Lại thấy ông đồ già. Bày mực tàu giấy đỏ. Bên phố đông người qua.", 
+            "Quê hương là chùm khế ngọt. Cho con trèo hái mỗi ngày. Quê hương là đường đi học. Con về rợp bướm vàng bay.", 
+            "Bước tới Đèo Ngang bóng xế tà. Cỏ cây chen đá lá chen hoa. Lom khom dưới núi tiêm vài chú. Lác đác bên sông chợ mấy nhà.", 
+            "Sao anh không về chơi thôn Vĩ? Nhìn nắng hàng cau nắng mới lên. Vườn ai mướt quá xanh như ngọc, Lá trúc che ngang mặt chữ điền.", 
+            "Công cha như núi Thái Sơn. Nghĩa mẹ như nước trong nguồn chảy ra. Một lòng thờ mẹ kính cha. Cho tròn chữ hiếu mới là đạo con.", 
+            "Mặt trời xuống biển như hòn lửa. Sóng đã cài then đêm sập cửa. Đoàn thuyền đánh cá lại ra khơi. Câu hát căng buồm cùng gió khơi.", 
+            "Việt Nam đất nước ta ơi. Mênh mông biển lúa đâu trời đẹp hơn. Cánh cò bay lả rập rờn. Mây mờ che đỉnh Trường Sơn sớm chiều.", 
+            "Anh đi anh nhớ quê nhà. Nhớ canh rau muống nhớ cà dầm tương. Nhớ ai dãi nắng dầm sương. Nhớ ai tát nước bên đường hôm nao.", 
+            "Em cầm tờ lịch cũ, Ngày hôm qua đâu rồi? Ra ngoài sân hỏi bố, Xoa đầu em bố cười.." 
         ],
         'en-US': [
             "The quick brown fox jumps over the lazy dog. Success is not final, failure is not fatal: it is the courage to continue that counts.",
-            "Two roads diverged in a yellow wood, and sorry I could not travel both. And be one traveler, long I stood and looked down one as far as I could.", // The Road Not Taken
-            "I wandered lonely as a cloud that floats on high o'er vales and hills, when all at once I saw a crowd, a host, of golden daffodils.", // Daffodils
-            "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune.", // Hamlet
-            "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.", // Pride and Prejudice
-            "I have a dream that one day this nation will rise up and live out the true meaning of its creed: We hold these truths to be self-evident, that all men are created equal.", // MLK
-            "All the world's a stage, and all the men and women merely players. They have their exits and their entrances.", // As You Like It
-            "Hope is the thing with feathers that perches in the soul, and sings the tune without the words, and never stops at all." // Emily Dickinson
+            "Two roads diverged in a yellow wood, and sorry I could not travel both. And be one traveler, long I stood and looked down one as far as I could.", 
+            "I wandered lonely as a cloud that floats on high o'er vales and hills, when all at once I saw a crowd, a host, of golden daffodils.", 
+            "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune.", 
+            "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.", 
+            "I have a dream that one day this nation will rise up and live out the true meaning of its creed: We hold these truths to be self-evident, that all men are created equal.", 
+            "All the world's a stage, and all the men and women merely players. They have their exits and their entrances.", 
+            "Hope is the thing with feathers that perches in the soul, and sings the tune without the words, and never stops at all." 
         ],
         'id-ID': [
             "Bhinneka Tunggal Ika adalah semboyan bangsa Indonesia yang tertulis pada lambang negara Garuda Pancasila. Maknanya adalah berbeda-beda tetapi tetap satu.",
-            "Kami putra dan putri Indonesia, mengaku bertumpah darah yang satu, tanah air Indonesia. Kami putra dan putri Indonesia, mengaku berbangsa yang satu, bangsa Indonesia.", // Sumpah Pemuda
-            "Aku. Kalau sampai waktuku, 'Ku mau tak seorang 'kan merayu. Tidak juga kau. Tak perlu sedu sedan itu.", // Chairil Anwar - Aku
-            "Bangsa yang besar adalah bangsa yang menghormati jasa pahlawannya. Perjuangan melawan penjajah memang sulit, namun perjuangan melawan bangsamu sendiri adalah lebih sulit.", // Soekarno
+            "Kami putra dan putri Indonesia, mengaku bertumpah darah yang satu, tanah air Indonesia. Kami putra dan putri Indonesia, mengaku berbangsa yang satu, bangsa Indonesia.",
+            "Aku. Kalau sampai waktuku, 'Ku mau tak seorang 'kan merayu. Tidak juga kau. Tak perlu sedu sedan itu.", 
+            "Bangsa yang besar adalah bangsa yang menghormati jasa pahlawannya. Perjuangan melawan penjajah memang sulit, namun perjuangan melawan bangsamu sendiri adalah lebih sulit.", 
             "Di timur matahari mulai bercahaya. Bangun dan berdiri kawan semua. Marilah mengatur barisan kita. Seluruh pemuda Indonesia.",
-            "Tut Wuri Handayani. Di depan memberi contoh, di tengah memberi semangat, di belakang memberi dorongan." // Ki Hajar Dewantara
+            "Tut Wuri Handayani. Di depan memberi contoh, di tengah memberi semangat, di belakang memberi dorongan." 
         ],
         'es-ES': [
-            "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero.", // Don Quijote
-            "Caminante, no hay camino, se hace camino al andar. Al andar se hace el camino, y al volver la vista atrás se ve la senda que nunca se ha de volver a pisar.", // Antonio Machado
-            "Puedo escribir los versos más tristes esta noche. Escribir, por ejemplo: 'La noche está estrellada, y tiritan, azules, los astros, a lo lejos'.", // Pablo Neruda
-            "Verde que te quiero verde. Verde viento. Verdes ramas. El barco sobre la mar y el caballo en la montaña.", // Federico García Lorca
-            "La vida es sueño, y los sueños, sueños son." // Calderón de la Barca
+            "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero.", 
+            "Caminante, no hay camino, se hace camino al andar. Al andar se hace el camino, y al volver la vista atrás se ve la senda que nunca se ha de volver a pisar.", 
+            "Puedo escribir los versos más tristes esta noche. Escribir, por ejemplo: 'La noche está estrellada, y tiritan, azules, los astros, a lo lejos'.", 
+            "Verde que te quiero verde. Verde viento. Verdes ramas. El barco sobre la mar y el caballo en la montaña.", 
+            "La vida es sueño, y los sueños, sueños son." 
         ],
         'it-IT': [
-            "Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura, ché la diritta via era smarrita.", // Dante - Inferno
-            "L'amor che move il sole e l'altre stelle.", // Dante - Paradiso
-            "Quel ramo del lago di Como, che volge a mezzogiorno, tra due catene non interrotte di monti, tutto a seni e a golfi.", // I Promessi Sposi
-            "E il naufragar m'è dolce in questo mare.", // L'Infinito - Leopardi
+            "Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura, ché la diritta via era smarrita.", 
+            "L'amor che move il sole e l'altre stelle.", 
+            "Quel ramo del lago di Como, che volge a mezzogiorno, tra due catene non interrotte di monti, tutto a seni e a golfi.", 
+            "E il naufragar m'è dolce in questo mare.", 
             "La vita è bella. Ricordati di essere felice."
         ],
         'la-VA': [
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            "Veni, vidi, vici. Alea iacta est. Carpe diem, quam minimum credula postero.", // Caesar & Horace
-            "Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora.", // Aeneid
+            "Veni, vidi, vici. Alea iacta est. Carpe diem, quam minimum credula postero.", 
+            "Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora.", 
             "Per aspera ad astra. Cogito, ergo sum. Errare humanum est, perseverare autem diabolicum.",
             "Tempus fugit. Memento mori. Amor vincit omnia."
         ]
     };
 
     // === 2. CẤU HÌNH & BIẾN ===
-    const coolNicknames = [
-      "Chiến Binh Bàn Phím", "Vua Gõ Chữ", "Thần Tốc", "HiHi Pro", "Ninja Luyện Gõ",
-      "Siêu Anh Hùng Gõ", "Chuyên Gia Chính Tả", "Người Bạn Của Chữ", "Đôi Tay Vàng"
-    ];
     const wordCache = {}; 
 
     let typedWords = 0;
@@ -745,7 +1013,6 @@
     let recognition = null;
     let isListening = false;
     let karaokeWords = [];
-    let playerName = '';
     let globalLang = localStorage.getItem('lang') || 'vi-VN';
     let voices = [];
     let selectedVoice = null;
@@ -762,7 +1029,7 @@
       lang: document.getElementById('globalLang'),
       text: document.getElementById('sampleText'),
       resetTextBtn: document.getElementById('resetTextBtn'),
-      randomTextBtn: document.getElementById('randomTextBtn'), // Nút mới
+      randomTextBtn: document.getElementById('randomTextBtn'), 
       start: document.getElementById('startBtn'),
       segment: document.getElementById('currentSegment'),
       input: document.getElementById('userInput'),
@@ -790,7 +1057,6 @@
       modeBtns: () => document.querySelectorAll('.mode-btn'),
       micBox: document.getElementById('micBox'),
       micBtn: document.getElementById('micBtn'),
-      playerName: document.getElementById('playerName'),
       mainTabs: () => document.querySelectorAll('.tab'),
       tabContents: () => document.querySelectorAll('.tab-content'),
       personalStatsRow: document.getElementById('personalStatsRow'),
@@ -800,42 +1066,9 @@
       personalSentences: document.getElementById('personalSentences'),
       personalBadge: document.getElementById('personalBadge'),
       personalChart: document.getElementById('personalChart'),
-      loginModal: document.getElementById('loginModal'),
-      usernameInput: document.getElementById('usernameInput'),
-      loginBtn: document.getElementById('loginBtn'),
-      skipLoginBtn: document.getElementById('skipLoginBtn'),
-      logoutBtn: document.getElementById('logoutBtn'),
-      logoutBtnWrapper: document.getElementById('logoutBtnWrapper')
     };
 
     // === 4. ĐỊNH NGHĨA HÀM ===
-
-    // === HỆ THỐNG TÀI KHOẢN ===
-    function handleLogin(name) {
-      if (!name) return;
-      playerName = name;
-      localStorage.setItem('hihiUser', JSON.stringify({ name: playerName }));
-      els.playerName.value = playerName;
-      els.playerName.readOnly = true;
-      els.loginModal.classList.remove('show');
-      els.logoutBtnWrapper.classList.remove('hidden');
-    }
-
-    function handleLogout() {
-      localStorage.removeItem('hihiUser');
-      playerName = '';
-      els.playerName.value = '';
-      els.playerName.readOnly = true;
-      els.logoutBtnWrapper.classList.add('hidden');
-      els.loginModal.classList.add('show');
-      els.usernameInput.value = '';
-    }
-
-    function checkLogin() {
-      const user = localStorage.getItem('hihiUser');
-      if (user) handleLogin(JSON.parse(user).name);
-      else els.loginModal.classList.add('show');
-    }
     
     // === CHỦ ĐỀ & GIÁNG SINH ===
     function createSnowflakes() {
@@ -861,7 +1094,6 @@
         if (themeMode === 'holiday') {
             body.setAttribute('data-theme', isDarkPreferred ? 'holiday-dark' : 'holiday');
         } else {
-            // Note: Aurora default is dark, so 'light' theme adds data-theme="light", otherwise default.
             body.setAttribute('data-theme', isDarkPreferred ? 'dark' : 'light');
         }
 
@@ -873,7 +1105,6 @@
     }
 
     function toggleBaseTheme() {
-        // Aurora default is dark. If current is dark (default), switch to light.
         const current = localStorage.getItem('baseTheme') === 'light' ? 'light' : 'dark';
         const next = current === 'dark' ? 'light' : 'dark';
         localStorage.setItem('baseTheme', next);
@@ -887,12 +1118,12 @@
         const nextState = !isCurrentlyOn;
         localStorage.setItem('isHoliday', nextState);
         
-        const base = localStorage.getItem('baseTheme') || 'dark'; // Default to dark for Aurora
+        const base = localStorage.getItem('baseTheme') || 'dark'; 
         applyTheme(nextState ? 'holiday' : base);
     }
 
     function initTheme() {
-        if (!localStorage.getItem('baseTheme')) localStorage.setItem('baseTheme', 'dark'); // Default Aurora Dark
+        if (!localStorage.getItem('baseTheme')) localStorage.setItem('baseTheme', 'dark'); 
         const isHoliday = localStorage.getItem('isHoliday') === 'true';
         const base = localStorage.getItem('baseTheme');
         applyTheme(isHoliday ? 'holiday' : base);
@@ -924,7 +1155,6 @@
       if (personalChart) personalChart.destroy();
       const recentHistory = [...personalHistory].reverse();
       
-      // Adjusted chart colors for Aurora theme
       personalChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -952,7 +1182,6 @@
       const targetCode = globalLang.split('-')[0]; 
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(targetCode));
       
-      // Fallback
       if (voices.length === 0 && (globalLang.startsWith('la') || globalLang.startsWith('id'))) {
           voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') || v.lang.startsWith('es') || v.lang.startsWith('it'));
       }
@@ -1098,7 +1327,6 @@
       if (word) word.classList.add('karaoke-active');
     }
 
-    // Hàm chuẩn hóa chuỗi để so sánh
     function normalizeText(text) {
         if (!text) return "";
         return text.trim()
@@ -1136,7 +1364,6 @@
       correctWords = correct;
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
-      // Điều kiện hoàn thành
       const isContentMatch = normalizeText(input) === normalizeText(orig);
 
       if (isContentMatch) {
@@ -1180,10 +1407,9 @@
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
       const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
       const badge = wpm < 50 ? "Tân Binh" : wpm < 100 ? "Thành Thạo" : wpm < 200 ? "Cao Thủ" : "Huyền Thoại";
-
-      const name = playerName.trim() || 'Ẩn danh';
-      const entry = { name, date: new Date().toISOString(), wpm, acc, score, badge, sentences: totalSentences };
       
+      // Save local
+      const entry = { date: new Date().toISOString(), wpm, acc, score, badge, sentences: totalSentences };
       personalHistory.push(entry);
       if (personalHistory.length > 10) personalHistory.shift();
       localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
@@ -1193,6 +1419,15 @@
           localStorage.setItem('bestStats', JSON.stringify(bestStats));
       }
 
+      // === SAVE TO FIREBASE LEADERBOARD ===
+      if (window.saveScoreToFirebase) {
+          window.saveScoreToFirebase({
+              wpm: wpm,
+              acc: acc,
+              score: score
+          });
+      }
+      
       els.level.textContent = badge; els.levelBadge.textContent = 'Đạt cấp: ' + badge;
       els.score.textContent = score; els.wpm.textContent = wpm; els.acc.textContent = acc + '%';
       
@@ -1266,13 +1501,6 @@
     }
 
     // === 5. SỰ KIỆN ===
-    els.loginBtn.addEventListener('click', () => {
-      const name = els.usernameInput.value.trim();
-      if (name) handleLogin(name); else alert('Vui lòng nhập tên!');
-    });
-    els.skipLoginBtn.addEventListener('click', () => handleLogin(coolNicknames[Math.floor(Math.random() * coolNicknames.length)]));
-    els.logoutBtn.addEventListener('click', handleLogout);
-
     els.theme.addEventListener('click', toggleBaseTheme);
     els.holidayBtn.addEventListener('click', toggleHolidayMode);
 
@@ -1286,33 +1514,25 @@
     els.previewVoice.addEventListener('click', () => speak(globalLang === 'vi-VN' ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.'));
     speechSynthesis.onvoiceschanged = loadVoices;
 
-    // Logic Đổi ngôn ngữ & Xử lý Textarea
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
       localStorage.setItem('lang', globalLang);
-      // Đã loại bỏ setRandomText() tại đây theo yêu cầu
       loadVoices();
     });
 
-    // Phát hiện người dùng tự sửa text
     els.text.addEventListener('input', () => {
         userHasEditedText = true;
         els.resetTextBtn.style.display = 'inline-flex';
     });
 
-    // Nút khôi phục text cũ (chỉ hiện khi đã sửa)
     els.resetTextBtn.addEventListener('click', () => {
-        // Thực tế ở phiên bản này, nó sẽ clear hoặc set về giá trị cũ
-        // Để đơn giản, ta sẽ cho nó clear đi để người dùng chọn Ngẫu nhiên lại
         els.text.value = '';
         els.resetTextBtn.style.display = 'none';
         els.text.focus();
     });
 
-    // Nút lấy text ngẫu nhiên (Mới)
     els.randomTextBtn.addEventListener('click', () => {
         setRandomText();
-        // Hiệu ứng nhẹ
         els.text.style.transition = 'none';
         els.text.style.backgroundColor = 'rgba(192, 132, 252, 0.2)';
         setTimeout(() => {
@@ -1324,7 +1544,6 @@
     els.start.addEventListener('click', () => {
       const text = els.text.value.trim();
       if (!text) return alert('Vui lòng nhập đoạn văn hoặc nhấn nút "🎲 Bài mẫu ngẫu nhiên"!');
-      // Tách câu thông minh hơn
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       
@@ -1391,7 +1610,6 @@
     els.lang.value = globalLang;
     
     window.addEventListener('load', () => {
-      checkLogin();
       renderPersonalStats();
       loadVoices();
     });
