@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HiHi - Gradient Master Edition</title>
+  <title>HiHi - Gradient Master Edition (Sync Realtime)</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke, bảng xếp hạng online.">
   <meta name="theme-color" content="#0f172a">
   <link href="https://googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
@@ -48,22 +48,24 @@
       --blob-blend: screen;
     }
 
-    /* --- LIGHT MODE (Pastel Dream) --- */
+    /* --- NEW LIGHT MODE (Nordic Clean) --- */
     [data-theme="light"] {
-      --bg-gradient: linear-gradient(-45deg, #f0f9ff, #e0e7ff, #fae8ff, #fce7f3, #fff1f2);
-      --text: #1e293b;
+      /* Nền sáng sạch, chuyên nghiệp hơn màu pastel cũ */
+      --bg-gradient: linear-gradient(-45deg, #f1f5f9, #e2e8f0, #cbd5e1, #f8fafc); 
+      --text: #0f172a; /* Chữ đậm màu đen xanh */
       --text-dim: #475569;
       
-      --glass-surface: rgba(255, 255, 255, 0.65);
-      --glass-border: rgba(255, 255, 255, 0.8);
-      --glass-highlight: rgba(255, 255, 255, 0.9);
+      --glass-surface: rgba(255, 255, 255, 0.75); /* Kính trắng đục */
+      --glass-border: rgba(255, 255, 255, 0.9);
+      --glass-highlight: #ffffff;
       
-      --primary: #0284c7;
-      --primary-gradient: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+      --primary: #0284c7; /* Xanh dương đậm */
+      --primary-gradient: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+      --primary-shadow: rgba(2, 132, 199, 0.3);
       
-      --blob-1: #a5b4fc; 
-      --blob-2: #bae6fd;
-      --blob-3: #fbcfe8;
+      --blob-1: #bfdbfe; /* Xanh nhạt */
+      --blob-2: #ddd6fe; /* Tím nhạt */
+      --blob-3: #bae6fd; /* Cyan nhạt */
       --blob-blend: multiply;
     }
 
@@ -134,13 +136,15 @@
       100% { transform: translate(0, 0) scale(1); }
     }
 
-    /* Snow */
+    /* Snow - Always Active */
     .snowflake {
       position: fixed; top: -10px; z-index: 999; color: #fff; 
       text-shadow: 0 0 5px rgba(255,255,255,0.8); pointer-events: none;
-      animation: fall linear forwards; display: none;
+      animation: fall linear forwards; display: block; /* Luôn hiện */
     }
-    [data-theme*="holiday"] .snowflake { display: block; }
+    /* Chỉnh màu tuyết tối hơn một chút ở Light Mode để dễ thấy */
+    [data-theme="light"] .snowflake { color: #bae6fd; text-shadow: none; }
+    
     @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
     /* === CONTAINER & ENHANCED GLASS CARD === */
@@ -235,6 +239,8 @@
       padding: 6px; border-radius: 20px; border: 1px solid var(--glass-border);
       margin: 0 auto; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
     }
+    [data-theme="light"] .tabs { background: rgba(255,255,255,0.5); }
+
     .tab {
       padding: 10px 32px; border-radius: 14px; border: none;
       background: transparent; color: var(--text-dim);
@@ -255,6 +261,7 @@
       font-size: 1.2rem; color: var(--text); font-weight: 700;
       font-family: var(--font-display); text-shadow: 0 0 10px rgba(255,255,255,0.2);
     }
+    [data-theme="light"] .name-display { text-shadow: none; }
 
     /* Inputs & Setup */
     .setup-grid {
@@ -266,6 +273,8 @@
       padding: 24px; border: 1px solid var(--glass-border);
       transition: 0.3s;
     }
+    [data-theme="light"] .setup-item { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.05); }
+
     .setup-item:hover { background: rgba(255,255,255,0.06); border-color: var(--primary); }
     
     .setup-item h3 {
@@ -282,13 +291,16 @@
       font-family: var(--font-main); font-size: 1rem; transition: 0.3s;
       backdrop-filter: blur(10px);
     }
-    [data-theme="light"] select, [data-theme="light"] textarea { background: rgba(255,255,255,0.6); color: #0f172a; }
+    [data-theme="light"] select, [data-theme="light"] textarea, [data-theme="light"] input[type="text"] { 
+        background: rgba(255,255,255,0.8); color: #0f172a; border-color: #cbd5e1;
+    }
 
     select:focus, textarea:focus, input[type="text"]:focus {
       outline: none; border-color: var(--primary);
       box-shadow: 0 0 0 3px var(--primary-shadow);
       background: rgba(0, 0, 0, 0.5);
     }
+    [data-theme="light"] select:focus, [data-theme="light"] textarea:focus { background: white; }
 
     /* Radio Custom */
     .radio-group { display: flex; flex-direction: column; gap: 10px; }
@@ -298,6 +310,8 @@
       border: 1px solid transparent; color: var(--text);
       background: rgba(255,255,255,0.02);
     }
+    [data-theme="light"] .radio-label { background: rgba(0,0,0,0.03); }
+
     .radio-label:hover { background: rgba(255, 255, 255, 0.1); }
     .radio-label:has(input:checked) {
       background: rgba(56, 189, 248, 0.15); border-color: var(--primary); font-weight: 600;
@@ -346,16 +360,21 @@
       background: rgba(0,0,0,0.2); color: var(--text-dim); font-weight: 600; cursor: pointer;
       transition: 0.3s; font-size: 0.9rem;
     }
+    [data-theme="light"] .mode-btn { background: rgba(255,255,255,0.5); }
+
     .mode-btn.active { 
         background: var(--text); color: var(--bg-color); 
         box-shadow: 0 0 15px rgba(255,255,255,0.5);
     }
+    [data-theme="light"] .mode-btn.active { background: var(--primary); color: white; }
 
     .progress-box { margin-bottom: 20px; }
     .progress-bar {
       height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;
       box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
     }
+    [data-theme="light"] .progress-bar { background: rgba(0,0,0,0.1); }
+
     .progress-fill {
       height: 100%; background: var(--primary-gradient); width: 0;
       border-radius: 10px; transition: width 0.5s ease;
@@ -371,6 +390,7 @@
       display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;
       box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
     }
+    [data-theme="light"] .segment-box { background: rgba(255,255,255,0.6); color: #0f172a; box-shadow: inset 0 0 20px rgba(0,0,0,0.05); }
     
     .karaoke-word {
       padding: 4px 8px; border-radius: 8px; transition: 0.2s; position: relative;
@@ -380,6 +400,8 @@
       background: var(--primary); color: #000 !important; transform: scale(1.15);
       box-shadow: 0 0 25px var(--primary); z-index: 10; font-weight: bold;
     }
+    [data-theme="light"] .karaoke-active { color: white !important; }
+
     .word-tooltip {
         position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
         background: #0f172a; color: var(--primary); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--primary);
@@ -394,6 +416,8 @@
       border-radius: 24px; border: 2px solid var(--glass-border);
       box-shadow: var(--shadow-lg); background: rgba(0,0,0,0.3);
     }
+    [data-theme="light"] #userInput { background: white; color: #000; }
+
     .hint-btn {
       position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
       width: 40px; height: 40px; border-radius: 12px;
@@ -408,6 +432,7 @@
       min-height: 50px; margin-bottom: 30px; color: var(--text-dim);
     }
     .correct { color: var(--success); font-weight: 700; text-shadow: 0 0 10px rgba(52, 211, 153, 0.4); }
+    [data-theme="light"] .correct { color: #059669; text-shadow: none; }
     .wrong { color: var(--danger); text-decoration: line-through; opacity: 0.7; }
 
     /* Actions */
@@ -425,6 +450,7 @@
     .btn-next { background: linear-gradient(135deg, #34d399, #059669); box-shadow: 0 0 20px rgba(52, 211, 153, 0.4); }
     .btn-reset { background: rgba(255,255,255,0.1); color: var(--text); border: 1px solid var(--glass-border); }
     .btn-reset:hover { background: rgba(255,255,255,0.2); }
+    [data-theme="light"] .btn-reset { background: rgba(0,0,0,0.05); color: #000; }
     
     /* Stats */
     .stats-row {
@@ -435,8 +461,11 @@
       padding: 16px; border-radius: 16px; text-align: center;
       backdrop-filter: blur(5px);
     }
+    [data-theme="light"] .stat-item { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); }
+
     .stat-item h4 { font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
     .stat-item .val { font-size: 2rem; font-weight: 800; color: var(--primary); font-family: var(--font-display); text-shadow: 0 0 20px var(--primary-shadow); }
+    [data-theme="light"] .stat-item .val { text-shadow: none; }
 
     .level-badge {
       display: inline-block; padding: 10px 40px; border-radius: 30px;
@@ -460,6 +489,9 @@
       text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); color: var(--text);
       position: relative; overflow: hidden;
     }
+    
+    [data-theme="light"] .modal-content { background: rgba(255,255,255,0.95); color: #000; }
+
     .modal-content::before {
         content:''; position: absolute; top:-50%; left:-50%; width:200%; height:200%;
         background: radial-gradient(circle, var(--primary-shadow) 0%, transparent 60%);
@@ -485,6 +517,8 @@
       font-size: 2.5rem; cursor: pointer; margin: 0 auto 20px; display: block;
       transition: 0.3s; box-shadow: 0 0 30px rgba(0,0,0,0.2);
     }
+    [data-theme="light"] .mic-btn { background: rgba(0,0,0,0.05); color: #000; }
+    
     .mic-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.1); box-shadow: 0 0 30px var(--primary); }
     .mic-btn.listening { 
         background: var(--danger); color: white; border-color: transparent;
@@ -504,6 +538,8 @@
     .leaderboard-table td {
         padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle;
     }
+    [data-theme="light"] .leaderboard-table td { border-bottom-color: rgba(0,0,0,0.1); }
+
     .rank-num { font-weight: 800; color: var(--primary); font-family: var(--font-display); font-size: 1.2rem; width: 40px; }
     .lb-user { display: flex; align-items: center; gap: 10px; }
     .lb-avatar { width: 30px; height: 30px; border-radius: 50%; background: #333; }
@@ -557,9 +593,9 @@
         <svg viewBox="0 0 24 24">
           <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
         </svg>
-        <h1>HiHi<span style="font-size:0.4em; vertical-align: super; opacity: 0.8;">Online</span></h1>
+        <h1>HiHi<span style="font-size:0.4em; vertical-align: super; opacity: 0.8;">Sync</span></h1>
       </div>
-      <p class="tagline">Luyện chính tả & ngoại ngữ - Bảng vàng vinh danh ✨</p>
+      <p class="tagline">Luyện chính tả & ngoại ngữ - Đua top Realtime ✨</p>
     </header>
 
     <div class="tabs">
@@ -634,21 +670,24 @@
     </div>
 
     <div id="rankPanel" class="tab-content glass-card hidden">
-        <h2 style="text-align:center; color:var(--primary); font-family:var(--font-display); text-shadow:0 0 10px var(--primary); margin-bottom: 20px;">Thành Tích Cá Nhân</h2>
-        <div id="personalStats">
-          <div class="stats-row" id="personalStatsRow">
-            <div class="stat-item"><h4>WPM Max</h4><div class="val" id="personalWPM">0</div></div>
-            <div class="stat-item"><h4>Chính xác</h4><div class="val" id="personalAcc">0%</div></div>
-            <div class="stat-item"><h4>Số câu</h4><div class="val" id="personalSentences">0</div></div> 
-            <div class="stat-item"><h4>Điểm cao</h4><div class="val"id="personalScore">0</div></div>
-          </div>
-          <div style="text-align:center; margin-top:20px;"><span class="level-badge" id="personalBadge">Hạng: Tân binh</span></div>
-          <div style="margin-top: 30px; padding:20px; background:rgba(255,255,255,0.05); border-radius:20px; border:1px solid var(--glass-border);">
-               <canvas id="personalChart"></canvas>
-          </div>
+        <h2 style="text-align:center; color:var(--primary); font-family:var(--font-display); text-shadow:0 0 10px var(--primary); margin-bottom: 20px;">
+             Thành Tích Tháng <span id="currentMonthDisplay">...</span>
+        </h2>
+        <div style="text-align:center; color:var(--text-dim); margin-bottom:20px; font-size:0.9rem;">
+            (Điểm sẽ reset vào ngày 1 hàng tháng)
         </div>
 
-        <h2 style="text-align:center; color:var(--warning); font-family:var(--font-display); text-shadow:0 0 10px var(--warning); margin-top: 60px;">🏆 Bảng Xếp Hạng Thế Giới</h2>
+        <div id="personalStats">
+          <div class="stats-row" id="personalStatsRow">
+            <div class="stat-item"><h4>WPM (Max)</h4><div class="val" id="personalWPM">0</div></div>
+            <div class="stat-item"><h4>Chính xác (Max)</h4><div class="val" id="personalAcc">0%</div></div>
+            <div class="stat-item"><h4>Tổng câu</h4><div class="val" id="personalSentences">0</div></div> 
+            <div class="stat-item"><h4>Tổng điểm</h4><div class="val" id="personalScore">0</div></div>
+          </div>
+          <div style="text-align:center; margin-top:20px;"><span class="level-badge" id="personalBadge">Tân binh</span></div>
+        </div>
+
+        <h2 style="text-align:center; color:var(--warning); font-family:var(--font-display); text-shadow:0 0 10px var(--warning); margin-top: 60px;">🏆 Bảng Xếp Hạng Tháng</h2>
         <div id="loadingLeaderboard" style="text-align:center; padding:20px; color:var(--text-dim);">Đang tải dữ liệu...</div>
         <div style="overflow-x:auto;">
             <table class="leaderboard-table" id="leaderboardTable">
@@ -656,9 +695,9 @@
                     <tr>
                         <th>#</th>
                         <th>Thành viên</th>
-                        <th>WPM</th>
-                        <th>Chính xác</th>
-                        <th>Điểm</th>
+                        <th>WPM (Max)</th>
+                        <th>Acc (Max)</th>
+                        <th>Tổng Điểm</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboardBody">
@@ -741,7 +780,7 @@
     </div>
 
     <footer style="text-align:center; margin-top:40px; color:var(--text-dim); font-size:0.9rem; padding-bottom: 20px;">
-        HiHi Online <span class="heart-icon">❤️</span> được Hải làm từ cả trái tim.
+        HiHi Sync <span class="heart-icon">❤️</span> được Hải làm từ cả trái tim.
     </footer>
   </div>
 
@@ -749,13 +788,12 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, get, push, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, get, onValue, query, orderByChild, limitToLast, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // --- CONFIG FIREBASE MỚI (CHÍNH XÁC) ---
+    // --- CONFIG FIREBASE ---
     const firebaseConfig = {
       apiKey: "AIzaSyDtaVYb_72YvoGzvcERJZypUGS-u3skz2M",
       authDomain: "tuvung-88e8d.firebaseapp.com",
-      // Chú ý: URL này có đuôi asia-southeast1.firebasedatabase.app
       databaseURL: "https://tuvung-88e8d-default-rtdb.asia-southeast1.firebasedatabase.app",
       projectId: "tuvung-88e8d",
       storageBucket: "tuvung-88e8d.firebasestorage.app",
@@ -772,9 +810,15 @@
 
     // --- GLOBAL VARIABLES CHO APP ---
     window.currentUser = null; 
-    window.authObj = auth;
-    window.dbObj = db;
     
+    // Helper to get Year-Month key for resetting leaderboard
+    function getMonthKey() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    }
+    
+    document.getElementById('currentMonthDisplay').textContent = getMonthKey();
+
     // UI Elements for Auth
     const loginModal = document.getElementById('loginModal');
     const googleBtn = document.getElementById('googleLoginBtn');
@@ -787,11 +831,16 @@
     const lbBody = document.getElementById('leaderboardBody');
     const loadingLb = document.getElementById('loadingLeaderboard');
 
+    // Stats Elements
+    const pWPM = document.getElementById('personalWPM');
+    const pAcc = document.getElementById('personalAcc');
+    const pScore = document.getElementById('personalScore');
+    const pSent = document.getElementById('personalSentences');
+    const pBadge = document.getElementById('personalBadge');
+
     // --- AUTH LOGIC ---
-    // 1. Theo dõi trạng thái đăng nhập
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // Đã đăng nhập
             window.currentUser = {
                 uid: user.uid,
                 name: user.displayName,
@@ -800,10 +849,9 @@
             };
             updateUserUI(window.currentUser);
             loginModal.classList.remove('show');
-            loadLeaderboard(); // Load BXH khi vào
+            initRealtimeSync(window.currentUser.uid); // Bắt đầu lắng nghe dữ liệu cá nhân
+            loadLeaderboard();
         } else {
-            // Chưa đăng nhập (hoặc đã logout)
-            // Kiểm tra xem có đang chơi chế độ khách không
             const guest = localStorage.getItem('hihiGuest');
             if (guest) {
                 window.currentUser = JSON.parse(guest);
@@ -818,19 +866,15 @@
         }
     });
 
-    // 2. Hàm Login Google
     googleBtn.addEventListener('click', () => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                console.log("Logged in:", result.user.displayName);
-                localStorage.removeItem('hihiGuest'); // Xóa chế độ khách cũ nếu có
+                localStorage.removeItem('hihiGuest');
             }).catch((error) => {
-                console.error(error);
                 alert("Lỗi đăng nhập: " + error.message);
             });
     });
 
-    // 3. Hàm Chơi Khách (Skip)
     skipBtn.addEventListener('click', () => {
         const name = guestInput.value.trim() || "Khách Ẩn Danh";
         const guestUser = {
@@ -846,13 +890,9 @@
         loadLeaderboard();
     });
 
-    // 4. Hàm Logout
     logoutBtn.addEventListener('click', () => {
         if (auth.currentUser) {
-            signOut(auth).then(() => {
-                console.log("Signed out");
-                window.location.reload();
-            });
+            signOut(auth).then(() => window.location.reload());
         } else {
             localStorage.removeItem('hihiGuest');
             window.location.reload();
@@ -870,61 +910,75 @@
         }
     }
 
-    // --- DATABASE LOGIC (LEADERBOARD) ---
-    
-    // Hàm lưu điểm (Gọi khi kết thúc game)
-    window.saveScoreToFirebase = function(scoreData) {
-        if (!window.currentUser) return;
-        const user = window.currentUser;
+    // --- REALTIME SYNC LOGIC ---
+
+    // 1. Lắng nghe thay đổi của chính mình (để cập nhật UI real-time)
+    function initRealtimeSync(uid) {
+        const monthKey = getMonthKey();
+        const myStatsRef = ref(db, `leaderboard/${monthKey}/${uid}`);
         
-        if (user.isAnonymous) {
-            console.log("Khách chơi, không lưu database để tránh rác.");
-            return;
-        }
-
-        const userScoreRef = ref(db, 'leaderboard/' + user.uid);
-        
-        // Cải tiến: Chỉ lưu nếu điểm mới cao hơn điểm cũ
-        get(userScoreRef).then((snapshot) => {
-            const currentData = snapshot.val();
-            let shouldUpdate = false;
-
-            if (!currentData) {
-                shouldUpdate = true; // Chưa có điểm -> Lưu luôn
-            } else if (scoreData.score > currentData.score) {
-                shouldUpdate = true; // Điểm mới cao hơn -> Lưu
+        onValue(myStatsRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Cập nhật giao diện ngay lập tức
+                pWPM.textContent = data.wpm || 0;
+                pAcc.textContent = (data.acc || 0) + '%';
+                pScore.textContent = data.score || 0;
+                pSent.textContent = data.sentences || 0;
+                
+                // Tính badge dựa trên WPM max
+                const wpm = data.wpm || 0;
+                const badge = wpm < 50 ? "Tân Binh" : wpm < 100 ? "Thành Thạo" : wpm < 200 ? "Cao Thủ" : "Huyền Thoại";
+                pBadge.textContent = badge;
             }
-
-            if (shouldUpdate) {
-                set(userScoreRef, {
-                    name: user.name,
-                    photo: user.photo,
-                    score: scoreData.score,
-                    wpm: scoreData.wpm,
-                    acc: scoreData.acc,
-                    date: Date.now()
-                }).then(() => console.log("New high score saved!"));
-            } else {
-                console.log("Score not high enough to save.");
-            }
-        }).catch((error) => {
-            console.error("Error checking score:", error);
-            // Nếu lỗi đọc, cứ thử lưu đè (fallback)
-             set(userScoreRef, {
-                    name: user.name,
-                    photo: user.photo,
-                    score: scoreData.score,
-                    wpm: scoreData.wpm,
-                    acc: scoreData.acc,
-                    date: Date.now()
-            });
         });
     }
 
-    // Hàm tải BXH
+    // 2. Hàm lưu điểm (CỘNG DỒN ĐIỂM + RESET THÁNG)
+    window.saveScoreToFirebase = function(gameData) {
+        if (!window.currentUser || window.currentUser.isAnonymous) return;
+        
+        const user = window.currentUser;
+        const monthKey = getMonthKey();
+        const userScoreRef = ref(db, `leaderboard/${monthKey}/${user.uid}`);
+
+        // Dùng Transaction để cộng dồn điểm an toàn
+        runTransaction(userScoreRef, (currentData) => {
+            if (currentData === null) {
+                // Chưa có dữ liệu tháng này -> Tạo mới
+                return {
+                    name: user.name,
+                    photo: user.photo,
+                    score: gameData.score,        // Điểm lần này
+                    sentences: gameData.sentences, // Số câu lần này
+                    wpm: gameData.wpm,            // WPM lần này
+                    acc: gameData.acc,            // Acc lần này
+                    lastPlayed: Date.now()
+                };
+            } else {
+                // Đã có dữ liệu -> Cộng dồn Score & Sentence, lấy Max WPM & Acc
+                return {
+                    name: user.name,
+                    photo: user.photo,
+                    score: (currentData.score || 0) + gameData.score,         // Cộng dồn điểm
+                    sentences: (currentData.sentences || 0) + gameData.sentences, // Cộng dồn số câu
+                    wpm: Math.max(currentData.wpm || 0, gameData.wpm),        // Lấy Max WPM
+                    acc: Math.max(currentData.acc || 0, gameData.acc),        // Lấy Max Acc
+                    lastPlayed: Date.now()
+                };
+            }
+        }).then(() => {
+            console.log("Transaction commited!");
+        }).catch((err) => {
+            console.error("Transaction failed: ", err);
+        });
+    }
+
+    // 3. Hàm tải BXH (Load theo tháng hiện tại)
     function loadLeaderboard() {
-        // Lấy 10 người điểm cao nhất
-        const lbRef = query(ref(db, 'leaderboard'), orderByChild('score'), limitToLast(10));
+        const monthKey = getMonthKey();
+        // Lấy 10 người điểm cao nhất (tổng điểm tích lũy)
+        const lbRef = query(ref(db, `leaderboard/${monthKey}`), orderByChild('score'), limitToLast(20));
         
         onValue(lbRef, (snapshot) => {
             loadingLb.style.display = 'none';
@@ -935,11 +989,10 @@
                 data.push(child.val());
             });
             
-            // Firebase trả về tăng dần, đảo ngược để người điểm cao nhất lên đầu
-            data.reverse();
+            data.reverse(); // Đảo ngược để cao nhất lên đầu
             
             if (data.length === 0) {
-                lbBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có dữ liệu</td></tr>';
+                lbBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Tháng mới chưa có dữ liệu. Hãy là người đầu tiên!</td></tr>';
                 return;
             }
 
@@ -949,7 +1002,7 @@
                     ? `<img src="${item.photo}" class="lb-avatar">` 
                     : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;">${item.name.charAt(0)}</div>`;
                 
-                let rankColor = '#fff';
+                let rankColor = 'var(--text)';
                 if(index === 0) rankColor = '#fbbf24'; // Vàng
                 else if(index === 1) rankColor = '#94a3b8'; // Bạc
                 else if(index === 2) rankColor = '#b45309'; // Đồng
@@ -962,93 +1015,62 @@
                             <span>${item.name}</span>
                         </div>
                     </td>
-                    <td>${item.wpm}</td>
-                    <td>${item.acc}%</td>
-                    <td class="lb-score">${item.score}</td>
+                    <td>${item.wpm || 0}</td>
+                    <td>${item.acc || 0}%</td>
+                    <td class="lb-score">${item.score || 0}</td>
                 `;
                 lbBody.appendChild(tr);
             });
-        }, (error) => {
-             console.error("Lỗi tải BXH:", error);
-             loadingLb.textContent = "Lỗi tải dữ liệu. Kiểm tra Security Rules!";
         });
     }
-
   </script>
 
   <script>
-    // === 1. THƯ VIỆN DỮ LIỆU ĐA NGÔN NGỮ KHỔNG LỒ ===
+    // === 1. THƯ VIỆN DỮ LIỆU ĐA NGÔN NGỮ ===
     const SAMPLE_LIBRARY = {
         'vi-VN': [
           "Sông Mã xa rồi Tây Tiến ơi! Nhớ về rừng núi, nhớ chơi vơi. Sài Khao sương lấp đoàn quân mỏi, Mường Lát hoa về trong đêm hơi.", 
-            "Mình về mình có nhớ ta? Mười lăm năm ấy thiết tha mặn nồng. Mình về mình có nhớ không, Nhìn cây nhớ núi, nhìn sông nhớ nguồn?", 
-            "Bỗng nhận ra hương ổi, Phả vào trong gió se, Sương chùng chình qua ngõ, Hình như thu đã về.",
-            "Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.", 
-            "Sông núi nước Nam vua Nam ở. Rành rành định phận tại sách trời. Cớ sao lũ giặc sang xâm phạm? Chúng bay sẽ bị đánh tơi bời.",
-            "Thân em vừa trắng lại vừa tròn. Bảy nổi ba chìm với nước non. Rắn nát mặc dầu tay kẻ nặn. Mà em vẫn giữ tấm lòng son.",
-            "Mỗi năm hoa đào nở. Lại thấy ông đồ già. Bày mực tàu giấy đỏ. Bên phố đông người qua.", 
-            "Quê hương là chùm khế ngọt. Cho con trèo hái mỗi ngày. Quê hương là đường đi học. Con về rợp bướm vàng bay.", 
-            "Bước tới Đèo Ngang bóng xế tà. Cỏ cây chen đá lá chen hoa. Lom khom dưới núi tiêm vài chú. Lác đác bên sông chợ mấy nhà.", 
-            "Sao anh không về chơi thôn Vĩ? Nhìn nắng hàng cau nắng mới lên. Vườn ai mướt quá xanh như ngọc, Lá trúc che ngang mặt chữ điền.", 
-            "Công cha như núi Thái Sơn. Nghĩa mẹ như nước trong nguồn chảy ra. Một lòng thờ mẹ kính cha. Cho tròn chữ hiếu mới là đạo con.", 
-            "Mặt trời xuống biển như hòn lửa. Sóng đã cài then đêm sập cửa. Đoàn thuyền đánh cá lại ra khơi. Câu hát căng buồm cùng gió khơi.", 
-            "Việt Nam đất nước ta ơi. Mênh mông biển lúa đâu trời đẹp hơn. Cánh cò bay lả rập rờn. Mây mờ che đỉnh Trường Sơn sớm chiều.", 
-            "Anh đi anh nhớ quê nhà. Nhớ canh rau muống nhớ cà dầm tương. Nhớ ai dãi nắng dầm sương. Nhớ ai tát nước bên đường hôm nao.", 
-            "Em cầm tờ lịch cũ, Ngày hôm qua đâu rồi? Ra ngoài sân hỏi bố, Xoa đầu em bố cười.." 
+          "Mình về mình có nhớ ta? Mười lăm năm ấy thiết tha mặn nồng. Mình về mình có nhớ không, Nhìn cây nhớ núi, nhìn sông nhớ nguồn?", 
+          "Bỗng nhận ra hương ổi, Phả vào trong gió se, Sương chùng chình qua ngõ, Hình như thu đã về.",
+          "Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.", 
+          "Sông núi nước Nam vua Nam ở. Rành rành định phận tại sách trời. Cớ sao lũ giặc sang xâm phạm? Chúng bay sẽ bị đánh tơi bời.",
+          "Thân em vừa trắng lại vừa tròn. Bảy nổi ba chìm với nước non. Rắn nát mặc dầu tay kẻ nặn. Mà em vẫn giữ tấm lòng son.",
+          "Mỗi năm hoa đào nở. Lại thấy ông đồ già. Bày mực tàu giấy đỏ. Bên phố đông người qua.", 
+          "Quê hương là chùm khế ngọt. Cho con trèo hái mỗi ngày. Quê hương là đường đi học. Con về rợp bướm vàng bay.", 
+          "Bước tới Đèo Ngang bóng xế tà. Cỏ cây chen đá lá chen hoa. Lom khom dưới núi tiêm vài chú. Lác đác bên sông chợ mấy nhà.", 
+          "Sao anh không về chơi thôn Vĩ? Nhìn nắng hàng cau nắng mới lên. Vườn ai mướt quá xanh như ngọc, Lá trúc che ngang mặt chữ điền."
         ],
         'en-US': [
             "The quick brown fox jumps over the lazy dog. Success is not final, failure is not fatal: it is the courage to continue that counts.",
             "Two roads diverged in a yellow wood, and sorry I could not travel both. And be one traveler, long I stood and looked down one as far as I could.", 
             "I wandered lonely as a cloud that floats on high o'er vales and hills, when all at once I saw a crowd, a host, of golden daffodils.", 
-            "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune.", 
-            "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.", 
-            "I have a dream that one day this nation will rise up and live out the true meaning of its creed: We hold these truths to be self-evident, that all men are created equal.", 
-            "All the world's a stage, and all the men and women merely players. They have their exits and their entrances.", 
-            "Hope is the thing with feathers that perches in the soul, and sings the tune without the words, and never stops at all." 
+            "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune."
         ],
         'id-ID': [
             "Bhinneka Tunggal Ika adalah semboyan bangsa Indonesia yang tertulis pada lambang negara Garuda Pancasila. Maknanya adalah berbeda-beda tetapi tetap satu.",
-            "Kami putra dan putri Indonesia, mengaku bertumpah darah yang satu, tanah air Indonesia. Kami putra dan putri Indonesia, mengaku berbangsa yang satu, bangsa Indonesia.",
-            "Aku. Kalau sampai waktuku, 'Ku mau tak seorang 'kan merayu. Tidak juga kau. Tak perlu sedu sedan itu.", 
-            "Bangsa yang besar adalah bangsa yang menghormati jasa pahlawannya. Perjuangan melawan penjajah memang sulit, namun perjuangan melawan bangsamu sendiri adalah lebih sulit.", 
-            "Di timur matahari mulai bercahaya. Bangun dan berdiri kawan semua. Marilah mengatur barisan kita. Seluruh pemuda Indonesia.",
-            "Tut Wuri Handayani. Di depan memberi contoh, di tengah memberi semangat, di belakang memberi dorongan." 
+            "Kami putra dan putri Indonesia, mengaku bertumpah darah yang satu, tanah air Indonesia."
         ],
         'es-ES': [
             "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero.", 
-            "Caminante, no hay camino, se hace camino al andar. Al andar se hace el camino, y al volver la vista atrás se ve la senda que nunca se ha de volver a pisar.", 
-            "Puedo escribir los versos más tristes esta noche. Escribir, por ejemplo: 'La noche está estrellada, y tiritan, azules, los astros, a lo lejos'.", 
-            "Verde que te quiero verde. Verde viento. Verdes ramas. El barco sobre la mar y el caballo en la montaña.", 
-            "La vida es sueño, y los sueños, sueños son." 
+            "Caminante, no hay camino, se hace camino al andar."
         ],
         'it-IT': [
             "Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura, ché la diritta via era smarrita.", 
-            "L'amor che move il sole e l'altre stelle.", 
-            "Quel ramo del lago di Como, che volge a mezzogiorno, tra due catene non interrotte di monti, tutto a seni e a golfi.", 
-            "E il naufragar m'è dolce in questo mare.", 
-            "La vita è bella. Ricordati di essere felice."
+            "L'amor che move il sole e l'altre stelle."
         ],
         'la-VA': [
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            "Veni, vidi, vici. Alea iacta est. Carpe diem, quam minimum credula postero.", 
-            "Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora.", 
-            "Per aspera ad astra. Cogito, ergo sum. Errare humanum est, perseverare autem diabolicum.",
-            "Tempus fugit. Memento mori. Amor vincit omnia."
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            "Veni, vidi, vici. Alea iacta est."
         ]
     };
 
     // === 2. CẤU HÌNH & BIẾN ===
     const wordCache = {}; 
-
     let typedWords = 0;
     let correctWords = 0;
     let totalCorrectWords = 0;
     let hintsUsed = 0;
     let totalSentences = 0; 
-    
-    let personalHistory = JSON.parse(localStorage.getItem('personalHistory')) || [];
-    let bestStats = JSON.parse(localStorage.getItem('bestStats')) || null;
-    let personalChart;
     
     let speechRate = 1.0;
     let currentUtterance = null;
@@ -1064,10 +1086,8 @@
     let currentIdx = 0;
     let startTime = 0;
     let timer = null;
-    
     let userHasEditedText = false; 
 
-    // === 3. CHỌN PHẦN TỬ (DOM) ===
     const els = {
       lang: document.getElementById('globalLang'),
       text: document.getElementById('sampleText'),
@@ -1102,29 +1122,22 @@
       micBtn: document.getElementById('micBtn'),
       mainTabs: () => document.querySelectorAll('.tab'),
       tabContents: () => document.querySelectorAll('.tab-content'),
-      personalStatsRow: document.getElementById('personalStatsRow'),
-      personalWPM: document.getElementById('personalWPM'),
-      personalAcc: document.getElementById('personalAcc'),
-      personalScore: document.getElementById('personalScore'),
-      personalSentences: document.getElementById('personalSentences'),
-      personalBadge: document.getElementById('personalBadge'),
-      personalChart: document.getElementById('personalChart'),
     };
 
-    // === 4. ĐỊNH NGHĨA HÀM ===
+    // === 4. LOGIC CHÍNH ===
     
-    // === CHỦ ĐỀ & GIÁNG SINH ===
+    // Tạo tuyết rơi liên tục
     function createSnowflakes() {
         const snowContainer = document.getElementById('snowContainer');
         snowContainer.innerHTML = '';
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 40; i++) {
             const flake = document.createElement('div');
             flake.className = 'snowflake';
-            flake.textContent = ['❄', '❅', '❆'][Math.floor(Math.random() * 3)];
+            flake.textContent = ['❄', '❅', '❆', '.'][Math.floor(Math.random() * 4)];
             flake.style.left = Math.random() * 100 + 'vw';
             flake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            flake.style.fontSize = Math.random() * 10 + 10 + 'px';
-            flake.style.opacity = Math.random();
+            flake.style.fontSize = Math.random() * 15 + 10 + 'px';
+            flake.style.opacity = Math.random() * 0.7 + 0.3;
             flake.style.animationDelay = Math.random() * 5 + 's';
             snowContainer.appendChild(flake);
         }
@@ -1137,14 +1150,12 @@
         if (themeMode === 'holiday') {
             body.setAttribute('data-theme', isDarkPreferred ? 'holiday-dark' : 'holiday');
         } else {
+            // Nếu không phải holiday, dùng base theme (light/dark)
             body.setAttribute('data-theme', isDarkPreferred ? 'dark' : 'light');
         }
 
         els.sun.classList.toggle('hidden', !isDarkPreferred);
         els.moon.classList.toggle('hidden', isDarkPreferred);
-        
-        if (themeMode === 'holiday') createSnowflakes();
-        else document.getElementById('snowContainer').innerHTML = '';
     }
 
     function toggleBaseTheme() {
@@ -1170,9 +1181,10 @@
         const isHoliday = localStorage.getItem('isHoliday') === 'true';
         const base = localStorage.getItem('baseTheme');
         applyTheme(isHoliday ? 'holiday' : base);
+        createSnowflakes(); // Luôn tạo tuyết
     }
 
-    // === TABS ===
+    // Tabs
     function setupTabs(tabButtons, tabContents) {
         tabButtons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1180,56 +1192,18 @@
                 tabButtons.forEach(t => t.classList.remove('active'));
                 btn.classList.add('active');
                 tabContents.forEach(c => c.classList.toggle('hidden', c.id !== targetId));
-                if (btn.dataset.tab === 'rankPanel') renderPersonalStats();
             });
         });
     }
 
-    function renderPersonalStats() {
-      if (bestStats) {
-        els.personalWPM.textContent = bestStats.wpm;
-        els.personalAcc.textContent = bestStats.acc + '%';
-        els.personalScore.textContent = bestStats.score;
-        els.personalSentences.textContent = bestStats.sentences || 0;
-        els.personalBadge.textContent = bestStats.badge;
-      }
-      
-      const ctx = els.personalChart.getContext('2d');
-      if (personalChart) personalChart.destroy();
-      const recentHistory = [...personalHistory].reverse();
-      
-      personalChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: recentHistory.map((_,i) => `Lần ${i+1}`),
-          datasets: [
-            { label: 'WPM', data: recentHistory.map(h=>h.wpm), borderColor: '#38bdf8', tension: 0.4, fill: true, backgroundColor: 'rgba(56, 189, 248, 0.2)' },
-            { label: 'Điểm', data: recentHistory.map(h=>h.score), borderColor: '#c084fc', tension: 0.4 }
-          ]
-        },
-        options: { 
-            responsive: true, 
-            plugins: { 
-                legend: { position: 'top', labels: { color: '#94a3b8' } } 
-            }, 
-            scales: { 
-                y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-                x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-            } 
-        }
-      });
-    }
-
-    // === GIỌNG ĐỌC ===
+    // TTS & Translate
     function loadVoices() {
       const targetCode = globalLang.split('-')[0]; 
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(targetCode));
-      
       if (voices.length === 0 && (globalLang.startsWith('la') || globalLang.startsWith('id'))) {
-          voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') || v.lang.startsWith('es') || v.lang.startsWith('it'));
+          voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') || v.lang.startsWith('es'));
       }
-
-      els.voiceSelect.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Không tìm thấy giọng phù hợp</option>';
+      els.voiceSelect.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Mặc định</option>';
       const saved = localStorage.getItem('voice');
       selectedVoice = voices.find(v => v.name === saved) || voices[0];
       if (selectedVoice) els.voiceSelect.value = selectedVoice.name;
@@ -1250,7 +1224,6 @@
       speechSynthesis.speak(currentUtterance);
     }
     
-    // === DỊCH THUẬT ===
     async function translateFull(text, src) {
       if (!text.trim() || globalLang === 'vi-VN') return text;
       try {
@@ -1276,19 +1249,14 @@
             const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=${src}|vi`);
             const data = await res.json();
             const result = data.responseData.translatedText;
-            
             if (result) {
                 wordCache[cleanWord] = result;
                 targetElement.textContent = result;
-            } else {
-                targetElement.textContent = "?";
-            }
-        } catch (e) {
-            targetElement.textContent = "?";
-        }
+            } else targetElement.textContent = "?";
+        } catch (e) { targetElement.textContent = "?"; }
     }
 
-    // === HIỂN THỊ ĐOẠN VĂN ===
+    // Display
     async function showSegment() {
       const text = segments[currentIdx];
       els.next.disabled = true;
@@ -1303,15 +1271,10 @@
       els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
       
       const srcLang = globalLang.split('-')[0];
-      
       if (globalLang !== 'vi-VN') {
           els.fullTrans.innerHTML = '<em>Đang dịch...</em>';
-          translateFull(text, srcLang).then(trans => {
-              els.fullTrans.textContent = 'Tạm dịch: ' + trans;
-          });
-      } else {
-          els.fullTrans.textContent = '';
-      }
+          translateFull(text, srcLang).then(trans => { els.fullTrans.textContent = 'Tạm dịch: ' + trans; });
+      } else els.fullTrans.textContent = '';
 
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>(Hãy nghe và gõ lại...)</em>';
@@ -1321,13 +1284,11 @@
 
       const fragment = document.createDocumentFragment();
       const parts = text.split(/(\s+)/);
-      
       let charIndex = 0;
       karaokeWords = [];
 
       parts.forEach(part => {
           if (!part) return;
-          
           if (/^\s+$/.test(part)) {
               fragment.appendChild(document.createTextNode(part));
               charIndex += part.length;
@@ -1372,35 +1333,25 @@
 
     function normalizeText(text) {
         if (!text) return "";
-        return text.trim()
-                   .replace(/[.,!?:;'"“”()[\]{}]/g, '')
-                   .replace(/\s+/g, ' ') 
-                   .toLowerCase();
+        return text.trim().replace(/[.,!?:;'"“”()[\]{}]/g, '').replace(/\s+/g, ' ').toLowerCase();
     }
 
-    // === XỬ LÝ GÕ PHÍM & FEEDBACK ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
-
       const oWords = orig.split(/\s+/).filter(w => w);
       const iWords = input.replace(/ $/, ' \u00A0').split(/\s+/).filter(w => w);
-      
       let html = '', correct = 0;
       
       iWords.forEach((w, i) => {
-        if (i >= oWords.length) {
-            html += `<span class="wrong">${w}</span> `;
-        } else {
+        if (i >= oWords.length) html += `<span class="wrong">${w}</span> `;
+        else {
             const cleanTarget = normalizeText(oWords[i]);
             const cleanInput = normalizeText(w);
-            
             if (cleanInput === cleanTarget) {
                 correct++;
                 html += `<span class="correct">${w}</span> `;
-            } else {
-                html += `<span class="wrong">${w}</span> `;
-            }
+            } else html += `<span class="wrong">${w}</span> `;
         }
       });
 
@@ -1408,7 +1359,6 @@
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
       const isContentMatch = normalizeText(input) === normalizeText(orig);
-
       if (isContentMatch) {
           els.next.disabled = false;
           els.input.style.borderColor = 'var(--success)';
@@ -1448,40 +1398,32 @@
       const s = (Date.now() - startTime) / 1000 / 60;
       const wpm = s > 0 ? Math.round(typedWords / s) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
+      // Công thức điểm đơn giản: (WPM * 2) + Acc - Suggest
       const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
       const badge = wpm < 50 ? "Tân Binh" : wpm < 100 ? "Thành Thạo" : wpm < 200 ? "Cao Thủ" : "Huyền Thoại";
       
-      // Save local
-      const entry = { date: new Date().toISOString(), wpm, acc, score, badge, sentences: totalSentences };
-      personalHistory.push(entry);
-      if (personalHistory.length > 10) personalHistory.shift();
-      localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
-      
-      if (!bestStats || entry.score > bestStats.score) {
-          bestStats = entry;
-          localStorage.setItem('bestStats', JSON.stringify(bestStats));
-      }
-
       // === SAVE TO FIREBASE LEADERBOARD ===
       if (window.saveScoreToFirebase) {
           window.saveScoreToFirebase({
               wpm: wpm,
               acc: acc,
-              score: score
+              score: score,
+              sentences: totalSentences
           });
       }
       
       els.level.textContent = badge; els.levelBadge.textContent = 'Đạt cấp: ' + badge;
       els.score.textContent = score; els.wpm.textContent = wpm; els.acc.textContent = acc + '%';
       
-      renderPersonalStats();
-      alert(`Hoàn thành!\nTốc độ: ${wpm} WPM\nĐiểm: ${score}\nCấp: ${badge}`);
+      alert(`Hoàn thành!\nTốc độ: ${wpm} WPM\nĐIỂM CỘNG THÊM: ${score}\nTổng điểm tích lũy sẽ được cập nhật trên BXH.`);
+      
+      // Chuyển sang tab BXH để xem kết quả
+      document.querySelector('[data-tab="rankPanel"]').click();
     }
 
     function initSpeechRecognition() {
       if (recognition) { recognition.onend = null; recognition.stop(); }
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) return false;
-      
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
       recognition = new SpeechRecognition();
       recognition.lang = globalLang;
@@ -1490,51 +1432,31 @@
       
       recognition.onresult = (e) => {
         let finalTranscript = '';
-        let interimTranscript = '';
-        
         for (let i = e.resultIndex; i < e.results.length; ++i) {
-             if (e.results[i].isFinal) {
-               finalTranscript += e.results[i][0].transcript;
-             } else {
-               interimTranscript += e.results[i][0].transcript;
-             }
+             if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript;
         }
         
         const target = segments[currentIdx];
-        const displaySafe = finalTranscript || interimTranscript;
-
-        els.feedback.innerHTML = `<span style="color:var(--primary)">${displaySafe}</span>`;
-
         if (finalTranscript) {
              const normTrans = normalizeText(finalTranscript);
              const normTarget = normalizeText(target);
-             
              if (normTrans === normTarget || normTrans.includes(normTarget)) {
                  els.feedback.innerHTML = `<span class="correct">${finalTranscript}</span> (Chính xác!)`;
                  els.next.disabled = false;
                  setTimeout(next, 1000);
-             } else {
-                 els.feedback.innerHTML = `<span class="wrong">${finalTranscript}</span> (Thử lại)`;
-             }
+             } else els.feedback.innerHTML = `<span class="wrong">${finalTranscript}</span> (Thử lại)`;
         }
       };
       
       recognition.onerror = (e) => {
-        console.error(e);
         els.feedback.innerHTML = `<em>Lỗi mic (${e.error}). Hãy nhấn lại.</em>`;
         els.micBtn.classList.remove('listening');
         isListening = false;
       };
-      
-      recognition.onend = () => { 
-          els.micBtn.classList.remove('listening'); 
-          isListening = false;
-      };
-      
+      recognition.onend = () => { els.micBtn.classList.remove('listening'); isListening = false; };
       return true;
     }
 
-    // === HÀM LẤY TEXT NGẪU NHIÊN ===
     function setRandomText() {
         const library = SAMPLE_LIBRARY[globalLang] || SAMPLE_LIBRARY['vi-VN'];
         const randomText = library[Math.floor(Math.random() * library.length)];
@@ -1543,15 +1465,14 @@
         els.resetTextBtn.style.display = 'none';
     }
 
-    // === 5. SỰ KIỆN ===
+    // Event Listeners
     els.theme.addEventListener('click', toggleBaseTheme);
     els.holidayBtn.addEventListener('click', toggleHolidayMode);
 
     setupTabs(els.mainTabs(), els.tabContents());
 
     els.voiceSelect.addEventListener('change', () => {
-        const voiceName = els.voiceSelect.value;
-        selectedVoice = voices.find(v => v.name === voiceName);
+        selectedVoice = voices.find(v => v.name === els.voiceSelect.value);
         if (selectedVoice) localStorage.setItem('voice', selectedVoice.name);
     });
     els.previewVoice.addEventListener('click', () => speak(globalLang === 'vi-VN' ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.'));
@@ -1574,15 +1495,7 @@
         els.text.focus();
     });
 
-    els.randomTextBtn.addEventListener('click', () => {
-        setRandomText();
-        els.text.style.transition = 'none';
-        els.text.style.backgroundColor = 'rgba(192, 132, 252, 0.2)';
-        setTimeout(() => {
-            els.text.style.transition = '0.3s';
-            els.text.style.backgroundColor = '';
-        }, 200);
-    });
+    els.randomTextBtn.addEventListener('click', setRandomText);
 
     els.start.addEventListener('click', () => {
       const text = els.text.value.trim();
@@ -1612,10 +1525,8 @@
       const origWords = segments[currentIdx].split(/\s+/).filter(w => w);
       const typedInput = els.input.value.trim();
       const typedCount = typedInput ? typedInput.split(/\s+/).length : 0;
-
       if (typedCount < origWords.length) {
-        const nextWord = origWords[typedCount];
-        els.feedback.innerHTML += ` <span style="color:var(--info); font-weight:700;">→ ${nextWord}</span>`;
+        els.feedback.innerHTML += ` <span style="color:var(--info); font-weight:700;">→ ${origWords[typedCount]}</span>`;
         hintsUsed++;
         els.input.focus();
       }
@@ -1633,29 +1544,18 @@
 
     els.micBtn.addEventListener('click', () => {
       if (!recognition) initSpeechRecognition();
-      if (isListening) {
-          recognition.stop();
-      } else { 
+      if (isListening) recognition.stop();
+      else { 
           try {
-              recognition.start(); 
-              els.micBtn.classList.add('listening'); 
-              isListening = true; 
+              recognition.start(); els.micBtn.classList.add('listening'); isListening = true; 
               els.feedback.innerHTML = '<em>Đang nghe... Hãy đọc to!</em>'; 
-          } catch(e) {
-              console.error(e);
-              initSpeechRecognition(); 
-          }
+          } catch(e) { initSpeechRecognition(); }
       }
     });
 
-    // === 6. KHỞI CHẠY ===
     initTheme(); 
     els.lang.value = globalLang;
-    
-    window.addEventListener('load', () => {
-      renderPersonalStats();
-      loadVoices();
-    });
+    window.addEventListener('load', loadVoices);
   </script>
   <a href="https://ngxuanhai123.github.io/" class="floating-home-btn">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1665,7 +1565,6 @@
 </a>
 
 <style>
-    /* CSS CHO NÚT QUAY VỀ */
     .floating-home-btn {
         position: fixed;
         top: 20px;
@@ -1688,35 +1587,21 @@
         transition: all 0.3s ease;
         overflow: hidden;
     }
-
-    .floating-home-btn svg {
-        width: 24px;
-        height: 24px;
-        transition: transform 0.3s ease;
+    [data-theme="light"] .floating-home-btn {
+        background: rgba(0,0,0,0.05); color: #333; border-color: rgba(0,0,0,0.1);
     }
-
-    /* Hiệu ứng Hover */
+    .floating-home-btn svg { width: 24px; height: 24px; transition: transform 0.3s ease; }
     .floating-home-btn:hover {
         background: linear-gradient(90deg, #4facfe, #00f2fe);
         transform: translateY(2px);
         box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
         border-color: transparent;
-        color: #0f172a; /* Đổi màu chữ khi hover cho dễ đọc */
+        color: #0f172a; 
     }
-
-    .floating-home-btn:hover svg {
-        transform: scale(1.1);
-    }
-
-    /* Ẩn chữ trên mobile để gọn màn hình */
+    .floating-home-btn:hover svg { transform: scale(1.1); }
     @media (max-width: 640px) {
-        .floating-home-btn span {
-            display: none;
-        }
-        .floating-home-btn {
-            padding: 12px;
-            border-radius: 50%;
-        }
+        .floating-home-btn span { display: none; }
+        .floating-home-btn { padding: 12px; border-radius: 50%; }
     }
 </style>
 </body>
