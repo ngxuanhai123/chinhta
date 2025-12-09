@@ -749,18 +749,19 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, push, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    // Đã thêm import 'get' để kiểm tra dữ liệu trước khi lưu
+    import { getDatabase, ref, set, push, onValue, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // --- CONFIG FIREBASE CỦA BẠN ---
+    // --- CONFIG FIREBASE CỦA BẠN (Đã cập nhật mới) ---
     const firebaseConfig = {
-      apiKey: "AIzaSyBWknPoFq6ny8F_CpeYMu_3N6QEVM3s9Pc",
-      authDomain: "xh-chinhta.firebaseapp.com",
-      databaseURL: "https://xh-chinhta-default-rtdb.firebaseio.com",
-      projectId: "xh-chinhta",
-      storageBucket: "xh-chinhta.firebasestorage.app",
-      messagingSenderId: "535611478192",
-      appId: "1:535611478192:web:c45475177c8dcef8ef6b75",
-      measurementId: "G-NCC6MG2HMM"
+      apiKey: "AIzaSyDtaVYb_72YvoGzvcERJZypUGS-u3skz2M",
+      authDomain: "tuvung-88e8d.firebaseapp.com",
+      databaseURL: "https://tuvung-88e8d-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "tuvung-88e8d",
+      storageBucket: "tuvung-88e8d.firebasestorage.app",
+      messagingSenderId: "722559465686",
+      appId: "1:722559465686:web:bae1a77791205d372db177",
+      measurementId: "G-T785TQ3V32"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -770,8 +771,8 @@
     const provider = new GoogleAuthProvider();
 
     // --- GLOBAL VARIABLES CHO APP ---
-    window.currentUser = null; // Biến global để logic cũ truy cập
-    window.authObj = auth; // Expose để dùng ở hàm logout
+    window.currentUser = null; 
+    window.authObj = auth;
     window.dbObj = db;
     
     // UI Elements for Auth
@@ -802,7 +803,6 @@
             loadLeaderboard(); // Load BXH khi vào
         } else {
             // Chưa đăng nhập (hoặc đã logout)
-            // Kiểm tra xem có đang chơi chế độ khách không
             const guest = localStorage.getItem('hihiGuest');
             if (guest) {
                 window.currentUser = JSON.parse(guest);
@@ -821,16 +821,15 @@
     googleBtn.addEventListener('click', () => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                // Thành công -> onAuthStateChanged sẽ chạy
                 console.log("Logged in:", result.user.displayName);
-                localStorage.removeItem('hihiGuest'); // Xóa chế độ khách cũ nếu có
+                localStorage.removeItem('hihiGuest'); 
             }).catch((error) => {
                 console.error(error);
                 alert("Lỗi đăng nhập: " + error.message);
             });
     });
 
-    // 3. Hàm Chơi Khách (Skip)
+    // 3. Hàm Chơi Khách
     skipBtn.addEventListener('click', () => {
         const name = guestInput.value.trim() || "Khách Ẩn Danh";
         const guestUser = {
@@ -854,7 +853,6 @@
                 window.location.reload();
             });
         } else {
-            // Nếu là khách thì clear storage và reload
             localStorage.removeItem('hihiGuest');
             window.location.reload();
         }
@@ -873,41 +871,44 @@
 
     // --- DATABASE LOGIC (LEADERBOARD) ---
     
-    // Hàm lưu điểm (Gọi khi kết thúc game)
+    // Hàm lưu điểm (đã được tối ưu để chỉ lưu điểm cao nhất)
     window.saveScoreToFirebase = function(scoreData) {
         if (!window.currentUser) return;
         const user = window.currentUser;
         
-        // Chỉ lưu lên server nếu là người dùng thật (để tránh spam từ khách)
-        // Hoặc bạn có thể cho phép khách lưu nhưng prefix tên là [Guest]
-        
+        // Không lưu dữ liệu khách để tránh rác database
         if (user.isAnonymous) {
-            console.log("Khách chơi, không lưu database để tránh rác.");
+            console.log("Khách chơi, không lưu database.");
             return;
         }
 
-        // Cấu trúc: leaderboard/{uid} -> Chỉ lưu điểm cao nhất của user đó
         const userScoreRef = ref(db, 'leaderboard/' + user.uid);
         
-        // Kiểm tra xem điểm mới có cao hơn điểm cũ không thì mới update (logic đơn giản ở client, tốt nhất là cloud function)
-        // Ở đây ta dùng set luôn, nhưng thực tế nên đọc về so sánh. 
-        // Để đơn giản cho bài tập này: Ta sẽ lưu nếu điểm cao.
-        
-        // Đọc điểm cũ
-        // Lưu ý: Cách này hơi chậm 1 nhịp, nhưng đơn giản.
-        // Ta sẽ dùng update nếu score mới > score cũ
-        
-        // Tạm thời ta set luôn để đảm bảo dữ liệu mới nhất được lên. 
-        // Cải tiến: Chỉ set nếu score > currentDbScore.
-        
-        set(userScoreRef, {
-            name: user.name,
-            photo: user.photo,
-            score: scoreData.score,
-            wpm: scoreData.wpm,
-            acc: scoreData.acc,
-            date: Date.now()
-        }).then(() => console.log("Score saved!"));
+        // CẢI TIẾN: Kiểm tra điểm cũ trước khi lưu
+        get(userScoreRef).then((snapshot) => {
+            let shouldUpdate = true;
+            if (snapshot.exists()) {
+                const oldData = snapshot.val();
+                // Nếu điểm mới thấp hơn điểm cũ thì KHÔNG cập nhật
+                if (oldData.score >= scoreData.score) {
+                    shouldUpdate = false;
+                    console.log("Điểm mới thấp hơn kỷ lục cũ, không lưu.");
+                }
+            }
+
+            if (shouldUpdate) {
+                set(userScoreRef, {
+                    name: user.name,
+                    photo: user.photo,
+                    score: scoreData.score,
+                    wpm: scoreData.wpm,
+                    acc: scoreData.acc,
+                    date: Date.now()
+                }).then(() => console.log("New High Score Saved!"));
+            }
+        }).catch((error) => {
+            console.error("Lỗi khi lưu điểm:", error);
+        });
     }
 
     // Hàm tải BXH
@@ -923,7 +924,7 @@
                 data.push(child.val());
             });
             
-            // Firebase trả về tăng dần, ta cần giảm dần (điểm cao nhất lên đầu)
+            // Đảo ngược để điểm cao nhất lên đầu
             data.reverse();
             
             if (data.length === 0) {
@@ -1706,4 +1707,3 @@
 </style>
 </body>
 </html>
-
