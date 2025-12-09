@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HiHi - Gradient Master Edition</title>
-  <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke, bảng xếp hạng online.">
+  <title>HiHi - Diligence Edition</title>
+  <meta name="description" content="Luyện gõ chuẩn, tích lũy điểm kinh nghiệm, đua top bảng xếp hạng siêng năng.">
   <meta name="theme-color" content="#0f172a">
   <link href="https://googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -26,7 +26,7 @@
       --text: #f8fafc;
       --text-dim: #cbd5e1;
       
-      --glass-surface: rgba(15, 23, 42, 0.6);
+      --glass-surface: rgba(15, 23, 42, 0.7);
       --glass-border: rgba(255, 255, 255, 0.1);
       --glass-highlight: rgba(255, 255, 255, 0.15);
       --glass-blur: 40px;
@@ -77,7 +77,7 @@
     [data-theme="holiday-dark"], [data-theme="holiday"] {
       --bg-gradient: linear-gradient(-45deg, #020617, #14532d, #7f1d1d, #020617);
       --text: #f1f5f9;
-      --glass-surface: rgba(0, 0, 0, 0.7);
+      --glass-surface: rgba(0, 0, 0, 0.75);
       --glass-border: rgba(255, 215, 0, 0.2); /* Gold border */
       
       --blob-1: #991b1b; /* Red */
@@ -559,7 +559,7 @@
         </svg>
         <h1>HiHi<span style="font-size:0.4em; vertical-align: super; opacity: 0.8;">Online</span></h1>
       </div>
-      <p class="tagline">Luyện chính tả & ngoại ngữ - Bảng vàng vinh danh ✨</p>
+      <p class="tagline">Siêng Năng Bù Thông Minh - Tích Lũy Điểm EXP ✨</p>
     </header>
 
     <div class="tabs">
@@ -640,7 +640,7 @@
             <div class="stat-item"><h4>WPM Max</h4><div class="val" id="personalWPM">0</div></div>
             <div class="stat-item"><h4>Chính xác</h4><div class="val" id="personalAcc">0%</div></div>
             <div class="stat-item"><h4>Số câu</h4><div class="val" id="personalSentences">0</div></div> 
-            <div class="stat-item"><h4>Điểm cao</h4><div class="val"id="personalScore">0</div></div>
+            <div class="stat-item"><h4>Tổng EXP</h4><div class="val"id="personalScore">0</div></div>
           </div>
           <div style="text-align:center; margin-top:20px;"><span class="level-badge" id="personalBadge">Hạng: Tân binh</span></div>
           <div style="margin-top: 30px; padding:20px; background:rgba(255,255,255,0.05); border-radius:20px; border:1px solid var(--glass-border);">
@@ -648,7 +648,7 @@
           </div>
         </div>
 
-        <h2 style="text-align:center; color:var(--warning); font-family:var(--font-display); text-shadow:0 0 10px var(--warning); margin-top: 60px;">🏆 Bảng Xếp Hạng Thế Giới</h2>
+        <h2 style="text-align:center; color:var(--warning); font-family:var(--font-display); text-shadow:0 0 10px var(--warning); margin-top: 60px;">🏆 Bảng Xếp Hạng Siêng Năng</h2>
         <div id="loadingLeaderboard" style="text-align:center; padding:20px; color:var(--text-dim);">Đang tải dữ liệu...</div>
         <div style="overflow-x:auto;">
             <table class="leaderboard-table" id="leaderboardTable">
@@ -656,9 +656,9 @@
                     <tr>
                         <th>#</th>
                         <th>Thành viên</th>
-                        <th>WPM</th>
+                        <th>WPM Max</th>
                         <th>Chính xác</th>
-                        <th>Điểm</th>
+                        <th>Tổng EXP (Cộng dồn)</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboardBody">
@@ -670,7 +670,7 @@
     <div class="modal" id="loginModal">
       <div class="modal-content">
         <h3>Xin chào! 👋</h3>
-        <p style="margin-bottom:24px; color:var(--text-dim);">Đăng nhập để lưu thành tích và đua top server.</p>
+        <p style="margin-bottom:24px; color:var(--text-dim);">Đăng nhập để lưu điểm tích lũy và đua top server.</p>
         
         <button id="googleLoginBtn" class="btn-google">
            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
@@ -731,7 +731,7 @@
         <div class="stat-item"><h4>Thời gian</h4><div class="val" id="time">0s</div></div>
         <div class="stat-item"><h4>Tốc độ</h4><div class="val" id="wpm">0</div></div>
         <div class="stat-item"><h4>Chính xác</h4><div class="val" id="accuracy">100%</div></div>
-        <div class="stat-item"><h4>Điểm</h4><div class="val" id="score">0</div></div>
+        <div class="stat-item"><h4>Điểm EXP</h4><div class="val" id="score">0</div></div>
       </div>
       
       <div style="text-align:center;">
@@ -749,10 +749,9 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    // Đã thêm import 'get' để kiểm tra dữ liệu trước khi lưu
-    import { getDatabase, ref, set, push, onValue, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, push, onValue, query, orderByChild, limitToLast, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // --- CONFIG FIREBASE CỦA BẠN (Đã cập nhật mới) ---
+    // --- CONFIG FIREBASE ---
     const firebaseConfig = {
       apiKey: "AIzaSyDtaVYb_72YvoGzvcERJZypUGS-u3skz2M",
       authDomain: "tuvung-88e8d.firebaseapp.com",
@@ -765,15 +764,12 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const auth = getAuth(app);
     const db = getDatabase(app);
     const provider = new GoogleAuthProvider();
 
     // --- GLOBAL VARIABLES CHO APP ---
     window.currentUser = null; 
-    window.authObj = auth;
-    window.dbObj = db;
     
     // UI Elements for Auth
     const loginModal = document.getElementById('loginModal');
@@ -788,21 +784,13 @@
     const loadingLb = document.getElementById('loadingLeaderboard');
 
     // --- AUTH LOGIC ---
-    // 1. Theo dõi trạng thái đăng nhập
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // Đã đăng nhập
-            window.currentUser = {
-                uid: user.uid,
-                name: user.displayName,
-                photo: user.photoURL,
-                isAnonymous: false
-            };
+            window.currentUser = { uid: user.uid, name: user.displayName, photo: user.photoURL, isAnonymous: false };
             updateUserUI(window.currentUser);
             loginModal.classList.remove('show');
-            loadLeaderboard(); // Load BXH khi vào
+            loadLeaderboard(); 
         } else {
-            // Chưa đăng nhập (hoặc đã logout)
             const guest = localStorage.getItem('hihiGuest');
             if (guest) {
                 window.currentUser = JSON.parse(guest);
@@ -817,27 +805,15 @@
         }
     });
 
-    // 2. Hàm Login Google
     googleBtn.addEventListener('click', () => {
         signInWithPopup(auth, provider)
-            .then((result) => {
-                console.log("Logged in:", result.user.displayName);
-                localStorage.removeItem('hihiGuest'); 
-            }).catch((error) => {
-                console.error(error);
-                alert("Lỗi đăng nhập: " + error.message);
-            });
+            .then((result) => { localStorage.removeItem('hihiGuest'); })
+            .catch((error) => { alert("Lỗi đăng nhập: " + error.message); });
     });
 
-    // 3. Hàm Chơi Khách
     skipBtn.addEventListener('click', () => {
         const name = guestInput.value.trim() || "Khách Ẩn Danh";
-        const guestUser = {
-            uid: 'guest_' + Date.now(),
-            name: name,
-            photo: null,
-            isAnonymous: true
-        };
+        const guestUser = { uid: 'guest_' + Date.now(), name: name, photo: null, isAnonymous: true };
         localStorage.setItem('hihiGuest', JSON.stringify(guestUser));
         window.currentUser = guestUser;
         updateUserUI(guestUser);
@@ -845,13 +821,9 @@
         loadLeaderboard();
     });
 
-    // 4. Hàm Logout
     logoutBtn.addEventListener('click', () => {
         if (auth.currentUser) {
-            signOut(auth).then(() => {
-                console.log("Signed out");
-                window.location.reload();
-            });
+            signOut(auth).then(() => window.location.reload());
         } else {
             localStorage.removeItem('hihiGuest');
             window.location.reload();
@@ -869,51 +841,53 @@
         }
     }
 
-    // --- DATABASE LOGIC (LEADERBOARD) ---
+    // --- DATABASE LOGIC (LEADERBOARD - SỬA LỖI & CẬP NHẬT) ---
     
-    // Hàm lưu điểm (đã được tối ưu để chỉ lưu điểm cao nhất)
+    // 1. Hàm lưu điểm (CỘNG DỒN CHO NGƯỜI SIÊNG NĂNG)
     window.saveScoreToFirebase = function(scoreData) {
         if (!window.currentUser) return;
         const user = window.currentUser;
         
-        // Không lưu dữ liệu khách để tránh rác database
-        if (user.isAnonymous) {
-            console.log("Khách chơi, không lưu database.");
-            return;
-        }
-
-        const userScoreRef = ref(db, 'leaderboard/' + user.uid);
+        // Vẫn cho phép khách lưu để test, nhưng khuyên dùng login
+        const userId = user.uid;
+        const userRef = ref(db, 'leaderboard/' + userId);
         
-        // CẢI TIẾN: Kiểm tra điểm cũ trước khi lưu
-        get(userScoreRef).then((snapshot) => {
-            let shouldUpdate = true;
-            if (snapshot.exists()) {
-                const oldData = snapshot.val();
-                // Nếu điểm mới thấp hơn điểm cũ thì KHÔNG cập nhật
-                if (oldData.score >= scoreData.score) {
-                    shouldUpdate = false;
-                    console.log("Điểm mới thấp hơn kỷ lục cũ, không lưu.");
-                }
+        get(userRef).then((snapshot) => {
+            const currentData = snapshot.val() || { total_score: 0, wpm: 0, acc: 0 };
+            
+            // Logic CỘNG DỒN ĐIỂM (Siêng năng)
+            const newTotalScore = (currentData.total_score || 0) + scoreData.score;
+            
+            // Logic Cập nhật WPM (Chỉ lấy max)
+            const maxWPM = Math.max(currentData.wpm || 0, scoreData.wpm);
+            
+            // Logic Acc (Lấy của lần chơi tốt nhất hoặc mới nhất - ở đây lấy mới nhất để phản ánh phong độ)
+            // Hoặc lấy trung bình? Đơn giản là lấy acc của lần đạt WPM cao nhất
+            let bestAcc = currentData.acc;
+            if (scoreData.wpm >= currentData.wpm) {
+                bestAcc = scoreData.acc;
             }
 
-            if (shouldUpdate) {
-                set(userScoreRef, {
-                    name: user.name,
-                    photo: user.photo,
-                    score: scoreData.score,
-                    wpm: scoreData.wpm,
-                    acc: scoreData.acc,
-                    date: Date.now()
-                }).then(() => console.log("New High Score Saved!"));
-            }
+            const updateData = {
+                name: user.name,
+                photo: user.photo,
+                total_score: newTotalScore, // Điểm tích lũy
+                wpm: maxWPM,               // Tốc độ cao nhất từng đạt
+                acc: bestAcc,              // Độ chính xác tương ứng
+                last_played: Date.now()
+            };
+
+            update(userRef, updateData).then(() => console.log("Data Updated!"));
+            
         }).catch((error) => {
             console.error("Lỗi khi lưu điểm:", error);
         });
     }
 
-    // Hàm tải BXH
+    // 2. Hàm tải BXH (SỬA LỖI LOADING)
     function loadLeaderboard() {
-        const lbRef = query(ref(db, 'leaderboard'), orderByChild('score'), limitToLast(10));
+        // Sắp xếp theo total_score (Điểm tích lũy) để vinh danh người chăm chỉ
+        const lbRef = query(ref(db, 'leaderboard'), orderByChild('total_score'), limitToLast(10));
         
         onValue(lbRef, (snapshot) => {
             loadingLb.style.display = 'none';
@@ -924,8 +898,7 @@
                 data.push(child.val());
             });
             
-            // Đảo ngược để điểm cao nhất lên đầu
-            data.reverse();
+            data.reverse(); // Đảo ngược để cao nhất lên đầu
             
             if (data.length === 0) {
                 lbBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có dữ liệu</td></tr>';
@@ -936,34 +909,33 @@
                 const tr = document.createElement('tr');
                 const photoHtml = item.photo 
                     ? `<img src="${item.photo}" class="lb-avatar">` 
-                    : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;">${item.name.charAt(0)}</div>`;
+                    : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;">${item.name.charAt(0).toUpperCase()}</div>`;
                 
                 let rankColor = '#fff';
-                if(index === 0) rankColor = '#fbbf24'; // Vàng
-                else if(index === 1) rankColor = '#94a3b8'; // Bạc
-                else if(index === 2) rankColor = '#b45309'; // Đồng
+                if(index === 0) rankColor = '#fbbf24'; 
+                else if(index === 1) rankColor = '#94a3b8'; 
+                else if(index === 2) rankColor = '#b45309'; 
 
                 tr.innerHTML = `
                     <td class="rank-num" style="color:${rankColor}">${index + 1}</td>
-                    <td>
-                        <div class="lb-user">
-                            ${photoHtml}
-                            <span>${item.name}</span>
-                        </div>
-                    </td>
+                    <td><div class="lb-user">${photoHtml}<span>${item.name}</span></div></td>
                     <td>${item.wpm}</td>
                     <td>${item.acc}%</td>
-                    <td class="lb-score">${item.score}</td>
+                    <td class="lb-score">${item.total_score.toLocaleString()}</td> 
                 `;
                 lbBody.appendChild(tr);
             });
+        }, (error) => {
+            // ERROR HANDLING: Hiển thị lỗi nếu không tải được
+            console.error(error);
+            loadingLb.innerHTML = `<span style="color:var(--danger)">Lỗi tải dữ liệu!<br>Hãy kiểm tra kết nối mạng hoặc quyền truy cập.</span>`;
         });
     }
 
   </script>
 
   <script>
-    // === 1. THƯ VIỆN DỮ LIỆU ĐA NGÔN NGỮ KHỔNG LỒ ===
+    // === 1. THƯ VIỆN DỮ LIỆU ĐA NGÔN NGỮ ===
     const SAMPLE_LIBRARY = {
         'vi-VN': [
           "Sông Mã xa rồi Tây Tiến ơi! Nhớ về rừng núi, nhớ chơi vơi. Sài Khao sương lấp đoàn quân mỏi, Mường Lát hoa về trong đêm hơi.", 
@@ -1025,10 +997,9 @@
 
     // === 2. CẤU HÌNH & BIẾN ===
     const wordCache = {}; 
-
     let typedWords = 0;
     let correctWords = 0;
-    let totalCorrectWords = 0;
+    let totalCorrectChars = 0; // Thêm biến đếm ký tự để tính độ siêng năng
     let hintsUsed = 0;
     let totalSentences = 0; 
     
@@ -1097,9 +1068,7 @@
       personalChart: document.getElementById('personalChart'),
     };
 
-    // === 4. ĐỊNH NGHĨA HÀM ===
-    
-    // === CHỦ ĐỀ & GIÁNG SINH ===
+    // === 4. HÀM XỬ LÝ ===
     function createSnowflakes() {
         const snowContainer = document.getElementById('snowContainer');
         snowContainer.innerHTML = '';
@@ -1119,16 +1088,13 @@
     function applyTheme(themeMode) {
         const body = document.body;
         const isDarkPreferred = localStorage.getItem('baseTheme') === 'dark';
-
         if (themeMode === 'holiday') {
             body.setAttribute('data-theme', isDarkPreferred ? 'holiday-dark' : 'holiday');
         } else {
             body.setAttribute('data-theme', isDarkPreferred ? 'dark' : 'light');
         }
-
         els.sun.classList.toggle('hidden', !isDarkPreferred);
         els.moon.classList.toggle('hidden', isDarkPreferred);
-        
         if (themeMode === 'holiday') createSnowflakes();
         else document.getElementById('snowContainer').innerHTML = '';
     }
@@ -1137,7 +1103,6 @@
         const current = localStorage.getItem('baseTheme') === 'light' ? 'light' : 'dark';
         const next = current === 'dark' ? 'light' : 'dark';
         localStorage.setItem('baseTheme', next);
-        
         const isHolidayOn = localStorage.getItem('isHoliday') === 'true';
         applyTheme(isHolidayOn ? 'holiday' : next);
     }
@@ -1146,7 +1111,6 @@
         const isCurrentlyOn = localStorage.getItem('isHoliday') === 'true';
         const nextState = !isCurrentlyOn;
         localStorage.setItem('isHoliday', nextState);
-        
         const base = localStorage.getItem('baseTheme') || 'dark'; 
         applyTheme(nextState ? 'holiday' : base);
     }
@@ -1175,7 +1139,7 @@
       if (bestStats) {
         els.personalWPM.textContent = bestStats.wpm;
         els.personalAcc.textContent = bestStats.acc + '%';
-        els.personalScore.textContent = bestStats.score;
+        els.personalScore.textContent = bestStats.score; // Show EXP here? Or total?
         els.personalSentences.textContent = bestStats.sentences || 0;
         els.personalBadge.textContent = bestStats.badge;
       }
@@ -1190,7 +1154,7 @@
           labels: recentHistory.map((_,i) => `Lần ${i+1}`),
           datasets: [
             { label: 'WPM', data: recentHistory.map(h=>h.wpm), borderColor: '#38bdf8', tension: 0.4, fill: true, backgroundColor: 'rgba(56, 189, 248, 0.2)' },
-            { label: 'Điểm', data: recentHistory.map(h=>h.score), borderColor: '#c084fc', tension: 0.4 }
+            { label: 'EXP', data: recentHistory.map(h=>h.score), borderColor: '#c084fc', tension: 0.4 }
           ]
         },
         options: { 
@@ -1206,15 +1170,13 @@
       });
     }
 
-    // === GIỌNG ĐỌC ===
+    // === VOICE ===
     function loadVoices() {
       const targetCode = globalLang.split('-')[0]; 
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(targetCode));
-      
       if (voices.length === 0 && (globalLang.startsWith('la') || globalLang.startsWith('id'))) {
           voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') || v.lang.startsWith('es') || v.lang.startsWith('it'));
       }
-
       els.voiceSelect.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Không tìm thấy giọng phù hợp</option>';
       const saved = localStorage.getItem('voice');
       selectedVoice = voices.find(v => v.name === saved) || voices[0];
@@ -1236,7 +1198,7 @@
       speechSynthesis.speak(currentUtterance);
     }
     
-    // === DỊCH THUẬT ===
+    // === DỊCH & XỬ LÝ TEXT ===
     async function translateFull(text, src) {
       if (!text.trim() || globalLang === 'vi-VN') return text;
       try {
@@ -1250,31 +1212,26 @@
         if (globalLang === 'vi-VN') return;
         const cleanWord = word.replace(/[.,!?;:"()]/g, "").trim().toLowerCase();
         if (!cleanWord) return;
-
-        if (wordCache[cleanWord]) {
-            targetElement.textContent = wordCache[cleanWord];
-            return;
-        }
-
+        if (wordCache[cleanWord]) { targetElement.textContent = wordCache[cleanWord]; return; }
         try {
             const src = globalLang.split('-')[0];
             targetElement.textContent = "..."; 
             const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=${src}|vi`);
             const data = await res.json();
             const result = data.responseData.translatedText;
-            
             if (result) {
                 wordCache[cleanWord] = result;
                 targetElement.textContent = result;
-            } else {
-                targetElement.textContent = "?";
-            }
-        } catch (e) {
-            targetElement.textContent = "?";
-        }
+            } else { targetElement.textContent = "?"; }
+        } catch (e) { targetElement.textContent = "?"; }
     }
 
-    // === HIỂN THỊ ĐOẠN VĂN ===
+    function normalizeText(text) {
+        if (!text) return "";
+        return text.trim().replace(/[.,!?:;'"“”()[\]{}]/g, '').replace(/\s+/g, ' ').toLowerCase();
+    }
+
+    // === GAME LOGIC ===
     async function showSegment() {
       const text = segments[currentIdx];
       els.next.disabled = true;
@@ -1289,15 +1246,10 @@
       els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
       
       const srcLang = globalLang.split('-')[0];
-      
       if (globalLang !== 'vi-VN') {
           els.fullTrans.innerHTML = '<em>Đang dịch...</em>';
-          translateFull(text, srcLang).then(trans => {
-              els.fullTrans.textContent = 'Tạm dịch: ' + trans;
-          });
-      } else {
-          els.fullTrans.textContent = '';
-      }
+          translateFull(text, srcLang).then(trans => { els.fullTrans.textContent = 'Tạm dịch: ' + trans; });
+      } else { els.fullTrans.textContent = ''; }
 
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>(Hãy nghe và gõ lại...)</em>';
@@ -1307,13 +1259,11 @@
 
       const fragment = document.createDocumentFragment();
       const parts = text.split(/(\s+)/);
-      
       let charIndex = 0;
       karaokeWords = [];
 
       parts.forEach(part => {
           if (!part) return;
-          
           if (/^\s+$/.test(part)) {
               fragment.appendChild(document.createTextNode(part));
               charIndex += part.length;
@@ -1323,7 +1273,6 @@
               span.textContent = part;
               span.dataset.start = charIndex;
               span.dataset.end = charIndex + part.length;
-              
               if (globalLang !== 'vi-VN') {
                   const tooltip = document.createElement('div');
                   tooltip.className = 'word-tooltip';
@@ -1331,13 +1280,11 @@
                   span.appendChild(tooltip);
                   span.addEventListener('mouseenter', () => translateSingleWord(part, tooltip));
               }
-
               karaokeWords.push(span);
               fragment.appendChild(span);
               charIndex += part.length;
           }
       });
-
       els.segment.innerHTML = '';
       els.segment.appendChild(fragment);
       
@@ -1356,37 +1303,20 @@
       if (word) word.classList.add('karaoke-active');
     }
 
-    function normalizeText(text) {
-        if (!text) return "";
-        return text.trim()
-                   .replace(/[.,!?:;'"“”()[\]{}]/g, '')
-                   .replace(/\s+/g, ' ') 
-                   .toLowerCase();
-    }
-
-    // === XỬ LÝ GÕ PHÍM & FEEDBACK ===
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
-
       const oWords = orig.split(/\s+/).filter(w => w);
       const iWords = input.replace(/ $/, ' \u00A0').split(/\s+/).filter(w => w);
       
       let html = '', correct = 0;
-      
       iWords.forEach((w, i) => {
-        if (i >= oWords.length) {
-            html += `<span class="wrong">${w}</span> `;
-        } else {
+        if (i >= oWords.length) { html += `<span class="wrong">${w}</span> `; } 
+        else {
             const cleanTarget = normalizeText(oWords[i]);
             const cleanInput = normalizeText(w);
-            
-            if (cleanInput === cleanTarget) {
-                correct++;
-                html += `<span class="correct">${w}</span> `;
-            } else {
-                html += `<span class="wrong">${w}</span> `;
-            }
+            if (cleanInput === cleanTarget) { correct++; html += `<span class="correct">${w}</span> `; } 
+            else { html += `<span class="wrong">${w}</span> `; }
         }
       });
 
@@ -1394,7 +1324,6 @@
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
       const isContentMatch = normalizeText(input) === normalizeText(orig);
-
       if (isContentMatch) {
           els.next.disabled = false;
           els.input.style.borderColor = 'var(--success)';
@@ -1407,9 +1336,11 @@
     }
 
     function next() {
-      const wordsInSegment = segments[currentIdx].trim().split(/\s+/).length;
+      const segText = segments[currentIdx].trim();
+      const wordsInSegment = segText.split(/\s+/).length;
       typedWords += wordsInSegment;
-      totalCorrectWords += correctWords;
+      totalCorrectChars += segText.length; // Cộng dồn số ký tự cho điểm siêng năng
+      
       currentIdx++;
       const p = (currentIdx / segments.length) * 100;
       els.progressFill.style.width = p + '%';
@@ -1422,9 +1353,8 @@
       els.time.textContent = s + 's';
       const m = s / 60;
       const wpm = m > 0 ? Math.round(typedWords / m) : 0;
-      const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
+      // Trong lúc chơi chưa tính điểm phức tạp, chỉ hiện sơ bộ
       els.wpm.textContent = wpm;
-      els.acc.textContent = acc + '%';
     }
 
     function end() {
@@ -1433,17 +1363,36 @@
       
       const s = (Date.now() - startTime) / 1000 / 60;
       const wpm = s > 0 ? Math.round(typedWords / s) : 0;
-      const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
-      const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
-      const badge = wpm < 50 ? "Tân Binh" : wpm < 100 ? "Thành Thạo" : wpm < 200 ? "Cao Thủ" : "Huyền Thoại";
+      const acc = typedWords > 0 ? 100 - Math.round((hintsUsed / typedWords)*100) : 100; // Cách tính đơn giản tạm thời cho UI
+      
+      // === CÔNG THỨC TÍNH ĐIỂM MỚI (DILIGENCE & ACCURACY) ===
+      // 1. Điểm cơ bản: Số ký tự đã gõ (Siêng năng)
+      let baseScore = totalCorrectChars * 5; 
+      
+      // 2. Hệ số chính xác (Phạt nặng nếu sai)
+      // Nếu dùng gợi ý nhiều -> hintsUsed tăng -> cần trừ điểm
+      // Logic ở đây: Nếu hoàn thành bài mà ko sai (dựa vào cơ chế bắt buộc gõ đúng mới next)
+      // thì acc gần như là 100%. Tuy nhiên nếu hintsUsed > 0 thì trừ.
+      const penalty = hintsUsed * 500;
+      
+      // 3. Thưởng tốc độ (Nhẹ)
+      const speedBonus = wpm * 10;
+      
+      // 4. Thưởng hoàn hảo
+      const perfectBonus = (hintsUsed === 0) ? 1000 : 0;
+      
+      let finalScore = baseScore + speedBonus + perfectBonus - penalty;
+      if (finalScore < 0) finalScore = 0;
+
+      const badge = wpm < 40 ? "Tân Binh" : wpm < 80 ? "Chăm Chỉ" : wpm < 150 ? "Kiên Trì" : "Thần Tốc";
       
       // Save local
-      const entry = { date: new Date().toISOString(), wpm, acc, score, badge, sentences: totalSentences };
+      const entry = { date: new Date().toISOString(), wpm, acc: 100, score: finalScore, badge, sentences: totalSentences };
       personalHistory.push(entry);
       if (personalHistory.length > 10) personalHistory.shift();
       localStorage.setItem('personalHistory', JSON.stringify(personalHistory));
       
-      if (!bestStats || entry.score > bestStats.score) {
+      if (!bestStats || finalScore > bestStats.score) {
           bestStats = entry;
           localStorage.setItem('bestStats', JSON.stringify(bestStats));
       }
@@ -1452,75 +1401,46 @@
       if (window.saveScoreToFirebase) {
           window.saveScoreToFirebase({
               wpm: wpm,
-              acc: acc,
-              score: score
+              acc: 100, // Bài đã hoàn thành nghĩa là đúng 100% nội dung
+              score: finalScore
           });
       }
       
-      els.level.textContent = badge; els.levelBadge.textContent = 'Đạt cấp: ' + badge;
-      els.score.textContent = score; els.wpm.textContent = wpm; els.acc.textContent = acc + '%';
+      els.level.textContent = badge; els.levelBadge.textContent = 'Danh hiệu: ' + badge;
+      els.score.textContent = finalScore; els.wpm.textContent = wpm; els.acc.textContent = '100%';
       
       renderPersonalStats();
-      alert(`Hoàn thành!\nTốc độ: ${wpm} WPM\nĐiểm: ${score}\nCấp: ${badge}`);
+      alert(`Hoàn thành xuất sắc!\nBạn nhận được: ${finalScore} EXP\nDanh hiệu: ${badge}`);
     }
 
     function initSpeechRecognition() {
       if (recognition) { recognition.onend = null; recognition.stop(); }
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) return false;
-      
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
       recognition = new SpeechRecognition();
       recognition.lang = globalLang;
       recognition.continuous = false;
       recognition.interimResults = true;
-      
       recognition.onresult = (e) => {
         let finalTranscript = '';
-        let interimTranscript = '';
-        
         for (let i = e.resultIndex; i < e.results.length; ++i) {
-             if (e.results[i].isFinal) {
-               finalTranscript += e.results[i][0].transcript;
-             } else {
-               interimTranscript += e.results[i][0].transcript;
-             }
+             if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript;
         }
-        
-        const target = segments[currentIdx];
-        const displaySafe = finalTranscript || interimTranscript;
-
-        els.feedback.innerHTML = `<span style="color:var(--primary)">${displaySafe}</span>`;
-
         if (finalTranscript) {
              const normTrans = normalizeText(finalTranscript);
-             const normTarget = normalizeText(target);
-             
+             const normTarget = normalizeText(segments[currentIdx]);
              if (normTrans === normTarget || normTrans.includes(normTarget)) {
-                 els.feedback.innerHTML = `<span class="correct">${finalTranscript}</span> (Chính xác!)`;
+                 els.feedback.innerHTML = `<span class="correct">${finalTranscript}</span>`;
                  els.next.disabled = false;
                  setTimeout(next, 1000);
-             } else {
-                 els.feedback.innerHTML = `<span class="wrong">${finalTranscript}</span> (Thử lại)`;
-             }
+             } else { els.feedback.innerHTML = `<span class="wrong">${finalTranscript}</span> (Thử lại)`; }
         }
       };
-      
-      recognition.onerror = (e) => {
-        console.error(e);
-        els.feedback.innerHTML = `<em>Lỗi mic (${e.error}). Hãy nhấn lại.</em>`;
-        els.micBtn.classList.remove('listening');
-        isListening = false;
-      };
-      
-      recognition.onend = () => { 
-          els.micBtn.classList.remove('listening'); 
-          isListening = false;
-      };
-      
+      recognition.onerror = (e) => { els.micBtn.classList.remove('listening'); isListening = false; };
+      recognition.onend = () => { els.micBtn.classList.remove('listening'); isListening = false; };
       return true;
     }
 
-    // === HÀM LẤY TEXT NGẪU NHIÊN ===
     function setRandomText() {
         const library = SAMPLE_LIBRARY[globalLang] || SAMPLE_LIBRARY['vi-VN'];
         const randomText = library[Math.floor(Math.random() * library.length)];
@@ -1529,59 +1449,37 @@
         els.resetTextBtn.style.display = 'none';
     }
 
-    // === 5. SỰ KIỆN ===
+    // === EVENTS ===
     els.theme.addEventListener('click', toggleBaseTheme);
     els.holidayBtn.addEventListener('click', toggleHolidayMode);
-
     setupTabs(els.mainTabs(), els.tabContents());
-
     els.voiceSelect.addEventListener('change', () => {
         const voiceName = els.voiceSelect.value;
         selectedVoice = voices.find(v => v.name === voiceName);
         if (selectedVoice) localStorage.setItem('voice', selectedVoice.name);
     });
-    els.previewVoice.addEventListener('click', () => speak(globalLang === 'vi-VN' ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.'));
+    els.previewVoice.addEventListener('click', () => speak(globalLang === 'vi-VN' ? 'Xin chào.' : 'Hello.'));
     speechSynthesis.onvoiceschanged = loadVoices;
-
-    els.lang.addEventListener('change', () => {
-      globalLang = els.lang.value;
-      localStorage.setItem('lang', globalLang);
-      loadVoices();
-    });
-
-    els.text.addEventListener('input', () => {
-        userHasEditedText = true;
-        els.resetTextBtn.style.display = 'inline-flex';
-    });
-
-    els.resetTextBtn.addEventListener('click', () => {
-        els.text.value = '';
-        els.resetTextBtn.style.display = 'none';
-        els.text.focus();
-    });
-
+    els.lang.addEventListener('change', () => { globalLang = els.lang.value; localStorage.setItem('lang', globalLang); loadVoices(); });
+    els.text.addEventListener('input', () => { userHasEditedText = true; els.resetTextBtn.style.display = 'inline-flex'; });
+    els.resetTextBtn.addEventListener('click', () => { els.text.value = ''; els.resetTextBtn.style.display = 'none'; els.text.focus(); });
     els.randomTextBtn.addEventListener('click', () => {
         setRandomText();
-        els.text.style.transition = 'none';
-        els.text.style.backgroundColor = 'rgba(192, 132, 252, 0.2)';
-        setTimeout(() => {
-            els.text.style.transition = '0.3s';
-            els.text.style.backgroundColor = '';
-        }, 200);
+        els.text.style.transition = 'none'; els.text.style.backgroundColor = 'rgba(192, 132, 252, 0.2)';
+        setTimeout(() => { els.text.style.transition = '0.3s'; els.text.style.backgroundColor = ''; }, 200);
     });
 
     els.start.addEventListener('click', () => {
       const text = els.text.value.trim();
-      if (!text) return alert('Vui lòng nhập đoạn văn hoặc nhấn nút "🎲 Bài mẫu ngẫu nhiên"!');
+      if (!text) return alert('Vui lòng nhập nội dung hoặc chọn bài mẫu!');
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
-      if (!segments.length) return alert('Không có đoạn hợp lệ!');
+      if (!segments.length) return alert('Không tìm thấy câu hợp lệ!');
       
-      currentIdx = 0; typedWords = 0; correctWords = 0; totalCorrectWords = 0; hintsUsed = 0; totalSentences = segments.length;
+      currentIdx = 0; typedWords = 0; correctWords = 0; totalCorrectChars = 0; hintsUsed = 0; totalSentences = segments.length;
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.voiceRateSelect.value);
       
       els.modeBtns().forEach(btn => btn.classList.toggle('active', btn.dataset.mode === currentMode));
-      
       startTime = Date.now(); 
       if (timer) clearInterval(timer);
       timer = setInterval(updateStats, 1000);
@@ -1598,10 +1496,8 @@
       const origWords = segments[currentIdx].split(/\s+/).filter(w => w);
       const typedInput = els.input.value.trim();
       const typedCount = typedInput ? typedInput.split(/\s+/).length : 0;
-
       if (typedCount < origWords.length) {
-        const nextWord = origWords[typedCount];
-        els.feedback.innerHTML += ` <span style="color:var(--info); font-weight:700;">→ ${nextWord}</span>`;
+        els.feedback.innerHTML += ` <span style="color:var(--info); font-weight:700;">→ ${origWords[typedCount]}</span>`;
         hintsUsed++;
         els.input.focus();
       }
@@ -1610,38 +1506,20 @@
     els.replay.addEventListener('click', () => speak(segments[currentIdx], highlightKaraoke));
     els.next.addEventListener('click', next);
     els.reset.addEventListener('click', () => location.reload());
-
     els.modeBtns().forEach(btn => btn.addEventListener('click', () => {
         currentMode = btn.dataset.mode;
         els.modeBtns().forEach(b => b.classList.toggle('active', b.dataset.mode === currentMode));
         showSegment();
     }));
-
     els.micBtn.addEventListener('click', () => {
       if (!recognition) initSpeechRecognition();
-      if (isListening) {
-          recognition.stop();
-      } else { 
-          try {
-              recognition.start(); 
-              els.micBtn.classList.add('listening'); 
-              isListening = true; 
-              els.feedback.innerHTML = '<em>Đang nghe... Hãy đọc to!</em>'; 
-          } catch(e) {
-              console.error(e);
-              initSpeechRecognition(); 
-          }
-      }
+      if (isListening) { recognition.stop(); } 
+      else { try { recognition.start(); els.micBtn.classList.add('listening'); isListening = true; els.feedback.innerHTML = '<em>Đang nghe...</em>'; } catch(e) { initSpeechRecognition(); } }
     });
 
-    // === 6. KHỞI CHẠY ===
-    initTheme(); 
-    els.lang.value = globalLang;
-    
-    window.addEventListener('load', () => {
-      renderPersonalStats();
-      loadVoices();
-    });
+    // === START ===
+    initTheme(); els.lang.value = globalLang;
+    window.addEventListener('load', () => { renderPersonalStats(); loadVoices(); });
   </script>
   <a href="https://ngxuanhai123.github.io/" class="floating-home-btn">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1651,59 +1529,19 @@
 </a>
 
 <style>
-    /* CSS CHO NÚT QUAY VỀ */
     .floating-home-btn {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 20px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50px;
-        color: white;
-        text-decoration: none;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-        overflow: hidden;
+        position: fixed; top: 20px; left: 20px; z-index: 1000;
+        display: flex; align-items: center; gap: 10px; padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px;
+        color: white; text-decoration: none; font-family: 'Poppins', sans-serif;
+        font-weight: 600; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;
     }
-
-    .floating-home-btn svg {
-        width: 24px;
-        height: 24px;
-        transition: transform 0.3s ease;
-    }
-
-    /* Hiệu ứng Hover */
     .floating-home-btn:hover {
-        background: linear-gradient(90deg, #4facfe, #00f2fe);
-        transform: translateY(2px);
-        box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
-        border-color: transparent;
-        color: #0f172a; /* Đổi màu chữ khi hover cho dễ đọc */
+        background: linear-gradient(90deg, #4facfe, #00f2fe); transform: translateY(2px);
+        box-shadow: 0 0 20px rgba(79, 172, 254, 0.6); color: #0f172a; border-color: transparent;
     }
-
-    .floating-home-btn:hover svg {
-        transform: scale(1.1);
-    }
-
-    /* Ẩn chữ trên mobile để gọn màn hình */
-    @media (max-width: 640px) {
-        .floating-home-btn span {
-            display: none;
-        }
-        .floating-home-btn {
-            padding: 12px;
-            border-radius: 50%;
-        }
-    }
+    @media (max-width: 640px) { .floating-home-btn span { display: none; } .floating-home-btn { padding: 12px; border-radius: 50%; } }
 </style>
 </body>
 </html>
