@@ -14,7 +14,7 @@
   
   <style>
     :root {
-      /* --- THEME VARIABLES FROM TƯ VỰNG FILE --- */
+      /* --- THEME VARIABLES --- */
       --glass-bg: rgba(255, 255, 255, 0.15);
       --glass-border: rgba(255, 255, 255, 0.3);
       --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
@@ -57,7 +57,7 @@
       display: flex; flex-direction: column; align-items: center;
     }
 
-    /* --- AURORA BACKGROUND (MATCHING TƯ VỰNG) --- */
+    /* --- AURORA BACKGROUND --- */
     .aurora-bg {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
       background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
@@ -66,7 +66,6 @@
       opacity: 0.8;
     }
     
-    /* Darker Aurora for contrast */
     [data-theme="dark"] .aurora-bg, body:not([data-theme="light"]) .aurora-bg {
       background: linear-gradient(-45deg, #020024, #090979, #1a0b2e, #001f3f);
       background-size: 400% 400%;
@@ -88,14 +87,6 @@
       50% { opacity: 0.5; }
       100% { transform: translateY(-10vh) scale(1); opacity: 0; }
     }
-
-    /* Snow - Always Active */
-    .snowflake {
-      position: fixed; top: -10px; z-index: 999; color: #fff; 
-      text-shadow: 0 0 5px rgba(255,255,255,0.8); pointer-events: none;
-      animation: fall linear forwards; display: block;
-    }
-    @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
     /* === CONTAINER & GLASS CARD === */
     .container {
@@ -420,12 +411,10 @@
 
   <div class="aurora-bg"></div>
   <div id="particles"></div>
-  <div id="snowContainer"></div>
   
   <div class="container">
     <header>
       <div class="theme-toggle-wrapper">
-        <button class="icon-btn" id="holidayBtn" title="Chế độ Giáng Sinh">🎄</button>
         <button class="icon-btn" id="themeBtn" title="Đổi giao diện">
            <i id="themeIcon" class="fas fa-moon"></i>
         </button>
@@ -600,7 +589,7 @@
 
       <div class="action-row">
         <button class="action-btn btn-replay" id="replayBtn"><i class="fas fa-volume-up"></i> Nghe</button>
-        <button class="action-btn btn-next" id="nextBtn" disabled>Tiếp <i class="fas fa-arrow-right"></i></button>
+        <button class="action-btn btn-next" id="nextBtn">Tiếp <i class="fas fa-arrow-right"></i></button>
         <button class="action-btn btn-reset" id="resetBtn"><i class="fas fa-times"></i></button>
       </div>
 
@@ -626,7 +615,6 @@
     // --- JS INIT ---
     function initApp() {
         createParticles();
-        createSnowflakes();
     }
 
     function createParticles() {
@@ -931,6 +919,8 @@
     let totalCorrectWords = 0;
     let hintsUsed = 0;
     let totalSentences = 0; 
+    let accumulatedScore = 0; // Tổng điểm tích lũy trong phiên
+    let currentSegmentCorrectChars = 0; // Điểm ký tự đúng của câu hiện tại
     
     let speechRate = 1.0;
     let currentUtterance = null;
@@ -971,7 +961,6 @@
       next: document.getElementById('nextBtn'),
       reset: document.getElementById('resetBtn'),
       theme: document.getElementById('themeBtn'),
-      holidayBtn: document.getElementById('holidayBtn'), 
       themeIcon: document.getElementById('themeIcon'),
       voiceSelect: document.getElementById('voiceSelect'),
       voiceRateSelect: document.getElementById('voiceRateSelect'),
@@ -985,23 +974,6 @@
 
     // === 4. LOGIC CHÍNH ===
     
-    // Tạo tuyết rơi liên tục
-    function createSnowflakes() {
-        const snowContainer = document.getElementById('snowContainer');
-        snowContainer.innerHTML = '';
-        for (let i = 0; i < 40; i++) {
-            const flake = document.createElement('div');
-            flake.className = 'snowflake';
-            flake.textContent = ['❄', '❅', '❆', '.'][Math.floor(Math.random() * 4)];
-            flake.style.left = Math.random() * 100 + 'vw';
-            flake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            flake.style.fontSize = Math.random() * 15 + 10 + 'px';
-            flake.style.opacity = Math.random() * 0.7 + 0.3;
-            flake.style.animationDelay = Math.random() * 5 + 's';
-            snowContainer.appendChild(flake);
-        }
-    }
-
     function applyTheme(themeMode) {
         const body = document.body;
         const isLight = themeMode === 'light';
@@ -1022,13 +994,6 @@
         const next = current === 'dark' ? 'light' : 'dark';
         localStorage.setItem('baseTheme', next);
         applyTheme(next);
-    }
-
-    function toggleHolidayMode() {
-        const isCurrentlyOn = localStorage.getItem('isHoliday') === 'true';
-        const nextState = !isCurrentlyOn;
-        localStorage.setItem('isHoliday', nextState);
-        alert(nextState ? "Đã bật chế độ lễ hội! (Tuyết rơi nhiều hơn)" : "Đã tắt chế độ lễ hội.");
     }
 
     function initTheme() {
@@ -1113,9 +1078,12 @@
     // Display
     async function showSegment() {
       const text = segments[currentIdx];
-      els.next.disabled = true;
+      // Cho phép chuyển câu kế tiếp luôn (không disable nút Next)
+      els.next.disabled = false;
+      
       els.input.style.borderColor = ''; els.input.style.boxShadow = ''; els.input.value = ''; els.input.focus();
       correctWords = 0;
+      currentSegmentCorrectChars = 0; // Reset điểm câu hiện tại
       
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
       const isReadOnly = currentMode === 'read-only';
@@ -1193,6 +1161,8 @@
     function updateFeedback() {
       const orig = segments[currentIdx];
       const input = els.input.value;
+      
+      // Logic cũ: so sánh từng từ để highlight
       const oWords = orig.split(/\s+/).filter(w => w);
       const iWords = input.replace(/ $/, ' \u00A0').split(/\s+/).filter(w => w);
       let html = '', correct = 0;
@@ -1212,24 +1182,45 @@
       correctWords = correct;
       els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
       
+      // LOGIC MỚI: Tính điểm Realtime dựa trên số ký tự đúng
+      // So sánh string input với string gốc để đếm ký tự khớp nhau
+      let matches = 0;
+      const minLen = Math.min(input.length, orig.length);
+      for(let i=0; i < minLen; i++) {
+          if(input[i] === orig[i]) matches++;
+      }
+      currentSegmentCorrectChars = matches;
+      
+      // Cập nhật điểm hiển thị ngay lập tức (Tổng đã lưu + Điểm tạm tính)
+      els.score.textContent = accumulatedScore + currentSegmentCorrectChars;
+
+      // Không disable nút Next dù đúng hay sai (để người dùng tự quyết định)
       const isContentMatch = normalizeText(input) === normalizeText(orig);
       if (isContentMatch) {
-          els.next.disabled = false;
           els.input.style.borderColor = '#4ade80';
       } else {
-          els.next.disabled = true;
           els.input.style.borderColor = '';
       }
     }
 
     function next() {
+      const inputVal = els.input.value;
       const wordsInSegment = segments[currentIdx].trim().split(/\s+/).length;
-      typedWords += wordsInSegment;
-      totalCorrectWords += correctWords;
+      
+      // Chỉ tính điểm nếu người dùng có gõ
+      if (inputVal.trim().length > 0) {
+          typedWords += wordsInSegment; // Tạm tính là đã gõ để tính WPM
+          totalCorrectWords += correctWords;
+          
+          // Cộng dồn điểm câu này vào tổng điểm
+          accumulatedScore += currentSegmentCorrectChars;
+      }
+      
       currentIdx++;
       const p = (currentIdx / segments.length) * 100;
       els.progressFill.style.width = p + '%';
       els.progressText.textContent = Math.round(p) + '%';
+      
       if (currentIdx >= segments.length) end(); else showSegment();
     }
 
@@ -1247,11 +1238,15 @@
       clearInterval(timer);
       if (isListening) recognition?.stop();
       
-      const s = (Date.now() - startTime) / 1000 / 60;
+      const totalTimeSec = Math.floor((Date.now() - startTime) / 1000);
+      const s = totalTimeSec / 60;
       const wpm = s > 0 ? Math.round(typedWords / s) : 0;
       const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
-      // Công thức điểm đơn giản: (WPM * 2) + Acc - Suggest
-      const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
+      
+      // TÍNH ĐIỂM MỚI: (Điểm ký tự tích lũy) - (Gợi ý * 5) + (Điểm siêng năng theo thời gian)
+      const diligencePoints = totalTimeSec; // 1 giây = 1 điểm siêng năng
+      const finalScore = Math.max(0, accumulatedScore - (hintsUsed * 5) + diligencePoints);
+      
       const badge = wpm < 50 ? "Tân Binh" : wpm < 100 ? "Thành Thạo" : wpm < 200 ? "Cao Thủ" : "Huyền Thoại";
       
       // === SAVE TO FIREBASE LEADERBOARD ===
@@ -1259,15 +1254,17 @@
           window.saveScoreToFirebase({
               wpm: wpm,
               acc: acc,
-              score: score,
+              score: finalScore,
               sentences: totalSentences
           });
       }
       
       els.level.textContent = badge; els.levelBadge.textContent = 'Đạt cấp: ' + badge;
-      els.score.textContent = score; els.wpm.textContent = wpm; els.acc.textContent = acc + '%';
+      els.score.textContent = finalScore; 
+      els.wpm.textContent = wpm; 
+      els.acc.textContent = acc + '%';
       
-      alert(`Hoàn thành!\nTốc độ: ${wpm} WPM\nĐIỂM CỘNG THÊM: ${score}\nTổng điểm tích lũy sẽ được cập nhật trên BXH.`);
+      alert(`Hoàn thành!\nTốc độ: ${wpm} WPM\nĐiểm gõ: ${accumulatedScore}\nĐiểm siêng năng (Thời gian): +${diligencePoints}\nTỔNG ĐIỂM: ${finalScore}`);
       
       // Chuyển sang tab BXH để xem kết quả
       document.querySelector('[data-tab="rankPanel"]').click();
@@ -1294,7 +1291,7 @@
              const normTarget = normalizeText(target);
              if (normTrans === normTarget || normTrans.includes(normTarget)) {
                  els.feedback.innerHTML = `<span class="correct">${finalTranscript}</span> (Chính xác!)`;
-                 els.next.disabled = false;
+                 // Với chế độ đọc, tự động next sau 1s nếu đúng
                  setTimeout(next, 1000);
              } else els.feedback.innerHTML = `<span class="wrong">${finalTranscript}</span> (Thử lại)`;
         }
@@ -1319,7 +1316,6 @@
 
     // Event Listeners
     els.theme.addEventListener('click', toggleBaseTheme);
-    els.holidayBtn.addEventListener('click', toggleHolidayMode);
 
     setupTabs(els.mainTabs(), els.tabContents());
 
@@ -1356,6 +1352,9 @@
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       
       currentIdx = 0; typedWords = 0; correctWords = 0; totalCorrectWords = 0; hintsUsed = 0; totalSentences = segments.length;
+      accumulatedScore = 0; // Reset điểm
+      currentSegmentCorrectChars = 0;
+      
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.voiceRateSelect.value);
       
@@ -1372,7 +1371,7 @@
     });
 
     els.input.addEventListener('input', updateFeedback);
-    els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (!els.next.disabled) next(); } });
+    els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); next(); } });
     els.hint.addEventListener('click', () => {
       const origWords = segments[currentIdx].split(/\s+/).filter(w => w);
       const typedInput = els.input.value.trim();
