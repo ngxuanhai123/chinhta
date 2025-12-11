@@ -3,22 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HiHi Spelling - Ultimate Sync</title>
+<title>HiHi Sync - Ultimate Spelling</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&family=Poppins:wght@300;400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&family=Poppins:wght@300;400;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
   :root {
-    --glass-bg: rgba(15, 23, 42, 0.65); /* Darker glass for better text contrast */
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.3);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    --accent-color: #38bdf8;
-    --success-color: #34d399;
-    --error-color: #f87171;
+    --accent-color: #00d2ff;
+    --success-color: #00e676;
+    --error-color: #ff5252;
     --text-color: #ffffff;
-    --radius: 24px;
-    --font-main: 'Be Vietnam Pro', sans-serif;
+    --radius: 28px;
+    --font-main: 'Be Vietnam Pro', 'Poppins', sans-serif;
+    --card-text-main: #1e293b;
+    --card-text-sub: #475569;
+    
+    /* Variables for Spelling specific elements */
+    --primary: #38bdf8;
+    --primary-gradient: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+    --warning: #fbbf24;
+  }
+
+  body.dark-mode {
+    --glass-bg: rgba(15, 23, 42, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --card-text-main: #f1f5f9;
+    --card-text-sub: #cbd5e1;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; user-select: none; }
@@ -29,17 +44,23 @@
     color: var(--text-color);
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center;
-    padding-bottom: 110px;
+    padding-bottom: 50px;
     overflow-x: hidden;
     position: relative;
   }
 
-  /* --- AURORA BACKGROUND (From Tu Vung) --- */
+  /* --- AURORA BACKGROUND (COPIED FROM VOCAB FILE) --- */
   .aurora-bg {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
-    background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #0f172a);
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
+    opacity: 0.8;
+  }
+  
+  body.dark-mode .aurora-bg {
+    background: linear-gradient(-45deg, #020024, #090979, #1a0b2e, #001f3f);
+    background-size: 400% 400%;
   }
 
   @keyframes gradientBG {
@@ -48,314 +69,371 @@
     100% { background-position: 0% 50%; }
   }
 
-  /* PARTICLES & SNOW */
-  .particle { position: absolute; border-radius: 50%; background: white; opacity: 0.3; animation: floatUp linear infinite; z-index: -1; }
-  @keyframes floatUp { 0% { transform: translateY(100vh) scale(0); opacity: 0; } 50% { opacity: 0.5; } 100% { transform: translateY(-10vh) scale(1); opacity: 0; } }
-  .snowflake { position: fixed; top: -20px; z-index: 9999; color: #fff; font-size: 1em; opacity: 0.5; pointer-events: none; animation: fall linear forwards; }
+  /* PARTICLES */
+  .particle {
+    position: absolute; border-radius: 50%; background: white;
+    opacity: 0.3; animation: floatUp linear infinite; z-index: -1;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+  
+  /* SNOWFLAKES */
+  .snowflake {
+    position: fixed; top: -20px; z-index: 9999; color: #fff;
+    font-size: 1em; opacity: 0.8; pointer-events: none;
+    user-select: none; animation: fall linear forwards;
+    text-shadow: 0 0 5px rgba(255,255,255,0.8);
+  }
   @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
-  /* --- COMMON UI COMPONENTS --- */
+  /* --- GLASS COMPONENT --- */
   .glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     border-radius: var(--radius);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
-    transition: transform 0.3s;
-    width: 100%;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: var(--text-color);
   }
 
+  /* --- BUTTONS --- */
   .btn-primary {
-    position: relative; overflow: hidden; border: none;
-    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
-    color: white; font-weight: 700; padding: 16px 24px; border-radius: 20px;
-    cursor: pointer; width: 100%; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); transition: all 0.2s;
+    position: relative; overflow: hidden;
+    border: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+    border: 1px solid rgba(255,255,255,0.5);
+    color: white; font-weight: 800;
+    padding: 18px 28px; border-radius: 20px;
+    cursor: pointer; width: 100%;
+    font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1.5px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: all 0.2s;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   }
-  .btn-primary:active { transform: scale(0.96); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+  .btn-primary:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
 
-  .input-glass {
-    width: 100%; padding: 16px; border-radius: 16px;
-    border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white;
-    font-size: 1rem; margin-bottom: 15px; font-family: var(--font-main);
+  .icon-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: 0.2s; backdrop-filter: blur(5px);
   }
-  .input-glass:focus { background: rgba(0,0,0,0.5); border-color: var(--accent-color); }
+  .icon-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
 
-  /* --- LAYOUT --- */
+  /* --- INPUTS --- */
+  select, textarea, input[type="text"] {
+      width: 100%; padding: 16px; border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0,0,0,0.3); color: white;
+      font-size: 1rem; margin-bottom: 15px; font-family: var(--font-main);
+  }
+  select:focus, textarea:focus, input[type="text"]:focus {
+      background: rgba(0,0,0,0.5); border-color: #fff;
+  }
+  select option { background: #0f172a; color: white; }
+
+  /* --- LAYOUT & HEADER --- */
   header { margin: 40px 0 20px 0; text-align: center; width: 100%; padding: 0 20px; z-index: 2; }
-  h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 5px; color: white; text-shadow: 0 0 20px rgba(56, 189, 248, 0.6); }
-
-  .view-container { width: 92%; max-width: 600px; z-index: 2; position: relative; padding-bottom: 20px; display: none; }
-  .animate__fadeIn { animation-duration: 0.5s; }
+  h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 5px; letter-spacing: -1px; 
+       color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(0, 210, 255, 0.5); }
+  
+  .container { width: 95%; max-width: 900px; z-index: 2; position: relative; padding-bottom: 20px; }
 
   /* --- LOGIN SECTION --- */
+  #loginSection {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 50vh; text-align: center;
+      animation: fadeIn 0.5s;
+  }
+
+  /* --- TABS --- */
+  .tabs {
+      display: inline-flex; background: rgba(0,0,0,0.3);
+      padding: 6px; border-radius: 20px; border: 1px solid var(--glass-border);
+      margin: 0 auto 20px auto;
+  }
+  .tab {
+      padding: 10px 32px; border-radius: 14px; border: none;
+      background: transparent; color: rgba(255,255,255,0.6);
+      font-weight: 600; font-size: 1rem; cursor: pointer;
+      transition: 0.3s; font-family: var(--font-main);
+  }
+  .tab.active {
+      background: rgba(255,255,255,0.2); color: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* --- SPELLING GAME SPECIFIC STYLES --- */
+  .segment-box {
+      font-size: 1.5rem; line-height: 1.8; text-align: center;
+      min-height: 140px; padding: 30px;
+      background: rgba(0,0,0,0.2); border-radius: 20px;
+      border: 1px solid var(--glass-border); margin-bottom: 24px;
+      color: white; font-weight: 500;
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;
+  }
+
+  .karaoke-word {
+      padding: 2px 6px; border-radius: 6px; transition: 0.2s; position: relative;
+  }
+  .karaoke-active {
+      background: #fbbf24; color: #000 !important; transform: scale(1.1);
+      box-shadow: 0 0 15px #fbbf24; z-index: 10; font-weight: bold; text-shadow: none;
+  }
+
+  #userInput {
+      font-size: 1.3rem; padding: 20px;
+      border: 2px solid var(--glass-border);
+      background: rgba(0,0,0,0.4);
+      color: white;
+  }
+
+  .correct { color: #4ade80; font-weight: 700; text-shadow: 0 0 10px rgba(74, 222, 128, 0.4); }
+  .wrong { color: #f87171; text-decoration: line-through; opacity: 0.8; }
+
+  /* Stats Row */
+  .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 30px;
+  }
+  .stat-item {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+      padding: 15px 5px; border-radius: 16px; text-align: center;
+  }
+  .stat-item h4 { font-size: 0.7rem; opacity: 0.7; text-transform: uppercase; margin-bottom: 5px; }
+  .stat-item .val { font-size: 1.5rem; font-weight: 800; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+
+  /* Mic Button */
+  .mic-btn {
+      width: 70px; height: 70px; border-radius: 50%; 
+      background: rgba(255,255,255,0.1); color: white;
+      border: 1px solid var(--glass-border);
+      font-size: 2rem; cursor: pointer; margin: 0 auto 20px; display: block;
+      transition: 0.3s;
+  }
+  .mic-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+  .mic-btn.listening { 
+      background: #ef4444; color: white;
+      animation: pulseMic 1.5s infinite; border-color: transparent;
+  }
+  @keyframes pulseMic { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 20px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+  /* User Badge */
   .user-badge {
     display: flex; align-items: center; gap: 12px;
-    background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 30px;
-    border: 1px solid rgba(255,255,255,0.2); margin-bottom: 20px; cursor: pointer;
+    background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 30px;
+    border: 1px solid rgba(255,255,255,0.3); margin-bottom: 20px;
+    cursor: pointer; transition: 0.2s;
   }
-  .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; }
-
-  /* --- SETUP PANEL STYLES --- */
-  .setup-grid { display: grid; gap: 15px; }
-  .radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .radio-label {
-    background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px;
-    border: 1px solid transparent; cursor: pointer; transition: 0.2s;
-    display: flex; align-items: center; gap: 8px; font-size: 0.9rem;
-  }
-  .radio-label:has(input:checked) {
-    background: rgba(56, 189, 248, 0.15); border-color: var(--accent-color); font-weight: 700;
-  }
-  input[type="radio"] { display: none; }
-
-  select.input-glass option { background: #0f172a; }
-
-  /* --- PRACTICE AREA STYLES --- */
-  .progress-box { margin-bottom: 20px; }
-  .progress-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top:5px; }
-  .progress-fill { height: 100%; background: var(--success-color); width: 0%; transition: width 0.3s; box-shadow: 0 0 10px var(--success-color); }
-
-  .segment-box {
-    font-size: 1.4rem; line-height: 1.8; text-align: center;
-    min-height: 140px; padding: 25px;
-    background: rgba(0,0,0,0.2); border-radius: 20px;
-    border: 1px solid var(--glass-border); margin-bottom: 20px;
-    display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px;
-  }
+  .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
   
-  .karaoke-word { padding: 2px 6px; border-radius: 6px; transition: 0.2s; border: 1px solid transparent; }
-  .karaoke-active {
-    background: var(--accent-color); color: #000; font-weight: 800;
-    transform: scale(1.1); box-shadow: 0 0 15px var(--accent-color);
-  }
-
-  .mic-btn {
-    width: 70px; height: 70px; border-radius: 50%;
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-    color: white; font-size: 1.8rem; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: 0.2s; margin: 0 auto 20px;
-  }
-  .mic-btn.listening { background: var(--error-color); animation: pulseMic 1.5s infinite; border-color: transparent; }
-  @keyframes pulseMic { 0% { box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.7); } 100% { box-shadow: 0 0 0 20px transparent; } }
-
-  .input-wrapper { position: relative; margin-bottom: 20px; }
-  #userInput { font-size: 1.2rem; padding-right: 50px; }
-  .hint-btn {
-    position: absolute; right: 10px; top: 50%; transform: translateY(-65%);
-    background: rgba(251, 191, 36, 0.2); color: #fbbf24;
-    width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; border: 1px solid rgba(251, 191, 36, 0.4);
-  }
-
-  .feedback-area { font-family: monospace; text-align: center; margin-bottom: 20px; min-height: 24px; font-size: 1.1rem; }
-  .correct { color: var(--success-color); font-weight: bold; }
-  .wrong { color: var(--error-color); text-decoration: line-through; opacity: 0.7; }
-
-  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
-  .stat-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; text-align: center; }
-  .stat-val { font-size: 1.2rem; font-weight: 800; color: var(--accent-color); }
-  .stat-label { font-size: 0.7rem; opacity: 0.7; text-transform: uppercase; }
-
-  /* --- LEADERBOARD --- */
-  .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
-  .leaderboard-table th { text-align: left; padding: 12px; color: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; }
+  /* Leaderboard Table */
+  .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; color: white; font-size: 0.9rem; }
+  .leaderboard-table th { text-align: left; padding: 12px; opacity: 0.7; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.75rem; text-transform: uppercase; }
   .leaderboard-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-  .rank-1 { color: #fbbf24; font-weight: bold; }
-  .rank-2 { color: #94a3b8; font-weight: bold; }
-  .rank-3 { color: #b45309; font-weight: bold; }
+  .rank-1 { color: #ffd700; font-weight: bold; }
+  .rank-2 { color: #c0c0c0; font-weight: bold; }
+  .rank-3 { color: #cd7f32; font-weight: bold; }
 
-  /* --- TAB BAR --- */
-  .tab-bar {
-    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-    width: 95%; max-width: 450px; height: 70px;
-    background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(25px);
-    border: 1px solid rgba(255,255,255,0.2); border-radius: 40px;
-    display: flex; justify-content: space-around; align-items: center; z-index: 1000;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  /* Floating Home Button */
+  .floating-home-btn {
+      position: fixed; top: 20px; left: 20px; z-index: 1000;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px; color: white; text-decoration: none;
+      font-family: 'Poppins', sans-serif; font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease; overflow: hidden;
   }
-  .tab-item {
-    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: rgba(255,255,255,0.5); font-size: 0.75rem; font-weight: 600; transition: 0.3s; cursor: pointer;
+  .floating-home-btn:hover {
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      transform: translateY(2px); box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+      border-color: transparent; color: #0f172a;
   }
-  .tab-item i { font-size: 1.5rem; margin-bottom: 5px; transition: 0.3s; }
-  .tab-item.active { color: var(--accent-color); }
-  .tab-item.active i { transform: translateY(-5px); text-shadow: 0 0 10px rgba(56, 189, 248, 0.8); }
-
-  /* --- TOAST --- */
-  #toast {
-    position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-150%);
-    background: rgba(0,0,0,0.9); color: white; padding: 12px 24px; border-radius: 50px;
-    font-weight: 600; z-index: 3000; transition: transform 0.4s;
-    border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);
+  .floating-home-btn svg { width: 24px; height: 24px; transition: transform 0.3s ease; }
+  .floating-home-btn:hover svg { transform: scale(1.1); }
+  @media (max-width: 640px) {
+      .floating-home-btn span { display: none; }
+      .floating-home-btn { padding: 12px; border-radius: 50%; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
   }
-  #toast.show { transform: translateX(-50%) translateY(20px); }
 
   .hidden { display: none !important; }
 </style>
 </head>
-<body onload="initApp()">
+<body class="dark-mode" onload="window.initApp()">
 
 <div class="aurora-bg"></div>
 <div id="particles"></div>
 
 <header>
-  <h1>HiHi Spelling</h1>
-  <div style="font-size:0.9rem; opacity:0.8; font-weight: 600;">Luyện Chính Tả & Giọng Nói</div>
+  <h1>HiHi Sync</h1>
+  <div style="font-size:0.85rem; opacity:0.8; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Ultimate Spelling Challenge</div>
 </header>
 
-<div id="appContainer" style="width: 100%; display: flex; justify-content: center;">
+<div class="container">
+    
+    <div id="loginSection">
+        <div class="glass-panel" style="padding: 40px; width: 100%; max-width: 400px; text-align: center;">
+            <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.8;"></i>
+            <h2 style="margin-bottom: 10px;">Yêu cầu đăng nhập</h2>
+            <p style="opacity: 0.7; margin-bottom: 30px; font-size: 0.9rem;">Vui lòng đăng nhập để lưu kết quả và đua top.</p>
+            <button id="googleLoginBtn" class="btn-primary">
+                <i class="fab fa-google"></i> &nbsp; Đăng nhập Google
+            </button>
+        </div>
+    </div>
 
-    <div id="view-home" class="view-container animate__animated animate__fadeIn">
-        <div id="userSection" style="display: flex; flex-direction: column; align-items: center;">
-            <div id="requireLoginMsg" style="text-align:center; margin-top:50px; padding:20px; display:block;">
-                <i class="fas fa-lock" style="font-size:3rem; margin-bottom:15px; opacity:0.7; color: var(--accent-color);"></i>
-                <div style="font-weight:600; margin-bottom: 20px;">Vui lòng đăng nhập để bắt đầu luyện tập.</div>
-                <button id="btnLogin" class="btn-primary" onclick="loginGoogle()">
-                    <i class="fab fa-google"></i> &nbsp; Đăng nhập với Google
-                </button>
-            </div>
-
-            <div id="loggedInContent" style="width: 100%; display: none;">
-                <div id="userProfile" class="user-badge" onclick="logoutGoogle()" style="width: fit-content; margin: 0 auto 20px;">
-                    <img id="userImg" src="" class="user-avatar" alt="Avt">
-                    <div style="text-align: left;">
-                        <div id="userName" style="font-weight: 700; font-size: 0.9rem;">User</div>
-                        <div style="font-size: 0.7rem; opacity: 0.8;">Nhấn để đăng xuất</div>
-                    </div>
-                </div>
-
-                <div class="glass-panel" style="padding: 24px;">
-                    <h3 style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Cấu hình luyện tập</h3>
-                    
-                    <div class="setup-grid">
-                        <div>
-                            <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 5px; display: block;">Ngôn ngữ</label>
-                            <select id="globalLang" class="input-glass">
-                                <option value="vi-VN">Tiếng Việt</option>
-                                <option value="en-US">Tiếng Anh (Mỹ)</option>
-                                <option value="id-ID">Tiếng Indonesia</option>
-                                <option value="es-ES">Tiếng Tây Ban Nha</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 5px; display: block;">Chế độ</label>
-                            <div class="radio-group">
-                                <label class="radio-label"><input type="radio" name="mode" value="read-write" checked> <i class="fas fa-eye"></i> Nhìn & Chép</label>
-                                <label class="radio-label"><input type="radio" name="mode" value="listen-write"> <i class="fas fa-headphones"></i> Nghe & Chép</label>
-                                <label class="radio-label"><input type="radio" name="mode" value="read-listen-write"> <i class="fas fa-sync"></i> Tổng hợp</label>
-                                <label class="radio-label"><input type="radio" name="mode" value="read-only"> <i class="fas fa-microphone"></i> Luyện Đọc</label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 5px; display: block;">Giọng đọc AI</label>
-                            <div style="display: flex; gap: 10px;">
-                                <select id="voiceSelect" class="input-glass" style="flex: 1; margin-bottom:0;"></select>
-                                <select id="voiceRateSelect" class="input-glass" style="width: 80px; margin-bottom:0;">
-                                    <option value="0.75">0.75x</option>
-                                    <option value="1.00" selected>1.0x</option>
-                                    <option value="1.25">1.25x</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
-                                <label style="font-size: 0.85rem; opacity: 0.8;">Nội dung luyện</label>
-                                <span style="font-size: 0.75rem; color: var(--accent-color); cursor: pointer;" onclick="setRandomText()">🎲 Lấy bài mẫu</span>
-                            </div>
-                            <textarea id="sampleText" class="input-glass" rows="4" placeholder="Nhập văn bản hoặc nhấn 'Lấy bài mẫu'..." spellcheck="false"></textarea>
-                        </div>
-
-                        <button class="btn-primary animate__animated animate__pulse animate__infinite" onclick="startPractice()">
-                            <i class="fas fa-play"></i> BẮT ĐẦU LUYỆN
-                        </button>
-                    </div>
+    <div id="appContent" class="hidden animate__animated animate__fadeIn">
+        
+        <div style="display:flex; justify-content:center; margin-bottom:20px;">
+             <div class="user-badge" onclick="window.logout()">
+                <img id="userAvatar" src="" class="user-avatar" alt="User">
+                <div>
+                    <div id="userName" style="font-weight:700; font-size:0.9rem;">User</div>
+                    <div style="font-size:0.7rem; opacity:0.8;">Nhấn để đăng xuất</div>
                 </div>
             </div>
+            <button class="icon-btn" onclick="window.toggleTheme()" style="margin-left:10px;">
+                <i class="fas fa-adjust"></i>
+            </button>
         </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="setupPanel">Luyện Tập</button>
+            <button class="tab" data-tab="rankPanel">Bảng Xếp Hạng</button>
+        </div>
+
+        <div id="setupPanel" class="tab-content glass-panel" style="padding: 24px;">
+            <div style="margin-bottom: 20px;">
+                <h3 style="margin-bottom:10px; color:#60a5fa;"><i class="fas fa-globe"></i> Ngôn ngữ & Giọng đọc</h3>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <select id="globalLang">
+                        <option value="vi-VN">Tiếng Việt</option>
+                        <option value="en-US">Tiếng Anh (US)</option>
+                        <option value="id-ID">Tiếng Indo</option>
+                    </select>
+                    <select id="voiceRateSelect">
+                        <option value="0.75">0.75x (Chậm)</option>
+                        <option value="1.00" selected>1.00x (Chuẩn)</option>
+                        <option value="1.25">1.25x (Nhanh)</option>
+                    </select>
+                </div>
+                <select id="voiceSelect" style="margin-top:10px;"></select>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                 <h3 style="margin-bottom:10px; color:#fbbf24;"><i class="fas fa-gamepad"></i> Chế độ chơi</h3>
+                 <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                     <label style="background:rgba(255,255,255,0.1); padding:10px; border-radius:10px; cursor:pointer; flex:1; min-width:120px;">
+                         <input type="radio" name="mode" value="read-write" checked> Nhìn & Gõ
+                     </label>
+                     <label style="background:rgba(255,255,255,0.1); padding:10px; border-radius:10px; cursor:pointer; flex:1; min-width:120px;">
+                         <input type="radio" name="mode" value="listen-write"> Nghe & Gõ
+                     </label>
+                     <label style="background:rgba(255,255,255,0.1); padding:10px; border-radius:10px; cursor:pointer; flex:1; min-width:120px;">
+                         <input type="radio" name="mode" value="read-only"> Luyện đọc (Mic)
+                     </label>
+                 </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                 <h3 style="margin-bottom:10px; color:#34d399;"><i class="fas fa-pen-fancy"></i> Nội dung</h3>
+                 <button onclick="window.setRandomText()" style="font-size:0.8rem; padding:5px 10px; background:rgba(255,255,255,0.2); border:none; color:white; border-radius:5px; cursor:pointer; margin-bottom:5px;">
+                     <i class="fas fa-dice"></i> Lấy bài mẫu
+                 </button>
+                 <textarea id="sampleText" rows="4" placeholder="Nhập văn bản mẫu hoặc bấm nút 'Lấy bài mẫu'..." spellcheck="false"></textarea>
+            </div>
+
+            <button class="btn-primary" id="startBtn">
+                <i class="fas fa-play"></i> BẮT ĐẦU LUYỆN
+            </button>
+        </div>
+
+        <div id="practiceArea" class="hidden animate__animated animate__fadeInUp">
+            <div class="glass-panel" style="padding: 24px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:700; opacity:0.8;">
+                    <span>Tiến độ</span> <span id="progressText">0%</span>
+                </div>
+                <div style="height:8px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; margin-bottom:20px;">
+                    <div id="progressFill" style="height:100%; width:0%; background:#38bdf8; transition:width 0.3s;"></div>
+                </div>
+
+                <div id="currentSegment" class="segment-box"></div>
+                
+                <div id="micBox" class="hidden">
+                     <button class="mic-btn" id="micBtn"><i class="fas fa-microphone"></i></button>
+                     <div style="text-align:center; opacity:0.7; font-size:0.9rem;">Nhấn mic và đọc to</div>
+                </div>
+
+                <div id="translationText" style="text-align:center; color:#fbbf24; font-style:italic; margin-bottom:15px; font-size:0.9rem; min-height:20px;"></div>
+
+                <div style="position:relative;">
+                    <input type="text" id="userInput" placeholder="Gõ lại nội dung..." autocomplete="off">
+                    <button id="hintBtn" style="position:absolute; right:10px; top:50%; transform:translateY(-70%); background:none; border:none; color:#fbbf24; font-size:1.2rem; cursor:pointer;">
+                        <i class="fas fa-lightbulb"></i>
+                    </button>
+                </div>
+
+                <div id="liveFeedback" style="min-height:25px; margin-bottom:15px; text-align:center; font-family:'Courier New', monospace;"></div>
+
+                <div style="display:flex; gap:10px; justify-content:center;">
+                    <button class="icon-btn" id="replayBtn" title="Nghe lại"><i class="fas fa-volume-up"></i></button>
+                    <button class="btn-primary" id="nextBtn" style="width:auto; padding:0 30px;" disabled>TIẾP THEO <i class="fas fa-arrow-right"></i></button>
+                    <button class="icon-btn" id="stopBtn" title="Dừng lại" style="background:rgba(239, 68, 68, 0.3);"><i class="fas fa-stop"></i></button>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item"><h4>Thời gian</h4><div class="val" id="time">0s</div></div>
+                    <div class="stat-item"><h4>Tốc độ</h4><div class="val" id="wpm">0</div></div>
+                    <div class="stat-item"><h4>Chính xác</h4><div class="val" id="accuracy">100%</div></div>
+                    <div class="stat-item"><h4>Điểm</h4><div class="val" id="score">0</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="rankPanel" class="tab-content glass-panel hidden" style="padding: 24px;">
+            <h2 style="text-align:center; color:#fbbf24; margin-bottom:5px;"><i class="fas fa-crown"></i> Bảng Xếp Hạng Tháng</h2>
+            <div style="text-align:center; opacity:0.6; font-size:0.8rem; margin-bottom:20px;">Dữ liệu cập nhật thời gian thực</div>
+            
+            <div style="overflow-x:auto;">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th style="width:10%">#</th>
+                            <th>Thành viên</th>
+                            <th style="text-align:center">WPM</th>
+                            <th style="text-align:center">Điểm</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr><td colspan="4" style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="margin-top:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
+                <h4 style="margin-bottom:10px; opacity:0.8;">Thành tích cá nhân (Tháng này)</h4>
+                <div class="stats-row">
+                     <div class="stat-item"><h4>Max WPM</h4><div class="val" id="myWpm">0</div></div>
+                     <div class="stat-item"><h4>Max Acc</h4><div class="val" id="myAcc">0%</div></div>
+                     <div class="stat-item"><h4>Số câu</h4><div class="val" id="mySent">0</div></div>
+                     <div class="stat-item"><h4>Tổng điểm</h4><div class="val" id="myScore">0</div></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div id="view-practice" class="view-container animate__animated animate__fadeIn">
-        <div class="glass-panel" style="padding: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <button onclick="endPractice()" style="background: none; border: none; color: white; opacity: 0.7;"><i class="fas fa-arrow-left"></i> Thoát</button>
-                <div style="font-weight: 700; color: var(--success-color);" id="progressText">0%</div>
-            </div>
-            <div class="progress-box">
-                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            </div>
-
-            <div class="segment-box" id="currentSegment"></div>
-
-            <div id="fullText" style="color:var(--accent-color); font-style:italic; text-align:center; margin-bottom:15px; font-size: 0.9rem; min-height: 20px;"></div>
-
-            <div id="micBox" class="hidden">
-                <button class="mic-btn" id="micBtn"><i class="fas fa-microphone"></i></button>
-                <p style="text-align:center; font-size:0.8rem; opacity:0.7;">Nhấn mic và đọc to đoạn văn trên</p>
-            </div>
-
-            <div class="input-wrapper" id="inputWrapper">
-                <input type="text" id="userInput" class="input-glass" placeholder="Gõ lại nội dung..." autocomplete="off">
-                <button class="hint-btn" id="hintBtn"><i class="fas fa-lightbulb"></i></button>
-            </div>
-
-            <div class="feedback-area" id="liveFeedback"></div>
-
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <button class="btn-primary" style="background: rgba(255,255,255,0.1); flex: 1;" onclick="speakCurrentSegment()"><i class="fas fa-volume-up"></i> Nghe lại</button>
-                <button class="btn-primary" id="nextBtn" style="flex: 2;" disabled onclick="nextSegment()">Tiếp theo <i class="fas fa-arrow-right"></i></button>
-            </div>
-
-            <div class="stats-row">
-                <div class="stat-item"><div class="stat-val" id="wpm">0</div><div class="stat-label">WPM</div></div>
-                <div class="stat-item"><div class="stat-val" id="accuracy">100%</div><div class="stat-label">Đúng</div></div>
-                <div class="stat-item"><div class="stat-val" id="time">0s</div><div class="stat-label">Thời gian</div></div>
-                <div class="stat-item"><div class="stat-val" id="score">0</div><div class="stat-label">Điểm</div></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-leaderboard" class="view-container animate__animated animate__fadeIn">
-        <h2 style="text-align: center; margin-bottom: 5px;">Bảng Xếp Hạng <span id="currentMonthDisplay"></span></h2>
-        <div style="text-align:center; font-size:0.8rem; opacity:0.7; margin-bottom: 20px;">(WPM: Tốc độ gõ - Acc: Độ chính xác)</div>
-
-        <div class="glass-panel" style="padding: 0; overflow: hidden;">
-             <table class="leaderboard-table">
-                 <thead>
-                     <tr>
-                         <th style="padding-left: 20px;">#</th>
-                         <th>Thành viên</th>
-                         <th>WPM</th>
-                         <th>Acc</th>
-                         <th>Điểm</th>
-                     </tr>
-                 </thead>
-                 <tbody id="leaderboardBody">
-                     <tr><td colspan="5" style="text-align:center; padding: 20px;">Đang tải dữ liệu...</td></tr>
-                 </tbody>
-             </table>
-        </div>
-    </div>
-
+    <div style="margin-top:40px; font-size:0.8rem; opacity:0.6;">HiHi Sync &bull; Powered by Google Firebase</div>
 </div>
 
-<div class="tab-bar">
-  <div class="tab-item active" data-target="view-home" onclick="navTo('view-home')">
-    <i class="fas fa-home"></i> <span>Setup</span>
-  </div>
-  <div class="tab-item" data-target="view-practice" onclick="navTo('view-practice')">
-    <i class="fas fa-keyboard"></i> <span>Luyện tập</span>
-  </div>
-  <div class="tab-item" data-target="view-leaderboard" onclick="navTo('view-leaderboard')">
-    <i class="fas fa-trophy"></i> <span>Xếp hạng</span>
-  </div>
-</div>
-
-<div id="toast"><span id="toast-msg">Message</span></div>
 <a href="https://ngxuanhai123.github.io/" class="floating-home-btn">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -363,24 +441,7 @@
     <span>Trang chủ</span>
 </a>
 
-<style>
-    .floating-home-btn {
-        position: fixed; top: 20px; left: 20px; z-index: 5000;
-        display: flex; align-items: center; gap: 10px; padding: 10px 20px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50px; color: white; text-decoration: none;
-        font-family: 'Poppins', sans-serif; font-weight: 600;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;
-    }
-    .floating-home-btn:hover { background: linear-gradient(90deg, #38bdf8, #2563eb); border-color: transparent; }
-    .floating-home-btn svg { width: 24px; height: 24px; }
-    @media (max-width: 640px) { .floating-home-btn span { display: none; } .floating-home-btn { padding: 12px; border-radius: 50%; } }
-</style>
-
 <script type="module">
-// --- FIREBASE CONFIG (Giữ nguyên logic Realtime DB của file Chính tả) ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getDatabase, ref, onValue, query, orderByChild, limitToLast, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -403,64 +464,79 @@ const provider = new GoogleAuthProvider();
 window.currentUser = null;
 
 // --- AUTH LOGIC ---
-window.loginGoogle = () => {
-    signInWithPopup(auth, provider).catch(error => showToast("Lỗi: " + error.message));
-};
-
-window.logoutGoogle = () => {
-    if(confirm("Bạn muốn đăng xuất?")) signOut(auth);
-};
-
 onAuthStateChanged(auth, (user) => {
-    const loginMsg = document.getElementById('requireLoginMsg');
-    const content = document.getElementById('loggedInContent');
+    const loginSec = document.getElementById('loginSection');
+    const appCont = document.getElementById('appContent');
     
     if (user) {
         window.currentUser = { uid: user.uid, name: user.displayName, photo: user.photoURL };
-        loginMsg.style.display = 'none';
-        content.style.display = 'block';
-        document.getElementById('userImg').src = user.photoURL;
         document.getElementById('userName').innerText = user.displayName;
-        loadLeaderboard(); // Load BXH khi đã login
+        document.getElementById('userAvatar').src = user.photoURL;
+        
+        loginSec.style.display = 'none';
+        appCont.classList.remove('hidden');
+        
+        initRealtimeStats(user.uid);
+        loadLeaderboard();
     } else {
         window.currentUser = null;
-        loginMsg.style.display = 'block';
-        content.style.display = 'none';
-        // Nếu đang ở màn chơi mà logout thì đá về home
-        navTo('view-home');
+        loginSec.style.display = 'flex';
+        appCont.classList.add('hidden');
     }
 });
 
-// --- HELPER: LEADERBOARD ---
+document.getElementById('googleLoginBtn').addEventListener('click', () => {
+    signInWithPopup(auth, provider).catch(e => alert("Lỗi: " + e.message));
+});
+
+window.logout = () => {
+    if(confirm("Đăng xuất?")) signOut(auth);
+};
+
+// --- REALTIME STATS & LEADERBOARD ---
 function getMonthKey() {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 }
-document.getElementById('currentMonthDisplay').textContent = getMonthKey();
 
-window.saveScoreToFirebase = function(gameData) {
-    if (!window.currentUser) return;
-    const user = window.currentUser;
-    const monthKey = getMonthKey();
-    const userScoreRef = ref(db, `leaderboard/${monthKey}/${user.uid}`);
+function initRealtimeStats(uid) {
+    const key = getMonthKey();
+    onValue(ref(db, `leaderboard/${key}/${uid}`), (snap) => {
+        const d = snap.val();
+        if(d) {
+            document.getElementById('myWpm').innerText = d.wpm || 0;
+            document.getElementById('myAcc').innerText = (d.acc || 0) + '%';
+            document.getElementById('mySent').innerText = d.sentences || 0;
+            document.getElementById('myScore').innerText = d.score || 0;
+        }
+    });
+}
 
-    runTransaction(userScoreRef, (currentData) => {
-        if (currentData === null) {
+window.saveScoreToFirebase = function(data) {
+    if(!window.currentUser) return;
+    const uid = window.currentUser.uid;
+    const key = getMonthKey();
+    const userRef = ref(db, `leaderboard/${key}/${uid}`);
+    
+    runTransaction(userRef, (curr) => {
+        if(!curr) {
             return {
-                name: user.name,
-                photo: user.photo,
-                score: gameData.score,
-                wpm: gameData.wpm,
-                acc: gameData.acc,
+                name: window.currentUser.name,
+                photo: window.currentUser.photo,
+                score: data.score,
+                sentences: data.sentences,
+                wpm: data.wpm,
+                acc: data.acc,
                 lastPlayed: Date.now()
             };
         } else {
             return {
-                name: user.name,
-                photo: user.photo,
-                score: (currentData.score || 0) + gameData.score,
-                wpm: Math.max(currentData.wpm || 0, gameData.wpm),
-                acc: Math.max(currentData.acc || 0, gameData.acc),
+                name: window.currentUser.name,
+                photo: window.currentUser.photo,
+                score: (curr.score || 0) + data.score,
+                sentences: (curr.sentences || 0) + data.sentences,
+                wpm: Math.max(curr.wpm || 0, data.wpm),
+                acc: Math.max(curr.acc || 0, data.acc),
                 lastPlayed: Date.now()
             };
         }
@@ -468,42 +544,42 @@ window.saveScoreToFirebase = function(gameData) {
 }
 
 function loadLeaderboard() {
-    const monthKey = getMonthKey();
-    const lbRef = query(ref(db, `leaderboard/${monthKey}`), orderByChild('score'), limitToLast(20));
+    const key = getMonthKey();
+    const lbQuery = query(ref(db, `leaderboard/${key}`), orderByChild('score'), limitToLast(20));
     
-    onValue(lbRef, (snapshot) => {
-        const lbBody = document.getElementById('leaderboardBody');
-        lbBody.innerHTML = '';
-        const data = [];
-        snapshot.forEach(child => data.push(child.val()));
-        data.reverse();
-
-        if (data.length === 0) {
-            lbBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Chưa có dữ liệu tháng này.</td></tr>';
+    onValue(lbQuery, (snap) => {
+        const list = [];
+        snap.forEach(c => list.push(c.val()));
+        list.reverse();
+        
+        const body = document.getElementById('leaderboardBody');
+        body.innerHTML = '';
+        
+        if(list.length === 0) {
+            body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:15px; opacity:0.6;">Chưa có dữ liệu tháng này</td></tr>';
             return;
         }
-
-        data.forEach((item, index) => {
+        
+        list.forEach((u, i) => {
             let rankClass = '';
-            if(index === 0) rankClass = 'rank-1';
-            else if(index === 1) rankClass = 'rank-2';
-            else if(index === 2) rankClass = 'rank-3';
-
+            if(i===0) rankClass = 'rank-1';
+            else if(i===1) rankClass = 'rank-2';
+            else if(i===2) rankClass = 'rank-3';
+            
             const row = `
                 <tr>
-                    <td class="${rankClass}" style="padding-left: 20px;">${index + 1}</td>
+                    <td class="${rankClass}">${i+1}</td>
                     <td>
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${item.photo}" style="width:25px; height:25px; border-radius:50%;">
-                            <span>${item.name}</span>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="${u.photo}" style="width:24px; height:24px; border-radius:50%;">
+                            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100px;">${u.name}</span>
                         </div>
                     </td>
-                    <td>${item.wpm}</td>
-                    <td>${item.acc}%</td>
-                    <td style="font-weight:bold; color:var(--success-color);">${item.score}</td>
+                    <td style="text-align:center;">${u.wpm}</td>
+                    <td style="text-align:center; font-weight:700;">${u.score}</td>
                 </tr>
             `;
-            lbBody.insertAdjacentHTML('beforeend', row);
+            body.innerHTML += row;
         });
     });
 }
@@ -511,35 +587,66 @@ function loadLeaderboard() {
 // --- GAME LOGIC ---
 const SAMPLE_LIBRARY = {
     'vi-VN': [
-      "Sông Mã xa rồi Tây Tiến ơi! Nhớ về rừng núi, nhớ chơi vơi. Sài Khao sương lấp đoàn quân mỏi, Mường Lát hoa về trong đêm hơi.", 
-      "Mình về mình có nhớ ta? Mười lăm năm ấy thiết tha mặn nồng. Mình về mình có nhớ không, Nhìn cây nhớ núi, nhìn sông nhớ nguồn?", 
-      "Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau. Trải qua một cuộc bể dâu, những điều trông thấy mà đau đớn lòng.", 
-      "Quê hương là chùm khế ngọt. Cho con trèo hái mỗi ngày. Quê hương là đường đi học. Con về rợp bướm vàng bay.", 
-      "Bước tới Đèo Ngang bóng xế tà. Cỏ cây chen đá lá chen hoa. Lom khom dưới núi tiêm vài chú. Lác đác bên sông chợ mấy nhà."
+      "Sông Mã xa rồi Tây Tiến ơi! Nhớ về rừng núi, nhớ chơi vơi.", 
+      "Thân em vừa trắng lại vừa tròn. Bảy nổi ba chìm với nước non.",
+      "Quê hương là chùm khế ngọt. Cho con trèo hái mỗi ngày.", 
+      "Trăm năm trong cõi người ta, chữ tài chữ mệnh khéo là ghét nhau."
     ],
     'en-US': [
-        "The quick brown fox jumps over the lazy dog. Success is not final, failure is not fatal: it is the courage to continue that counts.",
-        "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune.",
-        "I wandered lonely as a cloud that floats on high o'er vales and hills, when all at once I saw a crowd, a host, of golden daffodils."
+        "The quick brown fox jumps over the lazy dog.",
+        "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+        "To be, or not to be, that is the question."
     ],
-    'id-ID': ["Bhinneka Tunggal Ika adalah semboyan bangsa Indonesia. Maknanya adalah berbeda-beda tetapi tetap satu."],
-    'es-ES': ["Caminante, no hay camino, se hace camino al andar."]
+    'id-ID': [
+        "Bhinneka Tunggal Ika adalah semboyan bangsa Indonesia.",
+        "Kami putra dan putri Indonesia, mengaku bertumpah darah yang satu, tanah air Indonesia."
+    ]
 };
 
+let voices = [];
 let segments = [];
 let currentIdx = 0;
-let typedWords = 0, correctWords = 0, totalCorrectWords = 0, hintsUsed = 0;
-let startTime = 0, timer = null;
-let currentMode = 'read-write';
-let recognition = null, isListening = false;
-let voices = [], selectedVoice = null;
-let globalLang = 'vi-VN';
+let startTime = 0;
+let timer = null;
+let typedWords = 0, correctWords = 0, totalCorrectWords = 0, hintsUsed = 0, totalSentences = 0;
+let recognition = null;
+let isListening = false;
+let karaokeWords = [];
 
+// Elements
+const els = {
+    lang: document.getElementById('globalLang'),
+    voiceSelect: document.getElementById('voiceSelect'),
+    rate: document.getElementById('voiceRateSelect'),
+    text: document.getElementById('sampleText'),
+    segment: document.getElementById('currentSegment'),
+    input: document.getElementById('userInput'),
+    feedback: document.getElementById('liveFeedback'),
+    trans: document.getElementById('translationText'),
+    progressFill: document.getElementById('progressFill'),
+    progressText: document.getElementById('progressText'),
+    micBtn: document.getElementById('micBtn'),
+    next: document.getElementById('nextBtn')
+};
+
+// Functions
 window.initApp = function() {
     createParticles();
-    navTo('view-home');
-    if (window.speechSynthesis.onvoiceschanged !== undefined) window.speechSynthesis.onvoiceschanged = loadVoices;
-    loadVoices();
+    startSnow();
+    
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.remove('hidden');
+        });
+    });
+    
+    // Voices
+    if(speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+    setTimeout(loadVoices, 1000);
 }
 
 function createParticles() {
@@ -555,278 +662,257 @@ function createParticles() {
         container.appendChild(p);
     }
 }
-
-window.navTo = function(viewId) {
-    if (viewId !== 'view-home' && !window.currentUser) {
-        showToast("Vui lòng đăng nhập trước!");
-        return;
-    }
-    document.querySelectorAll('.view-container').forEach(el => el.style.display = 'none');
-    document.getElementById(viewId).style.display = 'block';
-    
-    document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
-    document.querySelector(`.tab-item[data-target="${viewId}"]`)?.classList.add('active');
+function startSnow() {
+    setInterval(() => {
+        const s = document.createElement('div');
+        s.innerHTML = '❄'; s.className = 'snowflake';
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.fontSize = Math.random() * 10 + 10 + 'px';
+        s.style.animationDuration = Math.random() * 5 + 5 + 's';
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 10000);
+    }, 400);
 }
+window.toggleTheme = () => document.body.classList.toggle('dark-mode');
 
-// TTS & Voice Logic
 function loadVoices() {
-    globalLang = document.getElementById('globalLang').value;
-    const targetCode = globalLang.split('-')[0];
-    voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(targetCode));
-    if (voices.length === 0 && (globalLang.startsWith('id') || globalLang.startsWith('es'))) {
-        voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
-    }
-    const select = document.getElementById('voiceSelect');
-    select.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name}</option>`).join('') : '<option>Mặc định</option>';
-    selectedVoice = voices[0];
-}
-
-document.getElementById('globalLang').addEventListener('change', loadVoices);
-document.getElementById('voiceSelect').addEventListener('change', (e) => {
-    selectedVoice = voices.find(v => v.name === e.target.value);
-});
-
-function speak(text, onWord) {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    if(selectedVoice) u.voice = selectedVoice;
-    u.rate = parseFloat(document.getElementById('voiceRateSelect').value);
-    u.lang = globalLang;
-    if(onWord) {
-        u.onboundary = (e) => { if(e.name === 'word') onWord(e.charIndex, e.charLength); };
-    }
-    speechSynthesis.speak(u);
-}
-
-// Game Functions
-window.setRandomText = function() {
-    globalLang = document.getElementById('globalLang').value;
-    const lib = SAMPLE_LIBRARY[globalLang] || SAMPLE_LIBRARY['vi-VN'];
-    document.getElementById('sampleText').value = lib[Math.floor(Math.random() * lib.length)];
-}
-
-window.startPractice = function() {
-    const text = document.getElementById('sampleText').value.trim();
-    if (!text) return showToast("Vui lòng nhập hoặc chọn bài mẫu!");
+    const code = els.lang.value.split('-')[0];
+    voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(code));
+    if(voices.length === 0 && code !== 'vi') voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
     
-    segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
-    currentIdx = 0; typedWords = 0; correctWords = 0; totalCorrectWords = 0; hintsUsed = 0;
-    currentMode = document.querySelector('input[name="mode"]:checked').value;
+    els.voiceSelect.innerHTML = voices.map(v => `<option value="${v.name}">${v.name}</option>`).join('');
+}
+
+els.lang.addEventListener('change', loadVoices);
+
+window.setRandomText = () => {
+    const lib = SAMPLE_LIBRARY[els.lang.value] || SAMPLE_LIBRARY['vi-VN'];
+    els.text.value = lib[Math.floor(Math.random() * lib.length)];
+};
+
+document.getElementById('startBtn').addEventListener('click', () => {
+    const raw = els.text.value.trim();
+    if(!raw) return alert("Vui lòng nhập nội dung!");
+    
+    segments = raw.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
+    currentIdx = 0; typedWords = 0; correctWords = 0; totalCorrectWords = 0; hintsUsed = 0; totalSentences = segments.length;
+    
+    document.getElementById('setupPanel').classList.add('hidden');
+    document.getElementById('practiceArea').classList.remove('hidden');
     
     startTime = Date.now();
     if(timer) clearInterval(timer);
     timer = setInterval(updateStats, 1000);
     
-    navTo('view-practice');
     showSegment();
-}
-
-window.endPractice = function() {
-    clearInterval(timer);
-    if(recognition) recognition.stop();
-    speechSynthesis.cancel();
-    navTo('view-home');
-}
-
-async function showSegment() {
-    const text = segments[currentIdx];
-    const nextBtn = document.getElementById('nextBtn');
-    nextBtn.disabled = true;
-    
-    const input = document.getElementById('userInput');
-    input.value = ''; input.style.borderColor = '';
-    
-    const isReadOnly = currentMode === 'read-only';
-    document.getElementById('micBox').className = isReadOnly ? '' : 'hidden';
-    document.getElementById('inputWrapper').className = isReadOnly ? 'hidden' : 'input-wrapper';
-    
-    // Translate if needed
-    const fullTextEl = document.getElementById('fullText');
-    if(globalLang !== 'vi-VN') {
-        fullTextEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang dịch...';
-        try {
-            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${globalLang.split('-')[0]}|vi`);
-            const data = await res.json();
-            fullTextEl.innerText = data.responseData.translatedText;
-        } catch(e) { fullTextEl.innerText = ""; }
-    } else { fullTextEl.innerText = ""; }
-
-    // Render Karaoke Text
-    const segBox = document.getElementById('currentSegment');
-    segBox.innerHTML = '';
-    
-    if (currentMode === 'listen-write') {
-        segBox.innerHTML = '<em style="opacity:0.6"><i class="fas fa-headphones"></i> Hãy nghe và chép lại...</em>';
-        setTimeout(() => speak(text), 500);
-    } else {
-        const words = text.split(/(\s+)/);
-        let charIdx = 0;
-        words.forEach(part => {
-             const span = document.createElement('span');
-             if(!/^\s+$/.test(part)) {
-                 span.className = 'karaoke-word';
-                 span.innerText = part;
-                 span.dataset.start = charIdx;
-                 span.dataset.end = charIdx + part.length;
-                 segBox.appendChild(span);
-             } else {
-                 segBox.appendChild(document.createTextNode(part));
-             }
-             charIdx += part.length;
-        });
-        if(currentMode === 'read-listen-write') setTimeout(() => speak(text, highlightWord), 500);
-    }
-    
-    if(!isReadOnly) input.focus();
-    else initSpeechRecognition();
-    
-    updateFeedback();
-}
-
-function highlightWord(idx) {
-    document.querySelectorAll('.karaoke-word').forEach(el => el.classList.remove('karaoke-active'));
-    const els = document.querySelectorAll('.karaoke-word');
-    for(let el of els) {
-        const start = parseInt(el.dataset.start);
-        const end = parseInt(el.dataset.end);
-        if(idx >= start && idx < end) {
-            el.classList.add('karaoke-active');
-            break;
-        }
-    }
-}
-
-window.speakCurrentSegment = function() {
-    speak(segments[currentIdx], currentMode !== 'listen-write' ? highlightWord : null);
-}
-
-// Input Logic
-document.getElementById('userInput').addEventListener('input', updateFeedback);
-document.getElementById('userInput').addEventListener('keydown', (e) => {
-    if(e.key === 'Enter' && !document.getElementById('nextBtn').disabled) window.nextSegment();
 });
 
+function showSegment() {
+    const txt = segments[currentIdx];
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    
+    els.next.disabled = true;
+    els.input.value = '';
+    els.feedback.innerHTML = '';
+    els.trans.innerText = '';
+    
+    if(els.lang.value !== 'vi-VN') {
+        fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(txt)}&langpair=${els.lang.value.split('-')[0]}|vi`)
+            .then(r => r.json()).then(d => els.trans.innerText = d.responseData.translatedText);
+    }
+    
+    // Render UI based on mode
+    if(mode === 'listen-write') {
+        els.segment.innerHTML = '<i class="fas fa-headphones" style="font-size:2rem; opacity:0.5;"></i><br>Nghe và chép lại...';
+        els.input.style.display = 'block';
+        document.getElementById('micBox').classList.add('hidden');
+        setTimeout(() => speak(txt), 500);
+    } else if(mode === 'read-only') {
+        renderKaraoke(txt);
+        els.input.style.display = 'none';
+        document.getElementById('micBox').classList.remove('hidden');
+    } else {
+        renderKaraoke(txt);
+        els.input.style.display = 'block';
+        document.getElementById('micBox').classList.add('hidden');
+    }
+    
+    if(mode !== 'read-only') els.input.focus();
+}
+
+function renderKaraoke(txt) {
+    els.segment.innerHTML = '';
+    karaokeWords = [];
+    let idx = 0;
+    
+    txt.split(/(\s+)/).forEach(part => {
+        if(!part) return;
+        if(/^\s+$/.test(part)) {
+            els.segment.appendChild(document.createTextNode(part));
+            idx += part.length;
+        } else {
+            const span = document.createElement('span');
+            span.className = 'karaoke-word';
+            span.textContent = part;
+            span.dataset.start = idx;
+            span.dataset.end = idx + part.length;
+            els.segment.appendChild(span);
+            karaokeWords.push(span);
+            idx += part.length;
+        }
+    });
+}
+
+function speak(text) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const vName = els.voiceSelect.value;
+    const v = voices.find(x => x.name === vName);
+    if(v) u.voice = v;
+    u.rate = parseFloat(els.rate.value);
+    
+    u.onboundary = (e) => {
+        if(e.name === 'word') {
+            karaokeWords.forEach(k => k.classList.remove('karaoke-active'));
+            const w = karaokeWords.find(k => e.charIndex >= parseInt(k.dataset.start) && e.charIndex < parseInt(k.dataset.end));
+            if(w) w.classList.add('karaoke-active');
+        }
+    };
+    u.onend = () => karaokeWords.forEach(k => k.classList.remove('karaoke-active'));
+    speechSynthesis.speak(u);
+}
+
+document.getElementById('replayBtn').addEventListener('click', () => speak(segments[currentIdx]));
+
+els.input.addEventListener('input', () => {
+    const target = segments[currentIdx];
+    const val = els.input.value;
+    
+    const targetWords = target.split(/\s+/).filter(x => x);
+    const inputWords = val.replace(/ $/, ' \u00A0').split(/\s+/).filter(x => x);
+    
+    let html = '';
+    let correct = 0;
+    
+    inputWords.forEach((w, i) => {
+        if(i >= targetWords.length) {
+            html += `<span class="wrong">${w}</span> `;
+        } else {
+            const cleanT = targetWords[i].replace(/[.,!?:;'"“”()[\]{}]/g, '').toLowerCase();
+            const cleanI = w.replace(/[.,!?:;'"“”()[\]{}]/g, '').toLowerCase();
+            if(cleanT === cleanI) {
+                correct++;
+                html += `<span class="correct">${w}</span> `;
+            } else {
+                html += `<span class="wrong">${w}</span> `;
+            }
+        }
+    });
+    
+    correctWords = correct;
+    els.feedback.innerHTML = html;
+    
+    if(normalize(val) === normalize(target)) {
+        els.next.disabled = false;
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+    }
+});
+
+function normalize(s) { return s.trim().replace(/[.,!?:;'"“”()[\]{}]/g, '').replace(/\s+/g, ' ').toLowerCase(); }
+
 document.getElementById('hintBtn').addEventListener('click', () => {
-    const orig = segments[currentIdx].split(/\s+/).filter(w=>w);
-    const val = document.getElementById('userInput').value.trim();
-    const count = val ? val.split(/\s+/).length : 0;
-    if(count < orig.length) {
-        document.getElementById('liveFeedback').innerHTML += ` <span style="color:var(--accent-color)">→ ${orig[count]}</span>`;
+    const words = segments[currentIdx].split(/\s+/).filter(x=>x);
+    const curr = els.input.value.trim().split(/\s+/).length;
+    if(curr < words.length) {
+        els.feedback.innerHTML += ` <span style="color:#fbbf24; font-weight:bold;">→ ${words[curr]}</span>`;
         hintsUsed++;
     }
 });
 
-function normalize(str) { return str.trim().replace(/[.,!?:;'"“”()[\]{}]/g, '').replace(/\s+/g, ' ').toLowerCase(); }
-
-function updateFeedback() {
-    const orig = segments[currentIdx];
-    const val = document.getElementById('userInput').value;
-    const fb = document.getElementById('liveFeedback');
-    
-    const oWords = orig.split(/\s+/).filter(w=>w);
-    const iWords = val.replace(/ $/, ' \u00A0').split(/\s+/).filter(w=>w);
-    
-    let html = '', correct = 0;
-    iWords.forEach((w, i) => {
-        if(i >= oWords.length) html += `<span class="wrong">${w}</span> `;
-        else {
-            if(normalize(w) === normalize(oWords[i])) { correct++; html += `<span class="correct">${w}</span> `; }
-            else html += `<span class="wrong">${w}</span> `;
-        }
-    });
-    fb.innerHTML = html;
-    correctWords = correct;
-    
-    if(normalize(val) === normalize(orig)) {
-        document.getElementById('nextBtn').disabled = false;
-        document.getElementById('userInput').style.borderColor = 'var(--success-color)';
-    }
-}
-
-window.nextSegment = function() {
-    const wordsInSeg = segments[currentIdx].trim().split(/\s+/).length;
+els.next.addEventListener('click', () => {
+    const wordsInSeg = segments[currentIdx].split(/\s+/).length;
     typedWords += wordsInSeg;
     totalCorrectWords += correctWords;
+    
     currentIdx++;
-    
     const pct = Math.round((currentIdx / segments.length) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressText').innerText = pct + '%';
+    els.progressFill.style.width = pct + '%';
+    els.progressText.innerText = pct + '%';
     
-    if(currentIdx >= segments.length) finishGame();
-    else showSegment();
-}
+    if(currentIdx >= segments.length) endGame(); else showSegment();
+});
+
+document.getElementById('stopBtn').addEventListener('click', () => {
+    if(confirm("Dừng luyện tập?")) endGame();
+});
 
 function updateStats() {
-    const s = (Date.now() - startTime) / 1000;
-    const min = s / 60;
-    const wpm = min > 0 ? Math.round(typedWords / min) : 0;
-    const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
+    const sec = (Date.now() - startTime) / 1000;
+    document.getElementById('time').innerText = Math.floor(sec) + 's';
     
-    document.getElementById('time').innerText = Math.round(s) + 's';
+    const min = sec / 60;
+    const wpm = min > 0 ? Math.round(typedWords / min) : 0;
     document.getElementById('wpm').innerText = wpm;
+    
+    const acc = typedWords > 0 ? Math.round((totalCorrectWords / typedWords) * 100) : 100;
     document.getElementById('accuracy').innerText = acc + '%';
-    // Score Formula: WPM*2 + Acc - Hints*5
-    const score = Math.max(0, Math.round(wpm * 2 + acc - hintsUsed * 5));
-    document.getElementById('score').innerText = score;
+    
+    const score = Math.round(wpm * 2 + acc * 1.5 - hintsUsed * 5);
+    document.getElementById('score').innerText = score > 0 ? score : 0;
 }
 
-function finishGame() {
+function endGame() {
     clearInterval(timer);
-    const wpm = parseInt(document.getElementById('wpm').innerText);
-    const acc = parseInt(document.getElementById('accuracy').innerText);
-    const score = parseInt(document.getElementById('score').innerText);
+    updateStats();
     
-    saveScoreToFirebase({ wpm, acc, score });
+    const finalScore = parseInt(document.getElementById('score').innerText);
+    const finalWpm = parseInt(document.getElementById('wpm').innerText);
+    const finalAcc = parseInt(document.getElementById('accuracy').innerText);
     
-    showToast(`Hoàn thành! Điểm: ${score}`, "success");
-    setTimeout(() => {
-        navTo('view-leaderboard');
-    }, 1500);
+    window.saveScoreToFirebase({
+        score: finalScore,
+        wpm: finalWpm,
+        acc: finalAcc,
+        sentences: totalSentences
+    });
+    
+    alert(`Hoàn thành!\nĐiểm: ${finalScore}\nTốc độ: ${finalWpm} WPM`);
+    document.getElementById('practiceArea').classList.add('hidden');
+    document.getElementById('setupPanel').classList.remove('hidden');
+    document.querySelector('.tab[data-tab="setupPanel"]').click();
 }
 
 // Mic Logic
-function initSpeechRecognition() {
-    if (!('webkitSpeechRecognition' in window)) return;
-    recognition = new webkitSpeechRecognition();
-    recognition.lang = globalLang;
+els.micBtn.addEventListener('click', () => {
+    if(recognition && isListening) {
+        recognition.stop();
+        return;
+    }
+    
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SpeechRecognition) return alert("Trình duyệt không hỗ trợ Mic");
+    
+    recognition = new SpeechRecognition();
+    recognition.lang = els.lang.value;
     recognition.continuous = false;
     recognition.interimResults = true;
     
-    recognition.onstart = () => { document.getElementById('micBtn').classList.add('listening'); isListening = true; };
-    recognition.onend = () => { document.getElementById('micBtn').classList.remove('listening'); isListening = false; };
+    recognition.onstart = () => { els.micBtn.classList.add('listening'); isListening = true; };
+    recognition.onend = () => { els.micBtn.classList.remove('listening'); isListening = false; };
     
     recognition.onresult = (e) => {
-        let transcript = '';
-        for (let i = e.resultIndex; i < e.results.length; ++i) {
-             if (e.results[i].isFinal) transcript += e.results[i][0].transcript;
-        }
-        if(transcript) {
-            const normTrans = normalize(transcript);
-            const normTgt = normalize(segments[currentIdx]);
-            if(normTrans.includes(normTgt) || normTgt.includes(normTrans)) { // Leniency
-                 document.getElementById('liveFeedback').innerHTML = `<span class="correct">${segments[currentIdx]}</span>`;
-                 document.getElementById('nextBtn').disabled = false;
-                 setTimeout(window.nextSegment, 1000);
-            } else {
-                 document.getElementById('liveFeedback').innerHTML = `<span class="wrong">${transcript}</span>`;
-            }
+        let transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+        els.feedback.innerHTML = `<span style="color:#00e676;">${transcript}</span>`;
+        
+        if(normalize(transcript) === normalize(segments[currentIdx])) {
+            els.next.disabled = false;
+            confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
         }
     };
     
-    document.getElementById('micBtn').onclick = () => {
-        if(isListening) recognition.stop(); else recognition.start();
-    }
-}
+    recognition.start();
+});
 
-function showToast(msg, type) {
-    const t = document.getElementById('toast');
-    document.getElementById('toast-msg').innerText = msg;
-    if(type === 'success') t.style.borderColor = 'var(--success-color)';
-    else t.style.borderColor = 'rgba(255,255,255,0.2)';
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-}
 </script>
 </body>
 </html>
