@@ -3,20 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>HiHi Sync - Luyện Chính Tả Pro</title>
+  <title>HiHi - Spelling Master (Sync Realtime)</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke, bảng xếp hạng online.">
   <meta name="theme-color" content="#0f172a">
   
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-  
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
+  
   <style>
     :root {
-      /* --- MÀU SẮC TỪ FILE TỪ VỰNG --- */
+      /* --- THEME VARIABLES FROM TƯ VỰNG FILE --- */
       --glass-bg: rgba(255, 255, 255, 0.15);
       --glass-border: rgba(255, 255, 255, 0.3);
       --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
@@ -26,58 +24,54 @@
       --text-color: #ffffff;
       --radius: 28px;
       --font-main: 'Poppins', sans-serif;
+      --font-display: 'Quicksand', sans-serif;
       
-      /* Mapping variables for Chinh Ta logic */
-      --primary: #00d2ff;
       --primary-gradient: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
-      --primary-shadow: rgba(0, 210, 255, 0.4);
-      --bg-gradient: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-      
-      --text: #ffffff;
-      --text-dim: rgba(255, 255, 255, 0.7);
-      --glass-surface: var(--glass-bg);
-      --warning: #fbbf24;
-      --info: #60a5fa;
+      --text-dim: #cbd5e1;
     }
 
-    /* Light Mode overrides (Giữ lại logic light mode của file cũ nhưng chỉnh màu cho hợp style mới) */
+    /* Dark Mode Override (Default) */
+    body {
+      --glass-bg: rgba(15, 23, 42, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+    }
+
     [data-theme="light"] {
-      --bg-gradient: linear-gradient(-45deg, #f1f5f9, #e2e8f0, #cbd5e1, #f8fafc); 
-      --text: #1e293b;
-      --text-dim: #475569;
-      --glass-surface: rgba(255, 255, 255, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.6);
-      --primary: #0284c7;
+       --glass-bg: rgba(255, 255, 255, 0.65);
+       --glass-border: rgba(255, 255, 255, 0.6);
+       --text-color: #1e293b;
+       --text-dim: #475569;
     }
 
-    /* Holiday Mode */
-    [data-theme*="holiday"] {
-      --bg-gradient: linear-gradient(-45deg, #020617, #14532d, #7f1d1d, #020617);
-      --primary: #ef4444;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing: antialiased; outline: none; -webkit-tap-highlight-color: transparent; }
+    
     body {
       font-family: var(--font-main);
       background: #0f172a;
-      color: var(--text-color);
       min-height: 100vh;
       padding: 20px;
-      padding-bottom: 80px;
+      line-height: 1.6;
       overflow-x: hidden;
       position: relative;
+      display: flex; flex-direction: column; align-items: center;
     }
 
-    /* --- AURORA BACKGROUND (Giống Từ Vựng) --- */
+    /* --- AURORA BACKGROUND (MATCHING TƯ VỰNG) --- */
     .aurora-bg {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
-      background: var(--bg-gradient);
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
       opacity: 0.8;
     }
     
+    /* Darker Aurora for contrast */
+    [data-theme="dark"] .aurora-bg, body:not([data-theme="light"]) .aurora-bg {
+      background: linear-gradient(-45deg, #020024, #090979, #1a0b2e, #001f3f);
+      background-size: 400% 400%;
+    }
+
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -94,27 +88,25 @@
       50% { opacity: 0.5; }
       100% { transform: translateY(-10vh) scale(1); opacity: 0; }
     }
-    
-    /* SNOWFLAKES */
+
+    /* Snow - Always Active */
     .snowflake {
-      position: fixed; top: -20px; z-index: 9999; color: #fff;
-      font-size: 1em; opacity: 0.8; pointer-events: none;
-      user-select: none; animation: fall linear forwards;
-      text-shadow: 0 0 5px rgba(255,255,255,0.8);
+      position: fixed; top: -10px; z-index: 999; color: #fff; 
+      text-shadow: 0 0 5px rgba(255,255,255,0.8); pointer-events: none;
+      animation: fall linear forwards; display: block;
     }
     @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
-    /* --- COMMON COMPONENTS --- */
+    /* === CONTAINER & GLASS CARD === */
     .container {
-      max-width: 900px; margin: 0 auto;
+      width: 100%; max-width: 900px;
+      display: flex; flex-direction: column; gap: 24px;
       position: relative; z-index: 10;
       padding-top: 20px;
-      display: flex; flex-direction: column; gap: 24px;
     }
 
-    /* Glass Card Style (Updated to match Tu Vung) */
     .glass-card {
-      background: var(--glass-surface);
+      background: var(--glass-bg);
       backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-radius: var(--radius);
       border: 1px solid var(--glass-border);
@@ -122,19 +114,110 @@
       padding: 30px;
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .glass-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.5); }
-
-    /* Header */
-    header { text-align: center; margin-bottom: 10px; }
-    .logo h1 {
-      font-size: 2.5rem; font-weight: 800; margin-bottom: 5px; letter-spacing: -1px;
-      color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(0, 210, 255, 0.5);
-      display: inline-block;
+    
+    .glass-card:hover { 
+      border-color: rgba(255,255,255,0.4);
     }
-    .tagline { opacity: 0.8; font-size: 0.9rem; font-weight: 600; }
 
-    /* Buttons */
-    .start-btn, .action-btn {
+    /* === HEADER === */
+    header { text-align: center; margin-bottom: 10px; }
+    
+    .logo h1 {
+      font-family: var(--font-main);
+      font-size: 2.5rem; font-weight: 800; letter-spacing: -1px;
+      color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(0, 210, 255, 0.5);
+      margin-bottom: 5px;
+    }
+    [data-theme="light"] .logo h1 { color: #1e293b; text-shadow: none; }
+
+    .tagline {
+      color: var(--text-dim); font-size: 0.9rem; font-weight: 500;
+    }
+
+    /* === BUTTONS & CONTROLS === */
+    .theme-toggle-wrapper {
+      position: absolute; top: 10px; right: 10px; display: flex; gap: 10px; z-index: 100;
+    }
+    .icon-btn {
+      width: 40px; height: 40px; border-radius: 50%; 
+      background: rgba(255,255,255,0.1); color: var(--text-color);
+      border: 1px solid var(--glass-border); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: 0.3s; backdrop-filter: blur(5px);
+      font-size: 1rem;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.05); }
+    
+    /* Tabs */
+    .tabs {
+      display: flex; justify-content: center; gap: 10px; margin-bottom: 10px;
+    }
+    .tab {
+      padding: 10px 24px; border-radius: 20px; border: 1px solid var(--glass-border);
+      background: rgba(0,0,0,0.2); color: var(--text-dim);
+      font-weight: 600; font-size: 0.9rem; cursor: pointer;
+      transition: 0.3s; font-family: var(--font-main);
+    }
+    .tab:hover { background: rgba(255,255,255,0.1); color: var(--text-color); }
+    .tab.active {
+      background: #38bdf8; color: white; border-color: #38bdf8;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+    }
+
+    .user-info-bar { 
+        text-align: center; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; }
+    .name-display {
+      font-size: 1rem; font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+
+    /* Inputs & Setup */
+    .setup-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+    }
+    .setup-item {
+      background: rgba(0,0,0,0.2); border-radius: 16px;
+      padding: 20px; border: 1px solid var(--glass-border);
+    }
+    [data-theme="light"] .setup-item { background: rgba(255,255,255,0.4); }
+
+    .setup-item h3 {
+      font-size: 0.9rem; margin-bottom: 12px; color: #60A5FA;
+      display: flex; align-items: center; gap: 8px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    
+    select, textarea, input[type="text"] {
+      width: 100%; padding: 14px 16px;
+      border: 1px solid var(--glass-border); border-radius: 16px;
+      background: rgba(0, 0, 0, 0.3); color: white; 
+      font-family: var(--font-main); font-size: 1rem; transition: 0.3s;
+    }
+    [data-theme="light"] select, [data-theme="light"] textarea, [data-theme="light"] input[type="text"] {
+        background: rgba(255,255,255,0.8); color: #0f172a; border-color: #cbd5e1;
+    }
+    select:focus, textarea:focus, input[type="text"]:focus {
+      border-color: #fff; background: rgba(0,0,0,0.5);
+    }
+
+    /* Radio Custom */
+    .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .radio-label {
+      display: flex; align-items: center; gap: 12px; padding: 10px;
+      border-radius: 12px; cursor: pointer; transition: 0.2s;
+      background: rgba(255,255,255,0.05);
+    }
+    .radio-label:hover { background: rgba(255, 255, 255, 0.1); }
+    .radio-label:has(input:checked) {
+      background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8;
+    }
+    input[type="radio"] { accent-color: #38bdf8; width: 16px; height: 16px; }
+
+    /* Main Start Button */
+    .start-btn {
+      grid-column: 1/-1;
       position: relative; overflow: hidden;
       border: none;
       background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
@@ -148,194 +231,229 @@
       text-shadow: 0 2px 4px rgba(0,0,0,0.3);
       display: flex; align-items: center; justify-content: center; gap: 10px;
     }
-    .start-btn:active, .action-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-    .start-btn:hover, .action-btn:hover { border-color: white; background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.2) 100%); }
+    .start-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
 
-    .icon-btn {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.1); color: white;
-      border: 1px solid rgba(255,255,255,0.3); cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: 0.3s;
+    .btn-small-action {
+        font-size: 0.8rem; padding: 6px 12px; border-radius: 10px; cursor: pointer; border: none; font-weight: 600; transition: 0.2s;
+        display: inline-flex; align-items: center; gap: 5px;
     }
-    .icon-btn:hover { background: rgba(255,255,255,0.3); transform: rotate(15deg); }
+    .reset-text-btn { color: #22d3ee; background: rgba(34, 211, 238, 0.15); display: none; }
+    .random-text-btn { background: #c084fc; color: white; }
 
-    /* Inputs */
-    select, textarea, input[type="text"] {
-      width: 100%; padding: 16px; border-radius: 16px;
-      border: 1px solid var(--glass-border);
-      background: rgba(0,0,0,0.3); color: white;
-      font-size: 1rem; margin-bottom: 15px; font-family: var(--font-main);
-      transition: 0.3s;
-    }
-    [data-theme="light"] select, [data-theme="light"] textarea, [data-theme="light"] input[type="text"] {
-        color: #333; background: rgba(255,255,255,0.6);
-    }
-    select:focus, textarea:focus, input[type="text"]:focus { 
-        background: rgba(0,0,0,0.5); border-color: #fff; 
-    }
-
-    /* Tabs */
-    .tabs {
-        display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;
-        background: rgba(0,0,0,0.2); padding: 5px; border-radius: 30px; width: fit-content; margin: 0 auto 20px auto;
-    }
-    .tab {
-        padding: 10px 25px; border-radius: 25px; border: none; background: transparent;
-        color: rgba(255,255,255,0.6); font-weight: 700; cursor: pointer; transition: 0.3s;
-        font-family: var(--font-main);
-    }
-    .tab.active { background: white; color: #0f172a; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
-    /* Specific Elements */
-    .setup-grid { display: grid; gap: 20px; }
-    .setup-item { margin-bottom: 10px; }
-    .setup-item h3 { font-size: 1rem; color: var(--accent-color); margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
-
-    .radio-group { display: flex; flex-direction: column; gap: 8px; }
-    .radio-label {
-        display: flex; align-items: center; gap: 10px; padding: 12px;
-        background: rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer;
-        border: 1px solid transparent; transition: 0.2s;
-    }
-    .radio-label:hover { background: rgba(255,255,255,0.1); }
-    .radio-label:has(input:checked) { border-color: var(--accent-color); background: rgba(0, 210, 255, 0.1); }
-    input[type="radio"] { accent-color: var(--accent-color); width: 18px; height: 18px; }
-
-    /* Practice Area */
-    .mode-switcher { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    /* === PRACTICE AREA === */
+    .mode-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
     .mode-btn {
-        padding: 8px 20px; border-radius: 20px; background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
-        cursor: pointer; font-weight: 600; transition: 0.3s;
+      padding: 8px 20px; border-radius: 30px; border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.1); color: var(--text-dim); font-weight: 600; cursor: pointer;
+      transition: 0.3s; font-size: 0.85rem;
     }
-    .mode-btn.active { background: var(--accent-color); color: #0f172a; border-color: var(--accent-color); }
+    .mode-btn.active { 
+        background: #fff; color: #0f172a; opacity: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .progress-box { margin-bottom: 20px; }
+    .progress-bar {
+      height: 12px; background: rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, #4ade80, #3b82f6); width: 0;
+      border-radius: 20px; transition: width 0.5s ease;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+    }
 
     .segment-box {
-        font-size: 1.6rem; line-height: 1.6; text-align: center;
-        min-height: 140px; padding: 30px;
-        background: rgba(0,0,0,0.3); border-radius: 20px;
-        border: 1px solid var(--glass-border); margin-bottom: 24px;
-        display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px;
+      font-size: 1.5rem; line-height: 1.6; text-align: center;
+      min-height: 140px; padding: 30px;
+      background: rgba(0,0,0,0.2); border-radius: 20px;
+      border: 1px solid var(--glass-border); margin-bottom: 24px;
+      color: var(--text-color); font-weight: 500;
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px;
     }
-    [data-theme="light"] .segment-box { color: #333; background: rgba(255,255,255,0.5); }
-
-    .karaoke-word { padding: 4px 8px; border-radius: 8px; transition: 0.2s; }
-    .karaoke-active { background: var(--accent-color); color: #0f172a; font-weight: 800; transform: scale(1.1); box-shadow: 0 0 15px var(--accent-color); }
-
-    #userInput { font-size: 1.3rem; padding: 20px; background: rgba(0,0,0,0.4); border: 2px solid var(--glass-border); }
+    [data-theme="light"] .segment-box { background: rgba(255,255,255,0.5); color: #0f172a; }
     
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 30px; }
-    .stat-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid var(--glass-border); }
-    .stat-item h4 { font-size: 0.7rem; opacity: 0.8; text-transform: uppercase; margin-bottom: 5px; }
-    .stat-item .val { font-size: 1.5rem; font-weight: 700; color: var(--accent-color); }
+    .karaoke-word {
+      padding: 4px 6px; border-radius: 8px; transition: 0.2s; position: relative;
+      display: inline-block; white-space: pre-wrap;
+    }
+    .karaoke-active {
+      background: #38bdf8; color: #000 !important; transform: scale(1.1);
+      box-shadow: 0 0 15px #38bdf8; z-index: 10; font-weight: bold;
+    }
 
-    /* Feedback text */
-    .correct { color: var(--success-color); font-weight: 700; }
-    .wrong { color: var(--error-color); text-decoration: line-through; opacity: 0.7; }
+    .word-tooltip {
+        position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+        background: #0f172a; color: #38bdf8; padding: 4px 8px; border-radius: 6px; border: 1px solid #38bdf8;
+        font-size: 0.8rem; opacity: 0; pointer-events: none; transition: 0.2s;
+        white-space: nowrap; z-index: 15;
+    }
+    .karaoke-word:hover .word-tooltip { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+
+    .input-wrapper { position: relative; margin: 20px 0; }
+    #userInput {
+      font-size: 1.3rem; padding: 20px 50px 20px 20px;
+      border-radius: 20px; border: 1px solid var(--glass-border);
+      background: rgba(0,0,0,0.3); color: white;
+    }
+    [data-theme="light"] #userInput { background: white; color: #0f172a; }
+
+    .hint-btn {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 12px;
+      background: rgba(251, 191, 36, 0.2); border: 1px solid rgba(251, 191, 36, 0.4);
+      color: #fbbf24; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: 0.2s;
+    }
+    .hint-btn:hover { background: rgba(251, 191, 36, 0.4); }
+
+    #liveFeedback {
+      font-family: 'Courier New', monospace; font-size: 1.1rem;
+      min-height: 40px; margin-bottom: 20px; color: var(--text-dim);
+    }
+    .correct { color: #4ade80; font-weight: 700; }
+    .wrong { color: #ef4444; text-decoration: line-through; opacity: 0.7; }
+
+    /* Actions */
+    .action-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: auto; }
+    .action-btn {
+      flex: 1; height: 60px; border-radius: 20px; border: none; font-size: 1rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; gap: 10px;
+      transition: all 0.2s; color: white;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .action-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; filter: grayscale(1); }
+    .action-btn:active:not(:disabled) { transform: scale(0.95); }
+
+    .btn-replay { background: rgba(251, 191, 36, 0.9); border: 1px solid rgba(251, 191, 36, 0.3); }
+    .btn-next { background: rgba(34, 197, 94, 0.9); border: 1px solid rgba(100,255,150,0.3); }
+    .btn-reset { background: rgba(239, 68, 68, 0.9); border: 1px solid rgba(255,100,100,0.3); }
     
-    /* Leaderboard */
-    .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; color: white; }
-    [data-theme="light"] .leaderboard-table { color: #333; }
-    .leaderboard-table th { text-align: left; padding: 15px; opacity: 0.7; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; text-transform: uppercase; }
-    .leaderboard-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 600; }
+    /* Stats */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 30px;
+    }
+    .stat-item {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      padding: 12px; border-radius: 16px; text-align: center;
+    }
     
-    .rank-num { font-size: 1.2rem; font-weight: 800; color: #ffd700; }
-    .lb-user { display: flex; align-items: center; gap: 10px; }
-    .lb-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid white; object-fit: cover; }
+    .stat-item h4 { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 5px; }
+    .stat-item .val { font-size: 1.4rem; font-weight: 800; color: #38bdf8; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+
+    .level-badge {
+      display: inline-block; padding: 8px 20px; border-radius: 30px;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: white; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      margin-top: 20px;
+    }
 
     /* Modal */
     .modal {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-        z-index: 2000; display: flex; align-items: center; justify-content: center;
-        opacity: 0; visibility: hidden; transition: 0.3s;
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transition: 0.3s;
     }
     .modal.show { opacity: 1; visibility: visible; }
     .modal-content {
-        background: #1e293b; border: 1px solid rgba(255,255,255,0.2);
-        padding: 40px; border-radius: 30px; width: 90%; max-width: 400px;
-        text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); color: white;
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      padding: 30px; border-radius: 32px; width: 90%; max-width: 400px;
+      text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); color: var(--text-color);
     }
+    
+    .modal h3 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 20px; color: white; }
+
+    /* Login Google Btn */
     .btn-google {
         display: flex; align-items: center; justify-content: center; gap: 10px;
         background: white; color: #333; width: 100%; padding: 12px;
-        border-radius: 30px; border: none; font-weight: 700; cursor: pointer;
-        margin: 20px 0; font-family: var(--font-main);
+        border-radius: 30px; border: none; font-weight: 600; cursor: pointer;
+        transition: 0.3s; margin-bottom: 16px; font-family: var(--font-main);
     }
-    
-    /* Mic Button */
-    .mic-btn {
-        width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 20px;
-        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-        font-size: 2rem; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; transition: 0.3s; color: white;
-    }
-    .mic-btn.listening { background: var(--error-color); animation: pulse 1.5s infinite; border-color: transparent; }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7); } 70% { box-shadow: 0 0 0 20px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+    .btn-google:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,255,255,0.4); }
 
+    .mic-btn {
+      width: 70px; height: 70px; border-radius: 50%; 
+      background: rgba(255,255,255,0.2); color: white;
+      border: 2px solid rgba(255,255,255,0.4);
+      font-size: 2rem; cursor: pointer; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+      transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .mic-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+    .mic-btn.listening { 
+        background: #ef4444; border-color: transparent;
+        animation: pulseMic 1.5s infinite; 
+    }
+    @keyframes pulseMic { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 20px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+    /* Leaderboard Table */
+    .leaderboard-table {
+        width: 100%; border-collapse: collapse; margin-top: 20px;
+        color: var(--text-color); font-size: 0.9rem;
+    }
+    .leaderboard-table th {
+        text-align: left; padding: 10px; color: var(--text-dim); border-bottom: 1px solid var(--glass-border);
+        text-transform: uppercase; font-size: 0.75rem;
+    }
+    .leaderboard-table td {
+        padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle;
+    }
+
+    .rank-num { font-weight: 800; color: #fbbf24; font-size: 1rem; width: 30px; text-align: center; }
+    .lb-user { display: flex; align-items: center; gap: 10px; }
+    .lb-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
+    .lb-score { font-weight: 700; color: #34d399; }
+
+    @media (max-width: 768px) {
+      .logo h1 { font-size: 2rem; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      #userInput { font-size: 1.1rem; }
+    }
     .hidden { display: none !important; }
     
-    /* User Info Top */
-    .user-info-bar { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
-    .user-avatar-top { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent-color); }
-    .user-name-top { font-weight: 700; font-size: 1rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-
-    /* Tooltip */
-    .word-tooltip {
-        position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
-        background: #0f172a; color: var(--accent-color); padding: 5px 10px; border-radius: 8px;
-        border: 1px solid var(--accent-color); font-size: 0.8rem; pointer-events: none;
-        white-space: nowrap; opacity: 0; transition: 0.2s; z-index: 100;
-    }
-    .karaoke-word { position: relative; }
-    .karaoke-word:hover .word-tooltip { opacity: 1; bottom: 110%; }
-
-    @media (max-width: 600px) {
-        .logo h1 { font-size: 1.8rem; }
-        .stats-row { grid-template-columns: 1fr 1fr; }
-        .tabs { width: 100%; }
-        .tab { padding: 8px 15px; font-size: 0.9rem; }
-    }
+    footer .heart-icon { color: #ff5252; animation: heartbeat 1.5s infinite; display: inline-block; }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
   </style>
 </head>
-<body>
+<body onload="initApp()">
 
   <div class="aurora-bg"></div>
   <div id="particles"></div>
-
+  <div id="snowContainer"></div>
+  
   <div class="container">
-    
-    <div style="position: absolute; top: 0; right: 0; display: flex; gap: 10px; z-index: 20;">
+    <header>
+      <div class="theme-toggle-wrapper">
         <button class="icon-btn" id="holidayBtn" title="Chế độ Giáng Sinh">🎄</button>
         <button class="icon-btn" id="themeBtn" title="Đổi giao diện">
-           <span id="sunIcon">☀️</span><span id="moonIcon" class="hidden">🌙</span>
+           <i id="themeIcon" class="fas fa-moon"></i>
         </button>
         <div id="logoutBtnWrapper" class="hidden">
-            <button class="icon-btn" id="logoutBtn" title="Đăng xuất" style="background: rgba(255, 82, 82, 0.2); border-color: rgba(255, 82, 82, 0.5);">🚪</button>
+            <button class="icon-btn" id="logoutBtn" title="Đăng xuất" style="color:#ff5252; border-color: rgba(255,82,82,0.3);"><i class="fas fa-sign-out-alt"></i></button>
         </div>
-    </div>
-
-    <header class="animate__animated animate__fadeInDown">
-      <div class="logo">
-        <h1>HiHi Sync</h1>
       </div>
-      <p class="tagline">Luyện chính tả & Ngoại ngữ • Đua top Realtime ✨</p>
+
+      <div class="logo">
+        <h1>HiHi Spelling</h1>
+      </div>
+      <p class="tagline">Luyện chính tả & ngoại ngữ - Đua top Realtime ✨</p>
     </header>
 
-    <div class="user-info-bar animate__animated animate__fadeIn">
-        <img id="userAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" class="user-avatar-top" alt="User">
-        <span class="user-name-top" id="playerNameDisplay">Khách (Chưa đăng nhập)</span>
+    <div class="tabs">
+      <div class="tab active" data-tab="setupPanel"><i class="fas fa-keyboard"></i> Luyện Tập</div>
+      <div class="tab" data-tab="rankPanel"><i class="fas fa-trophy"></i> BXH</div>
     </div>
 
-    <div class="tabs animate__animated animate__fadeInUp">
-      <button class="tab active" data-tab="setupPanel">Luyện Tập</button>
-      <button class="tab" data-tab="rankPanel">Thống Kê & BXH</button>
+    <div class="user-info-bar">
+      <img id="userAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" class="user-avatar" alt="User">
+      <span class="name-display" id="playerNameDisplay">Khách (Chưa đăng nhập)</span>
     </div>
 
     <div id="setupPanel" class="tab-content glass-card animate__animated animate__fadeIn">
       <div class="setup-grid">
         <div class="setup-item">
-          <h3>🌍 Ngôn ngữ luyện</h3>
+          <h3><i class="fas fa-globe"></i> Ngôn ngữ luyện</h3>
           <select id="globalLang">
             <option value="vi-VN">Tiếng Việt</option>
             <option value="en-US">Tiếng Anh (Mỹ)</option>
@@ -347,7 +465,7 @@
         </div>
 
         <div class="setup-item">
-          <h3>🎮 Chế độ chơi</h3>
+          <h3><i class="fas fa-gamepad"></i> Chế độ chơi</h3>
           <div class="radio-group">
             <label class="radio-label"><input type="radio" name="mode" value="read-write" checked> <span>Nhìn & Chép</span></label>
             <label class="radio-label"><input type="radio" name="mode" value="listen-write"> <span>Nghe & Chép</span></label>
@@ -357,8 +475,8 @@
         </div>
         
         <div class="setup-item">
-          <h3>🔊 Giọng đọc AI</h3>
-          <div style="display:flex; flex-direction:column; gap:10px;">
+          <h3><i class="fas fa-volume-up"></i> Giọng đọc AI</h3>
+          <div style="display:flex; flex-direction:column; gap:12px;">
              <select id="voiceSelect"></select>
              <div style="display:flex; gap:10px;">
                  <select id="voiceRateSelect" style="flex:1;">
@@ -367,51 +485,48 @@
                     <option value="1.25">1.25x (Nhanh)</option>
                     <option value="1.50">1.50x (Rất nhanh)</option>
                   </select>
-                  <button id="previewVoice" class="action-btn" style="width:auto; padding:0 20px; font-size:0.9rem;"><i class="fas fa-volume-up"></i></button>
+                  <button id="previewVoice" class="icon-btn" style="border-radius:12px; width:auto; padding:0 16px;"><i class="fas fa-play"></i></button>
              </div>
           </div>
         </div>
 
-        <div class="setup-item">
+        <div class="setup-item" style="grid-column: 1/-1;">
           <h3>
-            <span>✍️ Dữ liệu đầu vào</span>
+            <span><i class="fas fa-pen-fancy"></i> Dữ liệu đầu vào</span>
+            <div style="display:flex; gap:10px;">
+                <button id="randomTextBtn" class="btn-small-action random-text-btn"><i class="fas fa-dice"></i> Bài mẫu</button>
+                <button id="resetTextBtn" class="btn-small-action reset-text-btn"><i class="fas fa-undo"></i> Xóa</button>
+            </div>
           </h3>
-          <div style="display:flex; gap:10px; margin-bottom:10px;">
-            <button id="randomTextBtn" class="action-btn" style="background: rgba(192, 132, 252, 0.3); border-color:rgba(192, 132, 252, 0.5); font-size:0.8rem; padding:10px;">🎲 Lấy bài mẫu ngẫu nhiên</button>
-            <button id="resetTextBtn" class="action-btn" style="background: rgba(34, 211, 238, 0.3); border-color:rgba(34, 211, 238, 0.5); font-size:0.8rem; padding:10px; display:none;">🔄 Xóa</button>
+          <textarea id="sampleText" rows="6" spellcheck="false" placeholder="Nhấn nút 'Bài mẫu' để lấy bài văn mẫu hoặc tự nhập nội dung của bạn..."></textarea>
+          <div style="font-size:0.75rem; color:var(--text-dim); margin-top:5px; font-style:italic;">
+             **** Dữ liệu mẫu chứa nhiều bài thơ/văn kinh điển trong SGK và văn học thế giới.
           </div>
-          <textarea id="sampleText" rows="6" spellcheck="false" placeholder="Nhấn nút 'Lấy bài mẫu' hoặc tự nhập văn bản của bạn..."></textarea>
         </div>
 
         <button class="start-btn" id="startBtn">
-          <i class="fas fa-play"></i> Bắt đầu luyện tập
+          <i class="fas fa-play-circle"></i> Bắt đầu luyện tập
         </button>
       </div>
     </div>
 
     <div id="rankPanel" class="tab-content glass-card hidden animate__animated animate__fadeIn">
-        <h2 style="text-align:center; margin-bottom: 5px; text-transform:uppercase; letter-spacing:1px; color:var(--accent-color);">
+        <h2 style="text-align:center; color:#fff; text-shadow:0 0 10px rgba(255,255,255,0.4); margin-bottom: 20px;">
              Thành Tích Tháng <span id="currentMonthDisplay">...</span>
         </h2>
-        <div style="text-align:center; opacity:0.6; font-size:0.8rem; margin-bottom:20px;">
-            (Reset vào ngày 1 hàng tháng)
-        </div>
 
         <div id="personalStats">
           <div class="stats-row" id="personalStatsRow">
             <div class="stat-item"><h4>WPM (Max)</h4><div class="val" id="personalWPM">0</div></div>
-            <div class="stat-item"><h4>Chính xác</h4><div class="val" id="personalAcc">0%</div></div>
+            <div class="stat-item"><h4>Chính xác (Max)</h4><div class="val" id="personalAcc">0%</div></div>
             <div class="stat-item"><h4>Tổng câu</h4><div class="val" id="personalSentences">0</div></div> 
-            <div class="stat-item"><h4>Điểm</h4><div class="val" id="personalScore">0</div></div>
+            <div class="stat-item"><h4>Tổng điểm</h4><div class="val" id="personalScore">0</div></div>
           </div>
-          <div style="text-align:center; margin-top:20px;">
-              <span style="display:inline-block; padding:5px 15px; background:rgba(255,255,255,0.1); border-radius:20px; border:1px solid rgba(255,255,255,0.2); font-weight:700;" id="personalBadge">Tân binh</span>
-          </div>
+          <div style="text-align:center; margin-top:20px;"><span class="level-badge" id="personalBadge">Tân binh</span></div>
         </div>
 
-        <h3 style="text-align:center; color:#fbbf24; margin-top: 40px; margin-bottom:15px;"><i class="fas fa-crown"></i> Bảng Xếp Hạng</h3>
-        <div id="loadingLeaderboard" style="text-align:center; padding:20px; opacity:0.7;"><i class="fas fa-spinner fa-spin"></i> Đang tải...</div>
-        
+        <h2 style="text-align:center; color:#fbbf24; margin-top: 50px;"><i class="fas fa-crown"></i> Bảng Xếp Hạng</h2>
+        <div id="loadingLeaderboard" style="text-align:center; padding:20px; color:var(--text-dim);">Đang tải dữ liệu...</div>
         <div style="overflow-x:auto;">
             <table class="leaderboard-table" id="leaderboardTable">
                 <thead>
@@ -423,9 +538,33 @@
                         <th>Điểm</th>
                     </tr>
                 </thead>
-                <tbody id="leaderboardBody"></tbody>
+                <tbody id="leaderboardBody">
+                    </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="modal" id="loginModal">
+      <div class="modal-content animate__animated animate__zoomIn">
+        <h3>Xin chào! 👋</h3>
+        <p style="margin-bottom:24px; color:var(--text-dim);">Đăng nhập để lưu thành tích và đua top server.</p>
+        
+        <button id="googleLoginBtn" class="btn-google">
+           <i class="fab fa-google" style="color:#4285F4"></i>
+           Đăng nhập với Google
+        </button>
+
+        <div style="position:relative; margin: 20px 0;">
+            <hr style="border:0; border-top:1px solid var(--glass-border);">
+            <span style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.5); padding:0 10px; font-size:0.8rem; color:var(--text-dim); border-radius:10px;">Hoặc</span>
+        </div>
+
+        <input type="text" id="usernameInput" placeholder="Nhập tên khách..." maxlength="20" style="margin-bottom:20px; text-align:center;" />
+        
+        <div style="display:flex; gap:10px;">
+          <button class="action-btn btn-reset" id="skipLoginBtn" style="flex:1; justify-content:center; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white;">Chơi ngay</button>
+        </div>
+      </div>
     </div>
 
     <div id="practiceArea" class="tab-content glass-card hidden animate__animated animate__zoomIn">
@@ -433,38 +572,36 @@
         <button class="mode-btn active" data-mode="read-write">Chép</button>
         <button class="mode-btn" data-mode="listen-write">Nghe</button>
         <button class="mode-btn" data-mode="read-listen-write">Nghe-Chép</button>
-        <button class="mode-btn" data-mode="read-only">Đọc (Mic)</button>
+        <button class="mode-btn" data-mode="read-only">Đọc</button>
       </div>
 
-      <div style="margin-bottom: 20px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-weight:600; font-size:0.8rem; opacity:0.8;">
+      <div class="progress-box">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:600; font-size:0.8rem; opacity:0.8;">
           <span>Tiến trình</span> <span id="progressText">0%</span>
         </div>
-        <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;">
-            <div id="progressFill" style="height: 100%; width: 0; background: var(--accent-color); transition: width 0.3s;"></div>
-        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
       </div>
 
       <div class="segment-box" id="currentSegment"></div>
 
       <div class="mic-box hidden" id="micBox">
         <button class="mic-btn" id="micBtn"><i class="fas fa-microphone"></i></button>
-        <p style="text-align:center; opacity:0.7; font-size:0.9rem;">Nhấn mic và đọc to đoạn văn trên</p>
+        <p style="text-align:center; color:var(--text-dim); font-size:0.9rem;">Nhấn mic và đọc to đoạn văn trên</p>
       </div>
 
-      <div id="fullText" style="color:var(--info); font-style:italic; text-align:center; margin-bottom:16px; min-height:24px; font-size:0.9rem;"></div>
+      <div id="fullText" style="color:#22d3ee; font-style:italic; text-align:center; margin-bottom:16px; min-height:24px; font-size:0.9rem;"></div>
 
-      <div style="position: relative; margin-bottom: 20px;">
+      <div class="input-wrapper">
         <input type="text" id="userInput" placeholder="Gõ lại nội dung ở đây..." autocomplete="off" />
-        <button id="hintBtn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-65%); background: rgba(255,255,255,0.1); border:none; color:white; width:30px; height:30px; border-radius:8px; cursor:pointer;"><i class="fas fa-lightbulb"></i></button>
+        <button class="hint-btn" id="hintBtn" title="Gợi ý từ tiếp theo"><i class="fas fa-lightbulb"></i></button>
       </div>
 
-      <div id="liveFeedback" style="text-align:center; min-height:30px; font-family: 'Courier New', monospace;"><em>Kết quả sẽ hiện ở đây...</em></div>
+      <div id="liveFeedback" style="text-align:center;"><em>Kết quả sẽ hiện ở đây...</em></div>
 
-      <div style="display:flex; gap:15px; justify-content:center; margin-top:20px; flex-wrap:wrap;">
-        <button class="action-btn" id="replayBtn" style="width:auto;"><i class="fas fa-volume-up"></i> Nghe lại</button>
-        <button class="action-btn" id="nextBtn" disabled style="width:auto; background: var(--success-color); border-color:var(--success-color);">Tiếp theo <i class="fas fa-arrow-right"></i></button>
-        <button class="action-btn" id="resetBtn" style="width:auto; background:transparent; border-color:rgba(255,255,255,0.3);">Thoát</button>
+      <div class="action-row">
+        <button class="action-btn btn-replay" id="replayBtn"><i class="fas fa-volume-up"></i> Nghe</button>
+        <button class="action-btn btn-next" id="nextBtn" disabled>Tiếp <i class="fas fa-arrow-right"></i></button>
+        <button class="action-btn btn-reset" id="resetBtn"><i class="fas fa-times"></i></button>
       </div>
 
       <div class="stats-row">
@@ -474,37 +611,38 @@
         <div class="stat-item"><h4>Điểm</h4><div class="val" id="score">0</div></div>
       </div>
       
-      <div style="text-align:center; margin-top:20px;">
-        <div id="levelBadge" style="font-size:0.9rem; opacity:0.8; font-weight:600;">Cấp độ: Mới bắt đầu</div>
-        <div id="level" class="hidden"></div> 
-      </div>
+      <div style="text-align:center;">
+        <div class="level-badge" id="levelBadge" style="margin-top:30px;">Cấp độ: Mới bắt đầu</div>
+        <div id="level" class="hidden"></div> </div>
       <canvas id="mainChart" class="hidden"></canvas>
     </div>
 
-    <footer style="text-align:center; margin-top:20px; color:rgba(255,255,255,0.5); font-size:0.8rem;">
-        HiHi Sync <i class="fas fa-heart" style="color:#ff5252"></i> by Ngxuanhai123
+    <footer style="text-align:center; margin-top:20px; color:var(--text-dim); font-size:0.8rem; padding-bottom: 20px;">
+        HiHi Sync <span class="heart-icon">❤️</span> được Hải làm từ cả trái tim.
     </footer>
   </div>
 
-  <div class="modal" id="loginModal">
-      <div class="modal-content animate__animated animate__fadeInUp">
-        <h3 style="font-size:1.5rem; margin-bottom:10px;">Xin chào! 👋</h3>
-        <p style="opacity:0.7; margin-bottom:20px;">Đăng nhập để lưu thành tích và đua top server.</p>
-        
-        <button id="googleLoginBtn" class="btn-google">
-           <i class="fab fa-google" style="color:#DB4437"></i> Đăng nhập với Google
-        </button>
+  <script>
+    // --- JS INIT ---
+    function initApp() {
+        createParticles();
+        createSnowflakes();
+    }
 
-        <div style="position:relative; margin: 20px 0;">
-            <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1);">
-            <span style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#1e293b; padding:0 10px; font-size:0.8rem; opacity:0.6;">Hoặc</span>
-        </div>
-
-        <input type="text" id="usernameInput" placeholder="Nhập tên khách..." maxlength="20" style="text-align:center; background: rgba(0,0,0,0.2);" />
-        
-        <button class="action-btn" id="skipLoginBtn" style="background:transparent; border:1px solid rgba(255,255,255,0.2);">Chơi ngay (Không lưu)</button>
-      </div>
-  </div>
+    function createParticles() {
+      const container = document.getElementById('particles');
+      for(let i=0; i<15; i++) {
+          const p = document.createElement('div');
+          p.className = 'particle';
+          p.style.left = Math.random() * 100 + '%';
+          p.style.width = Math.random() * 5 + 2 + 'px';
+          p.style.height = p.style.width;
+          p.style.animationDuration = Math.random() * 10 + 10 + 's';
+          p.style.animationDelay = Math.random() * 5 + 's';
+          container.appendChild(p);
+      }
+    }
+  </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -699,7 +837,7 @@
     // 3. Hàm tải BXH (Load theo tháng hiện tại)
     function loadLeaderboard() {
         const monthKey = getMonthKey();
-        // Lấy 20 người điểm cao nhất (tổng điểm tích lũy)
+        // Lấy 10 người điểm cao nhất (tổng điểm tích lũy)
         const lbRef = query(ref(db, `leaderboard/${monthKey}`), orderByChild('score'), limitToLast(20));
         
         onValue(lbRef, (snapshot) => {
@@ -722,24 +860,24 @@
                 const tr = document.createElement('tr');
                 const photoHtml = item.photo 
                     ? `<img src="${item.photo}" class="lb-avatar">` 
-                    : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;background:#333;color:white;">${item.name.charAt(0)}</div>`;
+                    : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;background:#555;">${item.name.charAt(0)}</div>`;
                 
                 let rankColor = 'white';
-                if(index === 0) rankColor = '#ffd700'; // Vàng
-                else if(index === 1) rankColor = '#c0c0c0'; // Bạc
-                else if(index === 2) rankColor = '#cd7f32'; // Đồng
+                if(index === 0) rankColor = '#fbbf24'; // Vàng
+                else if(index === 1) rankColor = '#94a3b8'; // Bạc
+                else if(index === 2) rankColor = '#b45309'; // Đồng
 
                 tr.innerHTML = `
                     <td class="rank-num" style="color:${rankColor}">${index + 1}</td>
                     <td>
                         <div class="lb-user">
                             ${photoHtml}
-                            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px;">${item.name}</span>
+                            <span>${item.name}</span>
                         </div>
                     </td>
                     <td>${item.wpm || 0}</td>
                     <td>${item.acc || 0}%</td>
-                    <td style="color:var(--success-color)">${item.score || 0}</td>
+                    <td class="lb-score">${item.score || 0}</td>
                 `;
                 lbBody.appendChild(tr);
             });
@@ -748,42 +886,6 @@
   </script>
 
   <script>
-    // === PARTICLE EFFECTS (FROM TUVUNG.HTML) ===
-    function createParticles() {
-        const container = document.getElementById('particles');
-        for(let i=0; i<15; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.width = Math.random() * 5 + 2 + 'px';
-            p.style.height = p.style.width;
-            p.style.animationDuration = Math.random() * 10 + 10 + 's';
-            p.style.animationDelay = Math.random() * 5 + 's';
-            container.appendChild(p);
-        }
-    }
-    createParticles();
-    
-    // Tạo tuyết rơi
-    function createSnowflakes() {
-        // Chỉ tạo thêm nếu chưa có (trong style đã có CSS animation rồi)
-        // Đây là tạo element DOM
-        for (let i = 0; i < 20; i++) {
-            const flake = document.createElement('div');
-            flake.className = 'snowflake';
-            flake.textContent = ['❄', '❅', '❆', '.'][Math.floor(Math.random() * 4)];
-            flake.style.left = Math.random() * 100 + 'vw';
-            flake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            flake.style.fontSize = Math.random() * 15 + 10 + 'px';
-            flake.style.opacity = Math.random() * 0.7 + 0.3;
-            flake.style.animationDelay = Math.random() * 5 + 's';
-            document.body.appendChild(flake);
-            // Remove after animation
-            setTimeout(() => flake.remove(), 7000);
-        }
-    }
-    setInterval(createSnowflakes, 800);
-
     // === 1. THƯ VIỆN DỮ LIỆU ĐA NGÔN NGỮ ===
     const SAMPLE_LIBRARY = {
         'vi-VN': [
@@ -870,8 +972,7 @@
       reset: document.getElementById('resetBtn'),
       theme: document.getElementById('themeBtn'),
       holidayBtn: document.getElementById('holidayBtn'), 
-      sun: document.getElementById('sunIcon'),
-      moon: document.getElementById('moonIcon'),
+      themeIcon: document.getElementById('themeIcon'),
       voiceSelect: document.getElementById('voiceSelect'),
       voiceRateSelect: document.getElementById('voiceRateSelect'),
       previewVoice: document.getElementById('previewVoice'),
@@ -883,45 +984,57 @@
     };
 
     // === 4. LOGIC CHÍNH ===
+    
+    // Tạo tuyết rơi liên tục
+    function createSnowflakes() {
+        const snowContainer = document.getElementById('snowContainer');
+        snowContainer.innerHTML = '';
+        for (let i = 0; i < 40; i++) {
+            const flake = document.createElement('div');
+            flake.className = 'snowflake';
+            flake.textContent = ['❄', '❅', '❆', '.'][Math.floor(Math.random() * 4)];
+            flake.style.left = Math.random() * 100 + 'vw';
+            flake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            flake.style.fontSize = Math.random() * 15 + 10 + 'px';
+            flake.style.opacity = Math.random() * 0.7 + 0.3;
+            flake.style.animationDelay = Math.random() * 5 + 's';
+            snowContainer.appendChild(flake);
+        }
+    }
 
     function applyTheme(themeMode) {
         const body = document.body;
-        const isDarkPreferred = localStorage.getItem('baseTheme') === 'dark';
-
-        if (themeMode === 'holiday') {
-            body.setAttribute('data-theme', isDarkPreferred ? 'holiday-dark' : 'holiday');
+        const isLight = themeMode === 'light';
+        
+        if (isLight) {
+            body.setAttribute('data-theme', 'light');
+            els.themeIcon.className = 'fas fa-sun';
+            els.themeIcon.style.color = '#fcd34d';
         } else {
-            // Nếu không phải holiday, dùng base theme (light/dark)
-            body.setAttribute('data-theme', isDarkPreferred ? 'dark' : 'light');
+            body.setAttribute('data-theme', 'dark');
+            els.themeIcon.className = 'fas fa-moon';
+            els.themeIcon.style.color = '#fff';
         }
-
-        els.sun.classList.toggle('hidden', !isDarkPreferred);
-        els.moon.classList.toggle('hidden', isDarkPreferred);
     }
 
     function toggleBaseTheme() {
         const current = localStorage.getItem('baseTheme') === 'light' ? 'light' : 'dark';
         const next = current === 'dark' ? 'light' : 'dark';
         localStorage.setItem('baseTheme', next);
-        
-        const isHolidayOn = localStorage.getItem('isHoliday') === 'true';
-        applyTheme(isHolidayOn ? 'holiday' : next);
+        applyTheme(next);
     }
 
     function toggleHolidayMode() {
         const isCurrentlyOn = localStorage.getItem('isHoliday') === 'true';
         const nextState = !isCurrentlyOn;
         localStorage.setItem('isHoliday', nextState);
-        
-        const base = localStorage.getItem('baseTheme') || 'dark'; 
-        applyTheme(nextState ? 'holiday' : base);
+        alert(nextState ? "Đã bật chế độ lễ hội! (Tuyết rơi nhiều hơn)" : "Đã tắt chế độ lễ hội.");
     }
 
     function initTheme() {
         if (!localStorage.getItem('baseTheme')) localStorage.setItem('baseTheme', 'dark'); 
-        const isHoliday = localStorage.getItem('isHoliday') === 'true';
         const base = localStorage.getItem('baseTheme');
-        applyTheme(isHoliday ? 'holiday' : base);
+        applyTheme(base);
     }
 
     // Tabs
@@ -931,14 +1044,8 @@
                 const targetId = btn.dataset.tab;
                 tabButtons.forEach(t => t.classList.remove('active'));
                 btn.classList.add('active');
-                tabContents.forEach(c => {
-                     c.classList.add('hidden');
-                     c.classList.remove('animate__zoomIn', 'animate__fadeIn');
-                });
-                
-                const target = document.getElementById(targetId);
-                target.classList.remove('hidden');
-                target.classList.add('animate__animated', 'animate__fadeIn');
+                tabContents.forEach(c => c.classList.add('hidden'));
+                document.getElementById(targetId).classList.remove('hidden');
             });
         });
     }
@@ -1007,14 +1114,13 @@
     async function showSegment() {
       const text = segments[currentIdx];
       els.next.disabled = true;
-      els.next.style.opacity = '0.5';
       els.input.style.borderColor = ''; els.input.style.boxShadow = ''; els.input.value = ''; els.input.focus();
       correctWords = 0;
       
       els.micBox.classList.toggle('hidden', currentMode !== 'read-only');
       const isReadOnly = currentMode === 'read-only';
       els.input.style.display = isReadOnly ? 'none' : 'block';
-      els.hint.style.display = isReadOnly ? 'none' : 'block';
+      els.hint.style.display = isReadOnly ? 'none' : 'flex';
       els.feedback.style.display = 'block';
       els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
       
@@ -1025,7 +1131,7 @@
       } else els.fullTrans.textContent = '';
 
       if (currentMode === 'listen-write') {
-        els.segment.innerHTML = '<i class="fas fa-headphones" style="font-size:3rem; opacity:0.5; margin-bottom:10px;"></i><br><em>(Hãy nghe và gõ lại...)</em>';
+        els.segment.innerHTML = '<em>(Hãy nghe và gõ lại...)</em>';
         setTimeout(() => speak(text, () => {}), 600);
         return;
       }
@@ -1109,15 +1215,10 @@
       const isContentMatch = normalizeText(input) === normalizeText(orig);
       if (isContentMatch) {
           els.next.disabled = false;
-          els.next.style.opacity = '1';
-          els.input.style.borderColor = 'var(--success-color)';
-          els.input.style.boxShadow = '0 0 0 2px var(--success-color)';
-          confetti({ particleCount: 30, spread: 50, origin: { y: 0.7 } }); // Small visual reward
+          els.input.style.borderColor = '#4ade80';
       } else {
           els.next.disabled = true;
-          els.next.style.opacity = '0.5';
           els.input.style.borderColor = '';
-          els.input.style.boxShadow = '';
       }
     }
 
@@ -1166,7 +1267,6 @@
       els.level.textContent = badge; els.levelBadge.textContent = 'Đạt cấp: ' + badge;
       els.score.textContent = score; els.wpm.textContent = wpm; els.acc.textContent = acc + '%';
       
-      confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
       alert(`Hoàn thành!\nTốc độ: ${wpm} WPM\nĐIỂM CỘNG THÊM: ${score}\nTổng điểm tích lũy sẽ được cập nhật trên BXH.`);
       
       // Chuyển sang tab BXH để xem kết quả
@@ -1195,8 +1295,6 @@
              if (normTrans === normTarget || normTrans.includes(normTarget)) {
                  els.feedback.innerHTML = `<span class="correct">${finalTranscript}</span> (Chính xác!)`;
                  els.next.disabled = false;
-                 els.next.style.opacity = '1';
-                 confetti({ particleCount: 30, spread: 50, origin: { y: 0.7 } });
                  setTimeout(next, 1000);
              } else els.feedback.innerHTML = `<span class="wrong">${finalTranscript}</span> (Thử lại)`;
         }
@@ -1216,7 +1314,7 @@
         const randomText = library[Math.floor(Math.random() * library.length)];
         els.text.value = randomText;
         userHasEditedText = false;
-        els.resetTextBtn.style.display = 'none';
+        els.resetTextBtn.style.display = 'inline-flex';
     }
 
     // Event Listeners
@@ -1253,7 +1351,7 @@
 
     els.start.addEventListener('click', () => {
       const text = els.text.value.trim();
-      if (!text) return alert('Vui lòng nhập đoạn văn hoặc nhấn nút "Lấy bài mẫu"!');
+      if (!text) return alert('Vui lòng nhập đoạn văn hoặc nhấn nút "Bài mẫu"!');
       segments = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(s => s);
       if (!segments.length) return alert('Không có đoạn hợp lệ!');
       
@@ -1267,15 +1365,8 @@
       if (timer) clearInterval(timer);
       timer = setInterval(updateStats, 1000);
       
-      // Chuyển Tab Practice
       document.getElementById('setupPanel').classList.add('hidden');
-      const practiceTab = document.getElementById('practiceArea');
-      practiceTab.classList.remove('hidden');
-      practiceTab.classList.add('animate__animated', 'animate__zoomIn');
-      
-      // Update Tab Navigation Active State
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      
+      document.getElementById('practiceArea').classList.remove('hidden');
       initSpeechRecognition(); 
       showSegment();
     });
@@ -1287,7 +1378,7 @@
       const typedInput = els.input.value.trim();
       const typedCount = typedInput ? typedInput.split(/\s+/).length : 0;
       if (typedCount < origWords.length) {
-        els.feedback.innerHTML += ` <span style="color:var(--info); font-weight:700;">→ ${origWords[typedCount]}</span>`;
+        els.feedback.innerHTML += ` <span style="color:#22d3ee; font-weight:700;">→ ${origWords[typedCount]}</span>`;
         hintsUsed++;
         els.input.focus();
       }
@@ -1318,38 +1409,52 @@
     els.lang.value = globalLang;
     window.addEventListener('load', loadVoices);
   </script>
-  
   <a href="https://ngxuanhai123.github.io/" class="floating-home-btn">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
     </svg>
     <span>Trang chủ</span>
-  </a>
+</a>
 
-  <style>
+<style>
     .floating-home-btn {
-        position: fixed; top: 20px; left: 20px; z-index: 1000;
-        display: flex; align-items: center; gap: 10px;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         padding: 10px 20px;
         background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50px; color: white; text-decoration: none;
-        font-family: 'Poppins', sans-serif; font-weight: 600;
+        border-radius: 50px;
+        color: white;
+        text-decoration: none;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease; overflow: hidden;
+        transition: all 0.3s ease;
+        overflow: hidden;
     }
-    .floating-home-btn:hover {
-        background: linear-gradient(90deg, #4facfe, #00f2fe);
-        transform: translateY(2px); box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
-        border-color: transparent; color: #0f172a;
+    [data-theme="light"] .floating-home-btn {
+        background: rgba(0,0,0,0.05); color: #333; border-color: rgba(0,0,0,0.1);
     }
     .floating-home-btn svg { width: 24px; height: 24px; transition: transform 0.3s ease; }
+    .floating-home-btn:hover {
+        background: linear-gradient(90deg, #4facfe, #00f2fe);
+        transform: translateY(2px);
+        box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+        border-color: transparent;
+        color: #0f172a; 
+    }
     .floating-home-btn:hover svg { transform: scale(1.1); }
     @media (max-width: 640px) {
         .floating-home-btn span { display: none; }
         .floating-home-btn { padding: 12px; border-radius: 50%; }
     }
-  </style>
+</style>
 </body>
 </html>
