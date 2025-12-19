@@ -5,7 +5,7 @@
 
 **HiHi Spelling** là một ứng dụng web miễn phí giúp bạn luyện gõ chính tả, luyện nghe và luyện đọc ngoại ngữ một cách thú vị và hiệu quả. Ứng dụng hỗ trợ đồng bộ realtime với Firebase, bảng xếp hạng hàng tháng và nhiều tính năng hiện đại.
 
-🌐 **Truy cập ngay**: [https://ngxuanhai123.github.io/hihi-spelling/](https://ngxuanhai123.github.io/hihi-spelling/)  
+🌐 **Truy cập ngay**: [https://ngxuanhai123.github.io/chinhta/](https://ngxuanhai123.github.io/chinhta/)  
 (hoặc mở file `index.html` trực tiếp trên máy)
 
 ## Tính năng nổi bật
@@ -72,7 +72,7 @@
 
 ## Tác giả
 
-Ứng dụng được làm từ ❤️ bởi **Nguyễn Xuân Hải**  
+Ứng dụng được làm từ ❤️ bởi **Xuân Hải**  
 Liên hệ: [https://ngxuanhai123.github.io/](https://ngxuanhai123.github.io/)
 
 ## Giấy phép
