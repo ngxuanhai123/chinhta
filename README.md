@@ -1,6 +1,6 @@
 # HiHi Spelling Master – Luyện Chính Tả & Ngoại Ngữ (Sync Realtime)
 
-[![HiHi Spelling](https://img.shields.io/badge/HiHi-Spelling_Master-00d2ff?style=for-the-badge&logo=appveyor)](https://ngxuanhai123.github.io/hihi-spelling/)  
+[![HiHi Spelling](https://img.shields.io/badge/HiHi-Spelling_Master-00d2ff?style=for-the-badge&logo=appveyor)](https://ngxuanhai123.github.io/chinhta/)  
 ![Version](https://img.shields.io/badge/Version-1.0-blue) ![License](https://img.shields.io/badge/License-MIT-green)
 
 **HiHi Spelling** là một ứng dụng web miễn phí giúp bạn luyện gõ chính tả, luyện nghe và luyện đọc ngoại ngữ một cách thú vị và hiệu quả. Ứng dụng hỗ trợ đồng bộ realtime với Firebase, bảng xếp hạng hàng tháng và nhiều tính năng hiện đại.
