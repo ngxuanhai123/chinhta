@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
+  <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>HiHi - Spelling Master (Sync Realtime)</title>
   <meta name="description" content="Luyện gõ chuẩn, nghe rõ, đọc to – nhận diện giọng nói, karaoke, bảng xếp hạng online.">
@@ -1108,7 +1109,8 @@
       if (useGoogleVoice) {
           // Xử lý tham số tl
           const tl = getGoogleLangCode(globalLang);
-          const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${tl}&client=tw-ob`;
+          // NEW URL: translate.googleapis.com + client=gtx
+          const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${tl}&q=${encodeURIComponent(text)}`;
 
           currentAudio = new Audio(url);
           currentAudio.playbackRate = speechRate;
@@ -1120,7 +1122,8 @@
               speakSystem(text, onWord);
           };
 
-          currentAudio.onerror = triggerFallback;
+          // Listen for loading errors specifically
+          currentAudio.addEventListener('error', triggerFallback);
           
           // Note: Google TTS qua Audio tag không hỗ trợ 'onboundary' cho karaoke
           currentAudio.play().catch(triggerFallback);
