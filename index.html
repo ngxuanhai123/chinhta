@@ -477,7 +477,6 @@
         <div class="setup-item">
           <h3><i class="fas fa-volume-up"></i> Giọng đọc AI</h3>
           <div style="display:flex; flex-direction:column; gap:12px;">
-             <!-- SWITCH -->
              <div style="background:rgba(0,0,0,0.2); padding:4px; border-radius:12px; display:flex; border:1px solid var(--glass-border);">
                  <button id="btnUseGoogle" class="source-btn active" style="flex:1;"><i class="fab fa-google"></i> Google (Chuẩn)</button>
                  <button id="btnUseSystem" class="source-btn" style="flex:1;"><i class="fas fa-robot"></i> System (Máy)</button>
@@ -912,23 +911,32 @@
             "The quick brown fox jumps over the lazy dog. Success is not final, failure is not fatal: it is the courage to continue that counts.",
             "Two roads diverged in a yellow wood, and sorry I could not travel both. And be one traveler, long I stood and looked down one as far as I could.", 
             "I wandered lonely as a cloud that floats on high o'er vales and hills, when all at once I saw a crowd, a host, of golden daffodils.", 
-            "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune."
+            "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune.",
+            "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts."
         ],
         'id-ID': [
             "Bhinneka Tunggal Ika adalah semboyan bangsa Indonesia yang tertulis pada lambang negara Garuda Pancasila. Maknanya adalah berbeda-beda tetapi tetap satu.",
-            "Kami putra dan putri Indonesia, mengaku bertumpah darah yang satu, tanah air Indonesia."
+            "Kami putra dan putri Indonesia, mengaku bertumpah darah yang satu, tanah air Indonesia.",
+            "Pancasila adalah pilar ideologis negara Indonesia. Nama ini terdiri dari dua kata dari Sanskerta: pañca berarti lima dan śīla berarti prinsip atau asas.",
+            "Indonesia Raya adalah lagu kebangsaan Republik Indonesia. Lagu ini pertama kali diperkenalkan oleh komponisnya, Wage Rudolf Soepratman."
         ],
         'es-ES': [
             "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero.", 
-            "Caminante, no hay camino, se hace camino al andar."
+            "Caminante, no hay camino, se hace camino al andar. Al andar se hace el camino, y al volver la vista atrás se ve la senda que nunca se ha de volver a pisar.",
+            "La vida es sueño, y los sueños, sueños son. Que toda la vida es sueño, y los sueños, sueños son.",
+            "Donde una puerta se cierra, otra se abre."
         ],
         'it-IT': [
             "Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura, ché la diritta via era smarrita.", 
-            "L'amor che move il sole e l'altre stelle."
+            "L'amor che move il sole e l'altre stelle.",
+            "Vedi Napoli e poi muori. Una delle città più antiche e ricche di storia del mondo.",
+            "La commedia è finita. Andiamo a mangiare qualcosa di buono."
         ],
         'la-VA': [
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            "Veni, vidi, vici. Alea iacta est."
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "Veni, vidi, vici. Alea iacta est. Carpe diem, quam minimum credula postero.",
+            "Per aspera ad astra. Ubi concordia, ibi victoria.",
+            "Cogito, ergo sum. Verba volant, scripta manent."
         ]
     };
 
@@ -953,6 +961,7 @@
     let selectedVoice = null;
     let currentAudio = null; // Biến theo dõi audio của Google TTS
     let useGoogleVoice = true; // Default
+    let karaokeTimer = []; // Mảng chứa các timeout cho hiệu ứng karaoke giả lập
     
     let segments = [];
     let currentIdx = 0;
@@ -1042,12 +1051,29 @@
 
     // TTS & Translate
     function loadVoices() {
+      // Clear old options
+      els.voiceSelect.innerHTML = '';
+      
       const targetCode = globalLang.split('-')[0]; 
+      // Lấy voices bắt đầu bằng mã ngôn ngữ (vd: 'vi', 'en', 'id')
       voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(targetCode));
-      if (voices.length === 0 && (globalLang.startsWith('la') || globalLang.startsWith('id'))) {
-          voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') || v.lang.startsWith('es'));
+      
+      // Fallback nếu không tìm thấy voice đúng (vd tiếng Latin thường không có, dùng tiếng Ý hoặc Anh)
+      if (voices.length === 0) {
+          if (globalLang.startsWith('la')) {
+             voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('it') || v.lang.startsWith('en'));
+          } else if (globalLang.startsWith('id')) {
+             // Một số trình duyệt dùng code 'in' cho Indo thay vì 'id'
+             voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('in') || v.lang.startsWith('ms'));
+          }
       }
-      els.voiceSelect.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Mặc định</option>';
+      
+      // Nếu vẫn không có, lấy hết (fallback cuối cùng)
+      if (voices.length === 0) voices = speechSynthesis.getVoices();
+
+      els.voiceSelect.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Mặc định (System)</option>';
+      
+      // Restore selected voice if possible
       const saved = localStorage.getItem('voice');
       selectedVoice = voices.find(v => v.name === saved) || voices[0];
       if (selectedVoice) els.voiceSelect.value = selectedVoice.name;
@@ -1071,31 +1097,71 @@
 
     // === SYSTEM TTS ===
     function speakSystem(text, onWord) {
-      if (!selectedVoice) {
-          const targetCode = globalLang.split('-')[0];
-          selectedVoice = voices.find(v => v.lang.startsWith(targetCode));
+      if (!selectedVoice && voices.length > 0) {
+          selectedVoice = voices[0];
       }
       
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.voice = selectedVoice;
+      if (selectedVoice) utterance.voice = selectedVoice;
       utterance.rate = speechRate;
-      utterance.lang = globalLang;
+      utterance.lang = globalLang; // Quan trọng: set lang cho utterance để system chọn đúng engine
+      
       if (onWord) {
         utterance.onboundary = (e) => {
           if (e.name === 'word') onWord(e.charIndex, e.charLength);
         };
       }
-      speechSynthesis.speak(utterance);
+      
+      // Fix lỗi Chrome đôi khi treo TTS
+      speechSynthesis.cancel();
+      setTimeout(() => {
+          speechSynthesis.speak(utterance);
+      }, 10);
     }
 
     // === GOOGLE TTS ===
     function getGoogleLangCode(lang) {
         if (!lang) return 'vi';
-        const prefix = lang.split('-')[0].toLowerCase();
-        if (prefix === 'en') return 'en-US'; // or just 'en'
-        if (prefix === 'id') return 'id';
-        if (prefix === 'vi') return 'vi';
-        return prefix; // fallback
+        const lower = lang.toLowerCase();
+        // Ánh xạ chính xác mã Google TTS
+        if (lower.startsWith('vi')) return 'vi';
+        if (lower.startsWith('en')) return 'en-US'; // Anh Mỹ
+        if (lower.startsWith('id')) return 'id'; // Indo
+        if (lower.startsWith('es')) return 'es'; // TBN
+        if (lower.startsWith('it')) return 'it'; // Ý
+        if (lower.startsWith('la')) return 'la'; // Latin (có hỗ trợ cơ bản)
+        return lower.split('-')[0]; // fallback
+    }
+
+    // Hàm giả lập Karaoke cho Google Voice (do Google Audio không có sự kiện onboundary)
+    function simulateKaraoke(text, onWord) {
+        // Xóa các timer cũ
+        karaokeTimer.forEach(t => clearTimeout(t));
+        karaokeTimer = [];
+
+        if (!onWord) return;
+
+        // Ước lượng thời gian: Giả sử trung bình 1 từ mất 0.5 giây / tốc độ
+        // Đây chỉ là ước lượng để tạo hiệu ứng "chạy", không chính xác 100% như System Voice
+        const words = text.split(/(\s+)/);
+        let charIndex = 0;
+        let timeAccumulator = 0;
+        // Thời gian ước tính cho mỗi ký tự (ms)
+        const msPerChar = 60 / speechRate; 
+
+        words.forEach(w => {
+            const len = w.length;
+            if (w.trim().length > 0) {
+                 // Tạo timeout để highlight từ này
+                 const t = setTimeout(() => {
+                     onWord(charIndex, len);
+                 }, timeAccumulator);
+                 karaokeTimer.push(t);
+            }
+            // Cộng thời gian chờ cho từ tiếp theo
+            timeAccumulator += (len * msPerChar) + 50; // +50ms độ trễ giữa các từ
+            charIndex += len;
+        });
     }
 
     function speak(text, onWord) {
@@ -1105,28 +1171,30 @@
          currentAudio = null;
       }
       speechSynthesis.cancel();
+      karaokeTimer.forEach(t => clearTimeout(t)); // Xóa highlight cũ
+      karaokeTimer = [];
 
       if (useGoogleVoice) {
-          // Xử lý tham số tl
           const tl = getGoogleLangCode(globalLang);
-          // NEW URL: translate.googleapis.com + client=gtx
           const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${tl}&q=${encodeURIComponent(text)}`;
 
           currentAudio = new Audio(url);
           currentAudio.playbackRate = speechRate;
 
-          // Xử lý lỗi -> Fallback
           const triggerFallback = (e) => {
-              console.warn("Google TTS lỗi, chuyển sang System Voice.", e);
+              console.warn("Google TTS lỗi/không hỗ trợ, chuyển sang System Voice.", e);
               currentAudio = null;
               speakSystem(text, onWord);
           };
 
-          // Listen for loading errors specifically
           currentAudio.addEventListener('error', triggerFallback);
           
-          // Note: Google TTS qua Audio tag không hỗ trợ 'onboundary' cho karaoke
-          currentAudio.play().catch(triggerFallback);
+          currentAudio.play()
+             .then(() => {
+                 // Nếu play thành công, chạy giả lập karaoke
+                 simulateKaraoke(text, onWord);
+             })
+             .catch(triggerFallback);
       } else {
           speakSystem(text, onWord);
       }
@@ -1189,7 +1257,8 @@
 
       if (currentMode === 'listen-write') {
         els.segment.innerHTML = '<em>(Hãy nghe và gõ lại...)</em>';
-        setTimeout(() => speak(text, () => {}), 600);
+        // Delay một chút để chắc chắn UI đã render
+        setTimeout(() => speak(text, null), 600);
         return;
       }
 
@@ -1227,6 +1296,7 @@
       els.segment.innerHTML = '';
       els.segment.appendChild(fragment);
       
+      // Logic đọc & highlight
       if (currentMode.includes('listen') && currentMode !== 'read-only') {
         setTimeout(() => speak(text, highlightKaraoke), 300);
       }
@@ -1237,6 +1307,7 @@
       const word = karaokeWords.find(w => {
           const start = parseInt(w.dataset.start);
           const end = parseInt(w.dataset.end);
+          // Với Google simuation, charIndex có thể không chính xác 100%, nhưng đủ gần
           return charIndex >= start && charIndex < end;
       });
       if (word) word.classList.add('karaoke-active');
@@ -1412,13 +1483,17 @@
         selectedVoice = voices.find(v => v.name === els.voiceSelect.value);
         if (selectedVoice) localStorage.setItem('voice', selectedVoice.name);
     });
-    els.previewVoice.addEventListener('click', () => speak(globalLang === 'vi-VN' ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.'));
+    els.previewVoice.addEventListener('click', () => {
+         const previewText = (globalLang === 'vi-VN') ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.';
+         speak(previewText, null);
+    });
     speechSynthesis.onvoiceschanged = loadVoices;
 
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
       localStorage.setItem('lang', globalLang);
       loadVoices();
+      setRandomText(); // Tự động đổi bài mẫu khi đổi ngôn ngữ cho tiện
     });
 
     els.text.addEventListener('input', () => {
@@ -1472,7 +1547,7 @@
       }
     });
     
-    // Sửa nút Replay để gọi hàm speak với callback highlightKaraoke (dù Google TTS có thể không gọi callback này)
+    // Nút Replay gọi lại hàm speak (kèm highlight karaoke giả lập hoặc thật)
     els.replay.addEventListener('click', () => speak(segments[currentIdx], highlightKaraoke));
     els.next.addEventListener('click', next);
     els.reset.addEventListener('click', () => location.reload());
