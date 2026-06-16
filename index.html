@@ -11,7 +11,6 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   
   <style>
     :root {
@@ -416,6 +415,15 @@
     
     footer .heart-icon { color: #ff5252; animation: heartbeat 1.5s infinite; display: inline-block; }
     @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body onload="initApp()">
@@ -638,7 +646,8 @@
 
     function createParticles() {
       const container = document.getElementById('particles');
-      for(let i=0; i<15; i++) {
+      if (!container || container.children.length) return;
+      for(let i=0; i<10; i++) {
           const p = document.createElement('div');
           p.className = 'particle';
           p.style.left = Math.random() * 100 + '%';
@@ -670,10 +679,11 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
+    try { getAnalytics(app); } catch (err) { console.warn('Analytics unavailable:', err); }
     const auth = getAuth(app);
     const db = getDatabase(app);
     const provider = new GoogleAuthProvider();
+    window.firebaseAuthReady = true;
 
     // --- GLOBAL VARIABLES CHO APP ---
     window.currentUser = null; 
@@ -721,10 +731,17 @@
         } else {
             const guest = localStorage.getItem('hihiGuest');
             if (guest) {
-                window.currentUser = JSON.parse(guest);
-                updateUserUI(window.currentUser);
-                loginModal.classList.remove('show');
-                loadLeaderboard();
+                try {
+                    window.currentUser = JSON.parse(guest);
+                    updateUserUI(window.currentUser);
+                    loginModal.classList.remove('show');
+                    loadLeaderboard();
+                } catch {
+                    localStorage.removeItem('hihiGuest');
+                    window.currentUser = null;
+                    updateUserUI(null);
+                    loginModal.classList.add('show');
+                }
             } else {
                 window.currentUser = null;
                 updateUserUI(null);
@@ -775,6 +792,16 @@
             nameDisplay.textContent = "Chưa đăng nhập";
             logoutWrapper.classList.add('hidden');
         }
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
     }
 
     // --- REALTIME SYNC LOGIC ---
@@ -865,9 +892,16 @@
 
             data.forEach((item, index) => {
                 const tr = document.createElement('tr');
-                const photoHtml = item.photo 
-                    ? `<img src="${item.photo}" class="lb-avatar">` 
-                    : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;background:#555;">${item.name.charAt(0)}</div>`;
+                const name = item.name || 'Người chơi';
+                const safeName = escapeHtml(name);
+                const safePhoto = typeof item.photo === 'string' && /^https?:\/\//i.test(item.photo) ? escapeHtml(item.photo) : '';
+                const firstLetter = escapeHtml(name.charAt(0).toUpperCase() || '?');
+                const photoHtml = safePhoto
+                    ? `<img src="${safePhoto}" class="lb-avatar" alt="">`
+                    : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;background:#555;">${firstLetter}</div>`;
+                const wpm = Number(item.wpm) || 0;
+                const acc = Number(item.acc) || 0;
+                const score = Number(item.score) || 0;
                 
                 let rankColor = 'white';
                 if(index === 0) rankColor = '#fbbf24'; // Vàng
@@ -879,12 +913,12 @@
                     <td>
                         <div class="lb-user">
                             ${photoHtml}
-                            <span>${item.name}</span>
+                            <span>${safeName}</span>
                         </div>
                     </td>
-                    <td>${item.wpm || 0}</td>
-                    <td>${item.acc || 0}%</td>
-                    <td class="lb-score">${item.score || 0}</td>
+                    <td>${wpm}</td>
+                    <td>${acc}%</td>
+                    <td class="lb-score">${score}</td>
                 `;
                 lbBody.appendChild(tr);
             });
@@ -960,7 +994,7 @@
     let voices = [];
     let selectedVoice = null;
     let currentAudio = null; // Biến theo dõi audio của Google TTS
-    let useGoogleVoice = true; // Default
+    let useGoogleVoice = false; // System voice phản hồi nhanh và ổn định hơn khi chạy local
     let karaokeTimer = []; // Mảng chứa các timeout cho hiệu ứng karaoke giả lập
     
     let segments = [];
@@ -1005,6 +1039,117 @@
       btnSystem: document.getElementById('btnUseSystem'),
       sysPanel: document.getElementById('systemVoicePanel'),
     };
+
+    const authEls = {
+      loginModal: document.getElementById('loginModal'),
+      googleBtn: document.getElementById('googleLoginBtn'),
+      skipBtn: document.getElementById('skipLoginBtn'),
+      guestInput: document.getElementById('usernameInput'),
+      logoutBtn: document.getElementById('logoutBtn'),
+      logoutWrapper: document.getElementById('logoutBtnWrapper'),
+      userAvatar: document.getElementById('userAvatar'),
+      nameDisplay: document.getElementById('playerNameDisplay'),
+      lbBody: document.getElementById('leaderboardBody'),
+      loadingLb: document.getElementById('loadingLeaderboard'),
+      monthDisplay: document.getElementById('currentMonthDisplay'),
+    };
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function setEmphasis(el, message) {
+      el.innerHTML = '';
+      const em = document.createElement('em');
+      em.textContent = message;
+      el.appendChild(em);
+    }
+
+    function getMonthKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    }
+
+    function updateFallbackUserUI(user) {
+      if (user) {
+        authEls.nameDisplay.textContent = user.name;
+        authEls.logoutWrapper.classList.remove('hidden');
+      } else {
+        authEls.nameDisplay.textContent = 'Khách (Chưa đăng nhập)';
+        authEls.logoutWrapper.classList.add('hidden');
+      }
+    }
+
+    function setOfflineLeaderboardMessage(message) {
+      authEls.loadingLb.style.display = 'none';
+      authEls.lbBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">${escapeHtml(message)}</td></tr>`;
+    }
+
+    function initOfflineAuthFallback() {
+      if (window.firebaseAuthReady) return;
+
+      window.saveScoreToFirebase = window.saveScoreToFirebase || function () {};
+      authEls.monthDisplay.textContent = getMonthKey();
+      setOfflineLeaderboardMessage('Bảng xếp hạng trực tuyến chưa sẵn sàng. Bạn vẫn có thể luyện tập bình thường.');
+
+      const savedGuest = localStorage.getItem('hihiGuest');
+      if (savedGuest) {
+        try {
+          window.currentUser = JSON.parse(savedGuest);
+          updateFallbackUserUI(window.currentUser);
+          authEls.loginModal.classList.remove('show');
+        } catch {
+          localStorage.removeItem('hihiGuest');
+          authEls.loginModal.classList.add('show');
+        }
+      } else {
+        window.currentUser = null;
+        updateFallbackUserUI(null);
+        authEls.loginModal.classList.add('show');
+      }
+
+      if (!authEls.skipBtn.dataset.fallbackBound) {
+        authEls.skipBtn.dataset.fallbackBound = 'true';
+        authEls.skipBtn.addEventListener('click', () => {
+          if (window.firebaseAuthReady) return;
+          const name = authEls.guestInput.value.trim() || 'Khách Ẩn Danh';
+          const guestUser = {
+            uid: 'guest_' + Date.now(),
+            name,
+            photo: null,
+            isAnonymous: true
+          };
+          localStorage.setItem('hihiGuest', JSON.stringify(guestUser));
+          window.currentUser = guestUser;
+          updateFallbackUserUI(guestUser);
+          authEls.loginModal.classList.remove('show');
+        });
+      }
+
+      if (!authEls.googleBtn.dataset.fallbackBound) {
+        authEls.googleBtn.dataset.fallbackBound = 'true';
+        authEls.googleBtn.addEventListener('click', () => {
+          if (!window.firebaseAuthReady) alert('Đăng nhập trực tuyến chưa tải xong. Bạn có thể chọn "Chơi ngay" để luyện tập trước.');
+        });
+      }
+
+      if (!authEls.logoutBtn.dataset.fallbackBound) {
+        authEls.logoutBtn.dataset.fallbackBound = 'true';
+        authEls.logoutBtn.addEventListener('click', () => {
+          if (window.firebaseAuthReady) return;
+          localStorage.removeItem('hihiGuest');
+          window.currentUser = null;
+          updateFallbackUserUI(null);
+          authEls.loginModal.classList.add('show');
+        });
+      }
+    }
 
     // === 4. LOGIC CHÍNH ===
     
@@ -1051,6 +1196,14 @@
 
     // TTS & Translate
     function loadVoices() {
+      if (!('speechSynthesis' in window)) {
+        els.voiceSelect.innerHTML = '';
+        const option = document.createElement('option');
+        option.textContent = 'Trình duyệt không hỗ trợ';
+        els.voiceSelect.appendChild(option);
+        return;
+      }
+
       // Clear old options
       els.voiceSelect.innerHTML = '';
       
@@ -1071,7 +1224,18 @@
       // Nếu vẫn không có, lấy hết (fallback cuối cùng)
       if (voices.length === 0) voices = speechSynthesis.getVoices();
 
-      els.voiceSelect.innerHTML = voices.length ? voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('') : '<option>Mặc định (System)</option>';
+      if (voices.length) {
+        voices.forEach(v => {
+          const option = document.createElement('option');
+          option.value = v.name;
+          option.textContent = `${v.name} (${v.lang})`;
+          els.voiceSelect.appendChild(option);
+        });
+      } else {
+        const option = document.createElement('option');
+        option.textContent = 'Mặc định (System)';
+        els.voiceSelect.appendChild(option);
+      }
       
       // Restore selected voice if possible
       const saved = localStorage.getItem('voice');
@@ -1097,6 +1261,11 @@
 
     // === SYSTEM TTS ===
     function speakSystem(text, onWord) {
+      if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
+          setEmphasis(els.feedback, 'Trình duyệt này chưa hỗ trợ đọc văn bản.');
+          return;
+      }
+
       if (!selectedVoice && voices.length > 0) {
           selectedVoice = voices[0];
       }
@@ -1170,24 +1339,27 @@
          currentAudio.pause();
          currentAudio = null;
       }
-      speechSynthesis.cancel();
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
       karaokeTimer.forEach(t => clearTimeout(t)); // Xóa highlight cũ
       karaokeTimer = [];
 
-      if (useGoogleVoice) {
+      if (useGoogleVoice && text.length <= 180) {
           const tl = getGoogleLangCode(globalLang);
           const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${tl}&q=${encodeURIComponent(text)}`;
 
           currentAudio = new Audio(url);
           currentAudio.playbackRate = speechRate;
+          let didFallback = false;
 
           const triggerFallback = (e) => {
+              if (didFallback) return;
+              didFallback = true;
               console.warn("Google TTS lỗi/không hỗ trợ, chuyển sang System Voice.", e);
               currentAudio = null;
               speakSystem(text, onWord);
           };
 
-          currentAudio.addEventListener('error', triggerFallback);
+          currentAudio.addEventListener('error', triggerFallback, { once: true });
           
           currentAudio.play()
              .then(() => {
@@ -1234,6 +1406,7 @@
 
     // Display
     async function showSegment() {
+      if (!segments.length || currentIdx < 0 || currentIdx >= segments.length) return;
       const text = segments[currentIdx];
       // Cho phép chuyển câu kế tiếp luôn (không disable nút Next)
       els.next.disabled = false;
@@ -1247,16 +1420,16 @@
       els.input.style.display = isReadOnly ? 'none' : 'block';
       els.hint.style.display = isReadOnly ? 'none' : 'flex';
       els.feedback.style.display = 'block';
-      els.feedback.innerHTML = '<em>Nhập hoặc đọc để bắt đầu...</em>';
+      setEmphasis(els.feedback, 'Nhập hoặc đọc để bắt đầu...');
       
       const srcLang = globalLang.split('-')[0];
       if (globalLang !== 'vi-VN') {
-          els.fullTrans.innerHTML = '<em>Đang dịch...</em>';
+          setEmphasis(els.fullTrans, 'Đang dịch...');
           translateFull(text, srcLang).then(trans => { els.fullTrans.textContent = 'Tạm dịch: ' + trans; });
       } else els.fullTrans.textContent = '';
 
       if (currentMode === 'listen-write') {
-        els.segment.innerHTML = '<em>(Hãy nghe và gõ lại...)</em>';
+        setEmphasis(els.segment, '(Hãy nghe và gõ lại...)');
         // Delay một chút để chắc chắn UI đã render
         setTimeout(() => speak(text, null), 600);
         return;
@@ -1320,6 +1493,7 @@
 
     function updateFeedback() {
       const orig = segments[currentIdx];
+      if (!orig) return;
       const input = els.input.value;
       
       // Logic cũ: so sánh từng từ để highlight
@@ -1328,19 +1502,20 @@
       let html = '', correct = 0;
       
       iWords.forEach((w, i) => {
-        if (i >= oWords.length) html += `<span class="wrong">${w}</span> `;
+        if (i >= oWords.length) html += `<span class="wrong">${escapeHtml(w)}</span> `;
         else {
             const cleanTarget = normalizeText(oWords[i]);
             const cleanInput = normalizeText(w);
             if (cleanInput === cleanTarget) {
                 correct++;
-                html += `<span class="correct">${w}</span> `;
-            } else html += `<span class="wrong">${w}</span> `;
+                html += `<span class="correct">${escapeHtml(w)}</span> `;
+            } else html += `<span class="wrong">${escapeHtml(w)}</span> `;
         }
       });
 
       correctWords = correct;
-      els.feedback.innerHTML = html || '<em>Nhập để bắt đầu...</em>';
+      if (html) els.feedback.innerHTML = html;
+      else setEmphasis(els.feedback, 'Nhập để bắt đầu...');
       
       // LOGIC MỚI: Tính điểm Realtime dựa trên số ký tự đúng
       // So sánh string input với string gốc để đếm ký tự khớp nhau
@@ -1364,6 +1539,9 @@
     }
 
     function next() {
+      if (!segments.length || currentIdx >= segments.length || els.next.disabled) return;
+      els.next.disabled = true;
+
       const inputVal = els.input.value;
       const wordsInSegment = segments[currentIdx].trim().split(/\s+/).length;
       
@@ -1450,15 +1628,15 @@
              const normTrans = normalizeText(finalTranscript);
              const normTarget = normalizeText(target);
              if (normTrans === normTarget || normTrans.includes(normTarget)) {
-                 els.feedback.innerHTML = `<span class="correct">${finalTranscript}</span> (Chính xác!)`;
+                 els.feedback.innerHTML = `<span class="correct">${escapeHtml(finalTranscript)}</span> (Chính xác!)`;
                  // Với chế độ đọc, tự động next sau 1s nếu đúng
                  setTimeout(next, 1000);
-             } else els.feedback.innerHTML = `<span class="wrong">${finalTranscript}</span> (Thử lại)`;
+             } else els.feedback.innerHTML = `<span class="wrong">${escapeHtml(finalTranscript)}</span> (Thử lại)`;
         }
       };
       
       recognition.onerror = (e) => {
-        els.feedback.innerHTML = `<em>Lỗi mic (${e.error}). Hãy nhấn lại.</em>`;
+        setEmphasis(els.feedback, `Lỗi mic (${e.error}). Hãy nhấn lại.`);
         els.micBtn.classList.remove('listening');
         isListening = false;
       };
@@ -1487,7 +1665,7 @@
          const previewText = (globalLang === 'vi-VN') ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.';
          speak(previewText, null);
     });
-    speechSynthesis.onvoiceschanged = loadVoices;
+    if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = loadVoices;
 
     els.lang.addEventListener('change', () => {
       globalLang = els.lang.value;
@@ -1518,6 +1696,13 @@
       currentIdx = 0; typedWords = 0; correctWords = 0; totalCorrectWords = 0; hintsUsed = 0; totalSentences = segments.length;
       accumulatedScore = 0; // Reset điểm
       currentSegmentCorrectChars = 0;
+      els.progressFill.style.width = '0%';
+      els.progressText.textContent = '0%';
+      els.time.textContent = '0s';
+      els.wpm.textContent = '0';
+      els.acc.textContent = '100%';
+      els.score.textContent = '0';
+      els.levelBadge.textContent = 'Cấp độ: Mới bắt đầu';
       
       currentMode = document.querySelector('input[name="mode"]:checked').value;
       speechRate = parseFloat(els.voiceRateSelect.value);
@@ -1537,40 +1722,50 @@
     els.input.addEventListener('input', updateFeedback);
     els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); next(); } });
     els.hint.addEventListener('click', () => {
+      if (!segments[currentIdx]) return;
       const origWords = segments[currentIdx].split(/\s+/).filter(w => w);
       const typedInput = els.input.value.trim();
       const typedCount = typedInput ? typedInput.split(/\s+/).length : 0;
       if (typedCount < origWords.length) {
-        els.feedback.innerHTML += ` <span style="color:#22d3ee; font-weight:700;">→ ${origWords[typedCount]}</span>`;
+        els.feedback.innerHTML += ` <span style="color:#22d3ee; font-weight:700;">→ ${escapeHtml(origWords[typedCount])}</span>`;
         hintsUsed++;
         els.input.focus();
       }
     });
     
     // Nút Replay gọi lại hàm speak (kèm highlight karaoke giả lập hoặc thật)
-    els.replay.addEventListener('click', () => speak(segments[currentIdx], highlightKaraoke));
+    els.replay.addEventListener('click', () => {
+      if (segments[currentIdx]) speak(segments[currentIdx], highlightKaraoke);
+    });
     els.next.addEventListener('click', next);
     els.reset.addEventListener('click', () => location.reload());
 
     els.modeBtns().forEach(btn => btn.addEventListener('click', () => {
         currentMode = btn.dataset.mode;
         els.modeBtns().forEach(b => b.classList.toggle('active', b.dataset.mode === currentMode));
-        showSegment();
+        if (segments.length) showSegment();
     }));
 
     els.micBtn.addEventListener('click', () => {
-      if (!recognition) initSpeechRecognition();
+      if (!recognition && !initSpeechRecognition()) {
+        setEmphasis(els.feedback, 'Trình duyệt này chưa hỗ trợ nhận diện giọng nói.');
+        return;
+      }
       if (isListening) recognition.stop();
       else { 
           try {
               recognition.start(); els.micBtn.classList.add('listening'); isListening = true; 
-              els.feedback.innerHTML = '<em>Đang nghe... Hãy đọc to!</em>'; 
+              setEmphasis(els.feedback, 'Đang nghe... Hãy đọc to!'); 
           } catch(e) { initSpeechRecognition(); }
       }
     });
 
     initTheme(); 
     els.lang.value = globalLang;
+    authEls.monthDisplay.textContent = getMonthKey();
+    updateSourceUI();
+    if (!els.text.value.trim()) setRandomText();
+    setTimeout(initOfflineAuthFallback, 2500);
     window.addEventListener('load', loadVoices);
   </script>
   <a href="https://ngxuanhai123.github.io/" class="floating-home-btn">
