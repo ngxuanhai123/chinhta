@@ -1938,6 +1938,7 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getDatabase, ref, set, get, onValue, query, orderByChild, limitToLast, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getFirestore, collection, query as fsQuery, orderBy as fsOrderBy, limit as fsLimit, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     // --- CONFIG FIREBASE ---
     const firebaseConfig = {
@@ -1955,6 +1956,7 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     try { getAnalytics(app); } catch (err) { console.warn('Analytics unavailable:', err); }
     const auth = getAuth(app);
     const db = getDatabase(app);
+    const firestoreDb = getFirestore(app);
     const provider = new GoogleAuthProvider();
     window.firebaseAuthReady = true;
 
@@ -2113,20 +2115,43 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
         
         const user = window.currentUser;
         const monthKey = getMonthKey();
-        const userScoreRef = ref(db, `leaderboard/${monthKey}/${user.uid}`);
-        if (window.hihiUpdateScore) window.hihiUpdateScore('chinhta', totalScore);
+        const earnedScore = (gameData && typeof gameData.score === 'number') ? Math.round(gameData.score) : 0;
+        if (earnedScore <= 0) return;
 
-        // Dùng Transaction để cộng dồn điểm an toàn
+        // 1. Cập nhật qua hệ thống điểm chung HiHi (nếu có)
+        if (typeof window.hihiUpdateScore === 'function') {
+            window.hihiUpdateScore('chinhta', earnedScore, {
+                wpm: gameData.wpm,
+                acc: gameData.acc
+            });
+        }
+
+        // 2. Cập nhật trực tiếp wpm và acc vào Firestore hihi_leaderboard để bảng xếp hạng chinhta có ngay
+        try {
+            if (firestoreDb && user.uid) {
+                const fsRef = doc(firestoreDb, "hihi_leaderboard", user.uid);
+                setDoc(fsRef, {
+                    wpm: gameData.wpm || 0,
+                    acc: gameData.acc || 0,
+                    lastPlayed: Date.now()
+                }, { merge: true }).catch(err => console.warn("Firestore chinhta stats update error:", err));
+            }
+        } catch (e) {
+            console.warn("Firestore direct setDoc error:", e);
+        }
+
+        // 3. Dùng RTDB Transaction để cộng dồn điểm an toàn
+        const userScoreRef = ref(db, `leaderboard/${monthKey}/${user.uid}`);
         runTransaction(userScoreRef, (currentData) => {
             if (currentData === null) {
                 // Chưa có dữ liệu tháng này -> Tạo mới
                 return {
                     name: user.name,
                     photo: user.photo,
-                    score: gameData.score,        // Điểm lần này
-                    sentences: gameData.sentences, // Số câu lần này
-                    wpm: gameData.wpm,            // WPM lần này
-                    acc: gameData.acc,            // Acc lần này
+                    score: earnedScore,            // Điểm lần này
+                    sentences: gameData.sentences || 0, // Số câu lần này
+                    wpm: gameData.wpm || 0,        // WPM lần này
+                    acc: gameData.acc || 0,        // Acc lần này
                     lastPlayed: Date.now()
                 };
             } else {
@@ -2134,19 +2159,22 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
                 return {
                     name: user.name,
                     photo: user.photo,
-                    score: (currentData.score || 0) + gameData.score,         // Cộng dồn điểm
-                    sentences: (currentData.sentences || 0) + gameData.sentences, // Cộng dồn số câu
-                    wpm: Math.max(currentData.wpm || 0, gameData.wpm),        // Lấy Max WPM
-                    acc: Math.max(currentData.acc || 0, gameData.acc),        // Lấy Max Acc
+                    score: (currentData.score || 0) + earnedScore,         // Cộng dồn điểm
+                    sentences: (currentData.sentences || 0) + (gameData.sentences || 0), // Cộng dồn số câu
+                    wpm: Math.max(currentData.wpm || 0, gameData.wpm || 0),        // Lấy Max WPM
+                    acc: Math.max(currentData.acc || 0, gameData.acc || 0),        // Lấy Max Acc
                     lastPlayed: Date.now()
                 };
             }
         }).then(() => {
-            console.log("Transaction commited!");
+            console.log("RTDB Transaction committed!");
+            setTimeout(() => {
+                loadLeaderboard();
+            }, 800);
         }).catch((err) => {
             console.error("Transaction failed: ", err);
         });
-    }
+    };
 
     // --- CHINHTA MULTI-PERIOD LEADERBOARD LOGIC (Tuần / Tháng / Tất cả) ---
     let chinhtaCurrentPeriod = 'week'; // 'all' | 'week' | 'month'
@@ -2185,6 +2213,8 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
             sel.appendChild(opt);
         }
     }
+    window.chinhtaPopulateMonthOptions = chinhtaPopulateMonthOptions;
+    chinhtaPopulateMonthOptions();
 
     window.chinhtaSetPeriod = function(period) {
         chinhtaCurrentPeriod = period;
@@ -2194,6 +2224,10 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
 
         const mWrap = document.getElementById("chinhtaMonthSelectWrapper");
         if (mWrap) mWrap.style.display = (period === 'month') ? 'inline-flex' : 'none';
+
+        if (period === 'month') {
+            chinhtaPopulateMonthOptions();
+        }
 
         loadLeaderboard();
     };
@@ -2268,117 +2302,158 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
         }
         if (titleEl) titleEl.textContent = `Bảng Xếp Hạng Chính Tả — ${periodName}`;
 
-        // 1. Lấy dữ liệu từ cache Firestore của hệ thống HiHi
-        let firestoreUsers = [];
-        if (window.hihiCachedLeaderboardUsers && window.hihiCachedLeaderboardUsers.length > 0) {
-            firestoreUsers = window.hihiCachedLeaderboardUsers;
-        } else if (typeof window.hihiLoadLeaderboardData === "function") {
-            try {
-                firestoreUsers = await window.hihiLoadLeaderboardData(false) || [];
-            } catch(e) {}
-        }
+        try {
+            // 1. Lấy dữ liệu Firestore từ cache hoặc gọi hàm HiHi suite
+            let firestoreUsers = [];
+            if (window.hihiCachedLeaderboardUsers && window.hihiCachedLeaderboardUsers.length > 0) {
+                firestoreUsers = window.hihiCachedLeaderboardUsers;
+            } else if (typeof window.hihiLoadLeaderboardData === "function") {
+                try {
+                    firestoreUsers = await window.hihiLoadLeaderboardData(false) || [];
+                } catch(e) {
+                    console.warn("hihiLoadLeaderboardData call error:", e);
+                }
+            }
 
-        // 2. Lấy dữ liệu Realtime Database bổ sung (cho tháng hiện tại nếu có)
-        let rtdbData = {};
-        if (chinhtaCurrentPeriod === 'month' && chinhtaCurrentMonth === currMonth) {
+            // Nếu Firestore cache chưa có và firestoreDb sẵn sàng, query trực tiếp
+            if ((!firestoreUsers || firestoreUsers.length === 0) && typeof firestoreDb !== 'undefined') {
+                try {
+                    const fsQ = fsQuery(collection(firestoreDb, "hihi_leaderboard"), fsOrderBy("total_score", "desc"), fsLimit(100));
+                    const snap = await getDocs(fsQ);
+                    firestoreUsers = [];
+                    snap.forEach(d => firestoreUsers.push(d.data()));
+                    window.hihiCachedLeaderboardUsers = firestoreUsers;
+                } catch(e) {
+                    console.warn("Direct firestore query fallback error:", e);
+                }
+            }
+
+            // 2. Lấy dữ liệu Realtime Database bổ sung (theo tháng đang chọn hoặc tháng hiện tại)
+            let rtdbData = {};
+            const targetRtdbMonth = (chinhtaCurrentPeriod === 'month') ? chinhtaCurrentMonth : currMonth;
             try {
-                const snap = await get(query(ref(db, `leaderboard/${currMonth}`), orderByChild('score'), limitToLast(30)));
+                const snap = await get(query(ref(db, `leaderboard/${targetRtdbMonth}`), orderByChild('score'), limitToLast(50)));
                 if (snap.exists()) {
                     snap.forEach(child => {
                         rtdbData[child.key] = child.val();
                     });
                 }
-            } catch(e) {}
-        }
+            } catch(e) {
+                console.warn("RTDB load error:", e);
+            }
 
-        // 3. Xây dựng danh sách xếp hạng tổng hợp
-        const rankedMap = new Map();
+            // 3. Xây dựng danh sách xếp hạng tổng hợp
+            const rankedMap = new Map();
 
-        for (const u of firestoreUsers) {
-            let pts = 0;
-            if (chinhtaCurrentPeriod === 'all') {
-                pts = u.chinhta_score || u.total_score || 0;
-            } else if (chinhtaCurrentPeriod === 'week') {
-                if (u.weekKey === currWeek) pts = u.week_chinhta || u.week_score || 0;
-            } else if (chinhtaCurrentPeriod === 'month') {
-                if (u.monthly && u.monthly[chinhtaCurrentMonth]) {
-                    pts = u.monthly[chinhtaCurrentMonth].chinhta || u.monthly[chinhtaCurrentMonth].score || 0;
-                } else if (u.monthKey === chinhtaCurrentMonth) {
-                    pts = u.month_chinhta || u.month_score || 0;
+            // Duyệt danh sách người dùng từ Firestore
+            for (const u of (firestoreUsers || [])) {
+                let pts = 0;
+                if (chinhtaCurrentPeriod === 'all') {
+                    pts = u.chinhta_score || (u.total_score && !u.tuvung_score && !u.dich_score ? u.total_score : 0);
+                } else if (chinhtaCurrentPeriod === 'week') {
+                    if (u.weekKey === currWeek) {
+                        pts = u.week_chinhta || (u.week_score && !u.week_tuvung && !u.week_dich ? u.week_score : 0);
+                    }
+                } else if (chinhtaCurrentPeriod === 'month') {
+                    if (u.monthly && u.monthly[chinhtaCurrentMonth]) {
+                        pts = u.monthly[chinhtaCurrentMonth].chinhta || 
+                              (u.monthly[chinhtaCurrentMonth].score && !u.monthly[chinhtaCurrentMonth].tuvung && !u.monthly[chinhtaCurrentMonth].dich ? u.monthly[chinhtaCurrentMonth].score : 0);
+                    } else if (u.monthKey === chinhtaCurrentMonth) {
+                        pts = u.month_chinhta || (u.month_score && !u.month_tuvung && !u.month_dich ? u.month_score : 0);
+                    }
+                }
+
+                const uid = u.uid || u.id || u.email;
+                if (uid && (pts > 0 || (chinhtaCurrentPeriod === 'all' && (u.chinhta_score > 0 || (u.wpm && u.wpm > 0))))) {
+                    rankedMap.set(uid, {
+                        uid: uid,
+                        name: u.displayName || "Học viên",
+                        photo: u.photoURL || "",
+                        score: pts,
+                        wpm: u.wpm || 0,
+                        acc: u.acc || 0
+                    });
                 }
             }
 
-            if (pts > 0 || chinhtaCurrentPeriod === 'all') {
-                rankedMap.set(u.uid, {
-                    name: u.displayName || "Học viên",
-                    photo: u.photoURL || "",
-                    score: pts,
-                    wpm: u.wpm || 0,
-                    acc: u.acc || 0
-                });
-            }
-        }
+            // Hợp nhất dữ liệu RTDB
+            for (const [uid, rItem] of Object.entries(rtdbData)) {
+                const rScore = typeof rItem.score === 'number' ? rItem.score : 0;
+                const rWpm = typeof rItem.wpm === 'number' ? rItem.wpm : 0;
+                const rAcc = typeof rItem.acc === 'number' ? rItem.acc : 0;
 
-        // Hợp nhất dữ liệu RTDB
-        for (const [uid, rItem] of Object.entries(rtdbData)) {
-            if (rankedMap.has(uid)) {
-                const existing = rankedMap.get(uid);
-                if (rItem.wpm) existing.wpm = Math.max(existing.wpm, rItem.wpm);
-                if (rItem.acc) existing.acc = Math.max(existing.acc, rItem.acc);
-                if (rItem.score && (!existing.score || existing.score < rItem.score)) {
-                    existing.score = rItem.score;
+                if (rankedMap.has(uid)) {
+                    const existing = rankedMap.get(uid);
+                    if (rWpm) existing.wpm = Math.max(existing.wpm || 0, rWpm);
+                    if (rAcc) existing.acc = Math.max(existing.acc || 0, rAcc);
+                    if (chinhtaCurrentPeriod === 'month' && rScore > (existing.score || 0)) {
+                        existing.score = rScore;
+                    } else if (chinhtaCurrentPeriod === 'all' && rScore > (existing.score || 0)) {
+                        existing.score = Math.max(existing.score || 0, rScore);
+                    }
+                } else {
+                    let pts = 0;
+                    if (chinhtaCurrentPeriod === 'month' && chinhtaCurrentMonth === targetRtdbMonth) {
+                        pts = rScore;
+                    } else if (chinhtaCurrentPeriod === 'all') {
+                        pts = rScore;
+                    }
+                    if (pts > 0) {
+                        rankedMap.set(uid, {
+                            uid: uid,
+                            name: rItem.name || "Người chơi",
+                            photo: rItem.photo || "",
+                            score: pts,
+                            wpm: rWpm,
+                            acc: rAcc
+                        });
+                    }
                 }
-            } else if (chinhtaCurrentPeriod === 'month' && chinhtaCurrentMonth === currMonth) {
-                rankedMap.set(uid, {
-                    name: rItem.name || "Người chơi",
-                    photo: rItem.photo || "",
-                    score: rItem.score || 0,
-                    wpm: rItem.wpm || 0,
-                    acc: rItem.acc || 0
-                });
             }
+
+            const list = Array.from(rankedMap.values()).filter(item => item.score > 0);
+            list.sort((a, b) => b.score - a.score);
+
+            if (list.length === 0) {
+                body.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:28px 16px;color:var(--text-dim);"><i class="fas fa-info-circle" style="margin-right:6px;"></i> Chưa có dữ liệu thành tích cho ${periodName}. Hãy là người đầu tiên luyện tập!</td></tr>`;
+            } else {
+                body.innerHTML = list.map((item, index) => {
+                    const safeName = escapeHtml(item.name || 'Học viên');
+                    const safePhoto = typeof item.photo === 'string' && /^https?:\/\//i.test(item.photo) ? escapeHtml(item.photo) : '';
+                    const firstLetter = escapeHtml((item.name || '?').charAt(0).toUpperCase());
+                    const photoHtml = safePhoto
+                        ? `<img src="${safePhoto}" class="lb-avatar" alt="">`
+                        : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;background:#555;">${firstLetter}</div>`;
+                    
+                    let rankColor = '#fff';
+                    let rankIcon = `${index + 1}`;
+                    if (index === 0) { rankColor = '#fbbf24'; rankIcon = '🥇 1'; }
+                    else if (index === 1) { rankColor = '#94a3b8'; rankIcon = '🥈 2'; }
+                    else if (index === 2) { rankColor = '#b45309'; rankIcon = '🥉 3'; }
+
+                    return `
+                        <tr>
+                            <td class="rank-num" style="color:${rankColor};font-weight:700;">${rankIcon}</td>
+                            <td>
+                                <div class="lb-user">
+                                    ${photoHtml}
+                                    <span style="font-weight:600;">${safeName}</span>
+                                </div>
+                            </td>
+                            <td style="color:#38bdf8;font-weight:600;">${item.wpm || 0} WPM</td>
+                            <td>${item.acc || 100}%</td>
+                            <td class="lb-score" style="text-align:right;font-weight:700;color:#fbbf24;">${(item.score || 0).toLocaleString()}đ</td>
+                        </tr>
+                    `;
+                }).join("");
+            }
+        } catch (err) {
+            console.error("Lỗi tải bảng xếp hạng:", err);
+            body.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:#ef4444;"><i class="fas fa-exclamation-triangle" style="margin-right:6px;"></i> Lỗi tải dữ liệu bảng xếp hạng: ${escapeHtml(err.message || 'Vui lòng thử lại sau')}</td></tr>`;
+        } finally {
+            if (loading) loading.style.display = "none";
+            if (table) table.style.display = "table";
         }
-
-        const list = Array.from(rankedMap.values()).filter(item => item.score > 0 || chinhtaCurrentPeriod === 'all');
-        list.sort((a, b) => b.score - a.score);
-
-        if (loading) loading.style.display = "none";
-        if (table) table.style.display = "table";
-
-        if (list.length === 0) {
-            body.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-dim);">Chưa có dữ liệu thành tích cho ${periodName}. Hãy là người đầu tiên luyện tập!</td></tr>`;
-            return;
-        }
-
-        body.innerHTML = list.map((item, index) => {
-            const safeName = escapeHtml(item.name || 'Học viên');
-            const safePhoto = typeof item.photo === 'string' && /^https?:\/\//i.test(item.photo) ? escapeHtml(item.photo) : '';
-            const firstLetter = escapeHtml((item.name || '?').charAt(0).toUpperCase());
-            const photoHtml = safePhoto
-                ? `<img src="${safePhoto}" class="lb-avatar" alt="">`
-                : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;background:#555;">${firstLetter}</div>`;
-            
-            let rankColor = '#fff';
-            let rankIcon = `${index + 1}`;
-            if (index === 0) { rankColor = '#fbbf24'; rankIcon = '🥇 1'; }
-            else if (index === 1) { rankColor = '#94a3b8'; rankIcon = '🥈 2'; }
-            else if (index === 2) { rankColor = '#b45309'; rankIcon = '🥉 3'; }
-
-            return `
-                <tr>
-                    <td class="rank-num" style="color:${rankColor};font-weight:700;">${rankIcon}</td>
-                    <td>
-                        <div class="lb-user">
-                            ${photoHtml}
-                            <span style="font-weight:600;">${safeName}</span>
-                        </div>
-                    </td>
-                    <td style="color:#38bdf8;">${item.wpm || 0} WPM</td>
-                    <td>${item.acc || 100}%</td>
-                    <td class="lb-score" style="text-align:right;font-weight:700;color:#fbbf24;">${(item.score || 0).toLocaleString()}đ</td>
-                </tr>
-            `;
-        }).join("");
     }
     
   </script>
@@ -3540,19 +3615,24 @@ const HIHI_LB_CACHE_MAX_AGE = 5 * 60 * 1000; // 5 phút
 
 let hihiScoreDebounceTimer = null;
 let hihiPendingScores = { tuvung: 0, chinhta: 0, dich: 0 };
+let hihiPendingStats = { wpm: 0, acc: 0 };
 
-window.hihiUpdateScore = function(appKey, pointsToAdd) {
+window.hihiUpdateScore = function(appKey, pointsToAdd, extra = {}) {
   const user = auth.currentUser;
   if (!user || !pointsToAdd || pointsToAdd <= 0) return;
 
   if (appKey === 'tuvung' || appKey === 'chinhta' || appKey === 'dich') {
     hihiPendingScores[appKey] += pointsToAdd;
   }
+  if (extra && typeof extra.wpm === 'number') hihiPendingStats.wpm = Math.max(hihiPendingStats.wpm, extra.wpm);
+  if (extra && typeof extra.acc === 'number') hihiPendingStats.acc = Math.max(hihiPendingStats.acc, extra.acc);
 
   // Cập nhật UI lạc quan (Optimistic UI) ngay lập tức
   if (window.hihiCurrentUserData) {
     window.hihiCurrentUserData[appKey + '_score'] = (window.hihiCurrentUserData[appKey + '_score'] || 0) + pointsToAdd;
     window.hihiCurrentUserData.total_score = (window.hihiCurrentUserData.total_score || 0) + pointsToAdd;
+    if (extra && extra.wpm) window.hihiCurrentUserData.wpm = Math.max(window.hihiCurrentUserData.wpm || 0, extra.wpm);
+    if (extra && extra.acc) window.hihiCurrentUserData.acc = Math.max(window.hihiCurrentUserData.acc || 0, extra.acc);
     hihiUpdateScoreUI(window.hihiCurrentUserData);
   }
 
@@ -3597,6 +3677,11 @@ window.hihiUpdateScore = function(appKey, pointsToAdd) {
       data.chinhta_score = (data.chinhta_score || 0) + addC;
       data.dich_score = (data.dich_score || 0) + addD;
       data.total_score = (data.total_score || 0) + totalAdd;
+
+      // Cập nhật WPM & Acc nếu có
+      if (hihiPendingStats.wpm > 0) data.wpm = Math.max(data.wpm || 0, hihiPendingStats.wpm);
+      if (hihiPendingStats.acc > 0) data.acc = Math.max(data.acc || 0, hihiPendingStats.acc);
+      hihiPendingStats = { wpm: 0, acc: 0 };
 
       // 2. Cập nhật Tuần
       if (data.weekKey !== wk) {
@@ -3647,6 +3732,7 @@ window.hihiUpdateScore = function(appKey, pointsToAdd) {
 
       // Invalidate cache
       hihiCachedLeaderboardUsers = null;
+      window.hihiCachedLeaderboardUsers = null;
       hihiLbCacheTimestamp = 0;
     } catch(e) {
       console.warn("Lưu điểm Firebase:", e);
@@ -3724,8 +3810,9 @@ async function hihiLoadLeaderboardData(forceRefresh = false) {
   const now = Date.now();
 
   if (!forceRefresh && hihiCachedLeaderboardUsers && (now - hihiLbCacheTimestamp < HIHI_LB_CACHE_MAX_AGE)) {
+    window.hihiCachedLeaderboardUsers = hihiCachedLeaderboardUsers;
     hihiRenderFilteredLeaderboard();
-    return;
+    return hihiCachedLeaderboardUsers;
   }
 
   if (loadEl) loadEl.style.display = "block";
@@ -3738,11 +3825,14 @@ async function hihiLoadLeaderboardData(forceRefresh = false) {
     snap.forEach(docSnap => users.push(docSnap.data()));
 
     hihiCachedLeaderboardUsers = users;
+    window.hihiCachedLeaderboardUsers = users;
     hihiLbCacheTimestamp = now;
     hihiRenderFilteredLeaderboard();
+    return users;
   } catch(e) {
     console.warn("Lỗi tải BXH:", e);
     if (loadEl) loadEl.innerHTML = `<span style="color:#ef4444;">Lỗi tải dữ liệu: ${e.message}</span>`;
+    return [];
   }
 }
 
@@ -3839,6 +3929,12 @@ function hihiRenderFilteredLeaderboard() {
     `;
   }).join("");
 }
+
+// Expose HiHi Leaderboard Controller to window
+window.hihiLoadLeaderboardData = hihiLoadLeaderboardData;
+window.hihiRenderFilteredLeaderboard = hihiRenderFilteredLeaderboard;
+window.hihiPopulateMonthOptions = hihiPopulateMonthOptions;
+window.hihiCachedLeaderboardUsers = hihiCachedLeaderboardUsers;
 
 // --- 3. MEMRISE ADMIN STUDIO (MULTI-LANGUAGE SUPPORT) ---
 const HIHI_LANGUAGES = {
