@@ -2060,6 +2060,10 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     });
 
     logoutBtn.addEventListener('click', () => {
+        if (unsubscribeMyStats) {
+            try { unsubscribeMyStats(); } catch(e) {}
+            unsubscribeMyStats = null;
+        }
         if (window.hihiAuth && window.hihiAuth.logout) {
             window.hihiAuth.logout();
         } else if (auth.currentUser) {
@@ -2094,11 +2098,17 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     // --- REALTIME SYNC LOGIC ---
 
     // 1. Lắng nghe thay đổi của chính mình (để cập nhật UI real-time)
+    let unsubscribeMyStats = null;
     function initRealtimeSync(uid) {
+        if (unsubscribeMyStats) {
+            try { unsubscribeMyStats(); } catch(e) {}
+            unsubscribeMyStats = null;
+        }
+        if (!uid) return;
         const monthKey = getMonthKey();
         const myStatsRef = ref(db, `leaderboard/${monthKey}/${uid}`);
         
-        onValue(myStatsRef, (snapshot) => {
+        unsubscribeMyStats = onValue(myStatsRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 // Cập nhật giao diện ngay lập tức
@@ -2117,9 +2127,20 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
 
     // 2. Hàm lưu điểm (CỘNG DỒN ĐIỂM + RESET THÁNG)
     window.saveScoreToFirebase = function(gameData) {
-        if (!window.currentUser || window.currentUser.isAnonymous) return;
-        
-        const user = window.currentUser;
+        let user = window.currentUser;
+        if (!user || user.isAnonymous) {
+            const authUser = (auth && auth.currentUser) || (window.hihiAuth && window.hihiAuth.auth && window.hihiAuth.auth.currentUser);
+            if (authUser && !authUser.isAnonymous) {
+                user = {
+                    uid: authUser.uid,
+                    name: authUser.displayName || "Học viên",
+                    photo: authUser.photoURL || null
+                };
+                window.currentUser = user;
+            } else {
+                return;
+            }
+        }
         const monthKey = getMonthKey();
         const earnedScore = (gameData && typeof gameData.score === 'number') ? Math.round(gameData.score) : 0;
         if (earnedScore <= 0) return;
