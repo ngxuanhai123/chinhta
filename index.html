@@ -3,6 +3,8 @@
 <head>
     <!-- Real-time Error Monitoring & Sentry -->
     <script src="hihi-monitor.js"></script>
+    <script src="hihi-leaderboard.js" defer></script>
+
 
     <!-- HIHI STUDY PERFORMANCE PRECONNECT -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2384,7 +2386,7 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
             for (const u of (firestoreUsers || [])) {
                 let pts = 0;
                 if (chinhtaCurrentPeriod === 'all') {
-                    pts = u.chinhta_score || (u.total_score && !u.tuvung_score && !u.dich_score ? u.total_score : 0);
+                    pts = (chinhtaCurrentScope === 'all') ? (u.total_score || ((u.tuvung_score || 0) + (u.chinhta_score || 0) + (u.dich_score || 0))) : (u.chinhta_score || 0);
                 } else if (chinhtaCurrentPeriod === 'week') {
                     if (u.weekKey === currWeek) {
                         pts = u.week_chinhta || (u.week_score && !u.week_tuvung && !u.week_dich ? u.week_score : 0);
