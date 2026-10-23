@@ -1,4 +1,4 @@
-﻿/**
+/**
  * TEST SUITE: HiHi Chinhta (chinhta)
  * Kiểm thử độ ổn định, bộ nhớ & bảo mật
  */
@@ -69,6 +69,17 @@ async function runTests() {
     recordResult('5. Cơ chế lưu điểm dự phòng khi dùng tài khoản SSO', hasAuthFallback, `Auth fallback ready: ${hasAuthFallback}`);
   } catch (e) {
     recordResult('5. Cơ chế lưu điểm dự phòng', false, e.message);
+  }
+
+  // TEST 6: Đồng bộ Bảng Xếp Hạng toàn hệ thống (Toàn Hệ Thống / Riêng Chính Tả) & SSO
+  try {
+    const hasScopeToggle = html.includes('chinhtaSetScope');
+    const hasHihiLb = html.includes('hihi_leaderboard') && html.includes('hihiLeaderboardModal');
+    const hasSSO = html.includes('tuvung-88e8d') && html.includes('window.hihiAuth');
+    const passed = hasScopeToggle && hasHihiLb && hasSSO;
+    recordResult('6. Đồng bộ Bảng Xếp Hạng toàn hệ sinh thái & Single Sign-On (SSO)', passed, passed ? 'Đã liên kết hihi_leaderboard & SSO tuvung-88e8d' : 'Chưa đồng bộ BXH chung');
+  } catch (e) {
+    recordResult('6. Đồng bộ Bảng Xếp Hạng toàn hệ sinh thái & Single Sign-On (SSO)', false, e.message);
   }
 
   const passedCount = results.filter(r => r.passed).length;

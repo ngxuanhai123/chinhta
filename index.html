@@ -1792,6 +1792,11 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
           </h2>
 
           <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+            <!-- BỘ LỌC PHẠM VI (TOÀN HỆ THỐNG / CHÍNH TẢ) -->
+            <div class="hihi-lb-pill-group" style="margin:0;background:rgba(15,23,42,0.6);padding:3px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);">
+              <button class="hihi-lb-period-btn active" id="chinhtaScopeAllBtn" onclick="chinhtaSetScope('all')">🌐 Toàn Hệ Thống</button>
+              <button class="hihi-lb-period-btn" id="chinhtaScopeChinhtaBtn" onclick="chinhtaSetScope('chinhta')">⌨️ Riêng Chính Tả</button>
+            </div>
             <!-- BỘ LỌC KỲ THỜI GIAN -->
             <div class="hihi-lb-pill-group" style="margin:0;background:rgba(15,23,42,0.6);padding:3px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);">
               <button class="hihi-lb-period-btn" id="chinhtaPeriodAllBtn" onclick="chinhtaSetPeriod('all')">🏆 Tất cả</button>
