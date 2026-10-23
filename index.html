@@ -1703,6 +1703,7 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     <div class="user-info-bar">
       <img id="userAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" class="user-avatar" alt="User">
       <span class="name-display" id="playerNameDisplay">Khách (Chưa đăng nhập)</span>
+      <span id="currentMonthDisplay" style="display:none;"></span>
     </div>
 
     <div id="setupPanel" class="tab-content glass-card animate__animated animate__fadeIn">
@@ -1985,7 +1986,7 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     }
     
-    document.getElementById('currentMonthDisplay').textContent = getMonthKey();
+    const mDisplay = document.getElementById('currentMonthDisplay'); if (mDisplay) mDisplay.textContent = getMonthKey();
 
     // UI Elements for Auth
     const loginModal = document.getElementById('loginModal');
@@ -2009,15 +2010,17 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     // --- AUTH LOGIC ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            const displayName = user.displayName || (user.email ? user.email.split('@')[0] : 'Học viên');
             window.currentUser = {
                 uid: user.uid,
-                name: user.displayName,
+                name: displayName,
                 photo: user.photoURL,
                 isAnonymous: false
             };
             updateUserUI(window.currentUser);
-            loginModal.classList.remove('show');
-            initRealtimeSync(window.currentUser.uid); // Bắt đầu lắng nghe dữ liệu cá nhân
+            const lModal = document.getElementById('loginModal');
+            if (lModal) lModal.classList.remove('show');
+            initRealtimeSync(window.currentUser.uid);
             loadLeaderboard();
         } else {
             const guest = localStorage.getItem('hihiGuest');
@@ -2025,19 +2028,39 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
                 try {
                     window.currentUser = JSON.parse(guest);
                     updateUserUI(window.currentUser);
-                    loginModal.classList.remove('show');
+                    const lModal = document.getElementById('loginModal');
+                    if (lModal) lModal.classList.remove('show');
                     loadLeaderboard();
                 } catch {
                     localStorage.removeItem('hihiGuest');
                     window.currentUser = null;
                     updateUserUI(null);
-                    loginModal.classList.add('show');
                 }
             } else {
                 window.currentUser = null;
                 updateUserUI(null);
-                loginModal.classList.add('show');
             }
+        }
+    });
+
+    window.addEventListener('hihi-auth-changed', (e) => {
+        const user = e.detail && e.detail.user;
+        if (user) {
+            const displayName = user.displayName || (user.email ? user.email.split('@')[0] : 'Học viên');
+            window.currentUser = {
+                uid: user.uid,
+                name: displayName,
+                photo: user.photoURL,
+                isAnonymous: false
+            };
+            updateUserUI(window.currentUser);
+            const lModal = document.getElementById('loginModal');
+            if (lModal) lModal.classList.remove('show');
+            initRealtimeSync(user.uid);
+            loadLeaderboard();
+        } else {
+            window.currentUser = null;
+            updateUserUI(null);
         }
     });
 
@@ -2085,14 +2108,20 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     });
 
     function updateUserUI(user) {
+        const nDisplay = document.getElementById('playerNameDisplay') || nameDisplay;
+        const uAvatar = document.getElementById('userAvatar') || userAvatar;
+        const lWrapper = document.getElementById('logoutBtnWrapper') || logoutWrapper;
         if (user) {
-            nameDisplay.textContent = user.name;
-            if (user.photo) userAvatar.src = user.photo;
-            logoutWrapper.classList.remove('hidden');
+            const displayName = user.name || user.displayName || (user.email ? user.email.split('@')[0] : 'Học viên');
+            if (nDisplay) nDisplay.textContent = displayName;
+            if (uAvatar && (user.photo || user.photoURL)) uAvatar.src = user.photo || user.photoURL;
+            if (lWrapper) lWrapper.classList.remove('hidden');
         } else {
-            nameDisplay.textContent = "Chưa đăng nhập";
-            logoutWrapper.classList.add('hidden');
+            if (nDisplay) nDisplay.textContent = "Khách (Chưa đăng nhập)";
+            if (lWrapper) lWrapper.classList.add('hidden');
         }
+    }
+    window.updateChinhtaUserUI = updateUserUI;
     }
 
     function escapeHtml(value) {
@@ -2664,7 +2693,7 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
       if (window.firebaseAuthReady) return;
 
       window.saveScoreToFirebase = window.saveScoreToFirebase || function () {};
-      authEls.monthDisplay.textContent = getMonthKey();
+      if (authEls.monthDisplay) authEls.monthDisplay.textContent = getMonthKey();
       setOfflineLeaderboardMessage('Bảng xếp hạng trực tuyến chưa sẵn sàng. Bạn vẫn có thể luyện tập bình thường.');
 
       const savedGuest = localStorage.getItem('hihiGuest');
@@ -3565,6 +3594,23 @@ onAuthStateChanged(auth, async (user) => {
     if (dropEmail) dropEmail.textContent = user.email;
     if (adminBadge) adminBadge.style.display = isAdmin ? "inline-block" : "none";
     if (adminStudioBtn) adminStudioBtn.style.display = isAdmin ? "flex" : "none";
+
+    // Đồng bộ ngay lập tức cho thanh người chơi phía dưới (user-info-bar)
+    const localName = document.getElementById("playerNameDisplay");
+    const localAvatar = document.getElementById("userAvatar");
+    const localLogoutWrapper = document.getElementById("logoutBtnWrapper");
+    const displayName = user.displayName || (user.email ? user.email.split("@")[0] : "Học viên");
+    if (localName) localName.textContent = displayName;
+    if (localAvatar && user.photoURL) localAvatar.src = user.photoURL;
+    if (localLogoutWrapper) localLogoutWrapper.classList.remove('hidden');
+    window.currentUser = {
+      uid: user.uid,
+      name: displayName,
+      photo: user.photoURL,
+      isAnonymous: false
+    };
+    const localLoginModal = document.getElementById('loginModal');
+    if (localLoginModal) localLoginModal.classList.remove('show');
 
     window.dispatchEvent(new CustomEvent('hihi-auth-changed', {
       detail: { user, isAdmin }
