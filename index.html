@@ -1725,8 +1725,8 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     </div>
 
     <div class="user-info-bar">
-      <img id="userAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" class="user-avatar" alt="User">
-      <span class="name-display" id="playerNameDisplay">Khách (Chưa đăng nhập)</span>
+      <img id="userAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" class="user-avatar" alt="User" onclick="if(!window.currentUser || window.currentUser.isAnonymous) hihiAuthLogin()" style="cursor:pointer;" title="Nhấp để đăng nhập Google">
+      <span class="name-display" id="playerNameDisplay" onclick="if(!window.currentUser || window.currentUser.isAnonymous) hihiAuthLogin()" style="cursor:pointer;" title="Nhấp để đăng nhập Google">Khách (Chưa đăng nhập)</span>
       <span id="currentMonthDisplay" style="display:none;"></span>
     </div>
 
@@ -1874,28 +1874,7 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
         </div>
     </div>
 
-    <div class="modal" id="loginModal">
-      <div class="modal-content animate__animated animate__zoomIn">
-        <h3>Xin chào! 👋</h3>
-        <p style="margin-bottom:24px; color:var(--text-dim);">Đăng nhập để lưu thành tích và đua top server.</p>
-        
-        <button id="googleLoginBtn" class="btn-google">
-           <i class="fab fa-google" style="color:#4285F4"></i>
-           Đăng nhập với Google
-        </button>
-
-        <div style="position:relative; margin: 20px 0;">
-            <hr style="border:0; border-top:1px solid var(--glass-border);">
-            <span style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.5); padding:0 10px; font-size:0.8rem; color:var(--text-dim); border-radius:10px;">Hoặc</span>
-        </div>
-
-        <input type="text" id="usernameInput" placeholder="Nhập tên khách..." maxlength="20" style="margin-bottom:20px; text-align:center;" />
-        
-        <div style="display:flex; gap:10px;">
-          <button class="action-btn btn-reset" id="skipLoginBtn" style="flex:1; justify-content:center; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white;">Chơi ngay</button>
-        </div>
-      </div>
-    </div>
+    
 
     <div id="practiceArea" class="tab-content glass-card hidden animate__animated animate__zoomIn">
       <div class="mode-switcher">
@@ -2088,34 +2067,24 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
         }
     });
 
-    googleBtn.addEventListener('click', () => {
-        if (window.hihiAuth && window.hihiAuth.login) {
-            window.hihiAuth.login();
-        } else {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    localStorage.removeItem('hihiGuest');
-                }).catch((error) => {
-                    alert("Lỗi đăng nhập: " + error.message);
-                });
-        }
-    });
-
-    skipBtn.addEventListener('click', () => {
-        const name = guestInput.value.trim() || "Khách Ẩn Danh";
-        const guestUser = {
-            uid: 'guest_' + Date.now(),
-            name: name,
-            photo: null,
-            isAnonymous: true
-        };
-        localStorage.setItem('hihiGuest', JSON.stringify(guestUser));
-        window.currentUser = guestUser;
-        updateUserUI(guestUser);
-        loginModal.classList.remove('show');
-        loadLeaderboard();
-    });
-
+    // Đã loại bỏ modal đăng nhập riêng, thống nhất qua hệ thống Google SSO chung
+    if (googleBtn) {
+        googleBtn.addEventListener('click', () => {
+            if (window.hihiAuth && window.hihiAuth.login) {
+                window.hihiAuth.login();
+            } else if (window.hihiAuthLogin) {
+                window.hihiAuthLogin();
+            }
+        });
+    }
+    if (skipBtn && guestInput) {
+        skipBtn.addEventListener('click', () => {
+            const name = guestInput.value.trim() || "Khách Ẩn Danh";
+            window.currentUser = { uid: "guest_" + Date.now(), name: name, photo: null, isAnonymous: true };
+            updateUserUI(window.currentUser);
+            loadLeaderboard();
+        });
+    }
     logoutBtn.addEventListener('click', () => {
         if (unsubscribeMyStats) {
             try { unsubscribeMyStats(); } catch(e) {}
@@ -2135,13 +2104,30 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
         const nDisplay = document.getElementById('playerNameDisplay') || nameDisplay;
         const uAvatar = document.getElementById('userAvatar') || userAvatar;
         const lWrapper = document.getElementById('logoutBtnWrapper') || logoutWrapper;
-        if (user) {
+        if (user && !user.isAnonymous) {
             const displayName = user.name || user.displayName || (user.email ? user.email.split('@')[0] : 'Học viên');
-            if (nDisplay) nDisplay.textContent = displayName;
-            if (uAvatar && (user.photo || user.photoURL)) uAvatar.src = user.photo || user.photoURL;
+            if (nDisplay) {
+                nDisplay.textContent = displayName;
+                nDisplay.style.cursor = 'default';
+                nDisplay.title = displayName;
+            }
+            if (uAvatar && (user.photo || user.photoURL)) {
+                uAvatar.src = user.photo || user.photoURL;
+                uAvatar.style.cursor = 'default';
+                uAvatar.title = displayName;
+            }
             if (lWrapper) lWrapper.classList.remove('hidden');
         } else {
-            if (nDisplay) nDisplay.textContent = "Khách (Chưa đăng nhập)";
+            if (nDisplay) {
+                nDisplay.textContent = "Khách (Chưa đăng nhập)";
+                nDisplay.style.cursor = 'pointer';
+                nDisplay.title = 'Nhấp để đăng nhập Google';
+            }
+            if (uAvatar) {
+                uAvatar.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
+                uAvatar.style.cursor = 'pointer';
+                uAvatar.title = 'Nhấp để đăng nhập Google';
+            }
             if (lWrapper) lWrapper.classList.add('hidden');
         }
     }
@@ -2663,10 +2649,6 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     };
 
     const authEls = {
-      loginModal: document.getElementById('loginModal'),
-      googleBtn: document.getElementById('googleLoginBtn'),
-      skipBtn: document.getElementById('skipLoginBtn'),
-      guestInput: document.getElementById('usernameInput'),
       logoutBtn: document.getElementById('logoutBtn'),
       logoutWrapper: document.getElementById('logoutBtnWrapper'),
       userAvatar: document.getElementById('userAvatar'),
@@ -2699,8 +2681,8 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     }
 
     function updateFallbackUserUI(user) {
-      if (user) {
-        authEls.nameDisplay.textContent = user.name;
+      if (user && !user.isAnonymous) {
+        authEls.nameDisplay.textContent = user.name || 'Học viên';
         authEls.logoutWrapper.classList.remove('hidden');
       } else {
         authEls.nameDisplay.textContent = 'Khách (Chưa đăng nhập)';
@@ -2715,62 +2697,11 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
 
     function initOfflineAuthFallback() {
       if (window.firebaseAuthReady) return;
-
       window.saveScoreToFirebase = window.saveScoreToFirebase || function () {};
       if (authEls.monthDisplay) authEls.monthDisplay.textContent = getMonthKey();
       setOfflineLeaderboardMessage('Bảng xếp hạng trực tuyến chưa sẵn sàng. Bạn vẫn có thể luyện tập bình thường.');
-
-      const savedGuest = localStorage.getItem('hihiGuest');
-      if (savedGuest) {
-        try {
-          window.currentUser = JSON.parse(savedGuest);
-          updateFallbackUserUI(window.currentUser);
-          authEls.loginModal.classList.remove('show');
-        } catch {
-          localStorage.removeItem('hihiGuest');
-          authEls.loginModal.classList.add('show');
-        }
-      } else {
-        window.currentUser = null;
-        updateFallbackUserUI(null);
-        authEls.loginModal.classList.add('show');
-      }
-
-      if (!authEls.skipBtn.dataset.fallbackBound) {
-        authEls.skipBtn.dataset.fallbackBound = 'true';
-        authEls.skipBtn.addEventListener('click', () => {
-          if (window.firebaseAuthReady) return;
-          const name = authEls.guestInput.value.trim() || 'Khách Ẩn Danh';
-          const guestUser = {
-            uid: 'guest_' + Date.now(),
-            name,
-            photo: null,
-            isAnonymous: true
-          };
-          localStorage.setItem('hihiGuest', JSON.stringify(guestUser));
-          window.currentUser = guestUser;
-          updateFallbackUserUI(guestUser);
-          authEls.loginModal.classList.remove('show');
-        });
-      }
-
-      if (!authEls.googleBtn.dataset.fallbackBound) {
-        authEls.googleBtn.dataset.fallbackBound = 'true';
-        authEls.googleBtn.addEventListener('click', () => {
-          if (!window.firebaseAuthReady) alert('Đăng nhập trực tuyến chưa tải xong. Bạn có thể chọn "Chơi ngay" để luyện tập trước.');
-        });
-      }
-
-      if (!authEls.logoutBtn.dataset.fallbackBound) {
-        authEls.logoutBtn.dataset.fallbackBound = 'true';
-        authEls.logoutBtn.addEventListener('click', () => {
-          if (window.firebaseAuthReady) return;
-          localStorage.removeItem('hihiGuest');
-          window.currentUser = null;
-          updateFallbackUserUI(null);
-          authEls.loginModal.classList.add('show');
-        });
-      }
+      window.currentUser = null;
+      updateFallbackUserUI(null);
     }
 
     // === 4. LOGIC CHÍNH ===
@@ -3388,7 +3319,7 @@ window.hihiAuthLogout = window.hihiAuthLogout || function() {
     authEls.monthDisplay.textContent = getMonthKey();
     updateSourceUI();
     if (!els.text.value.trim()) setRandomText();
-    setTimeout(initOfflineAuthFallback, 2500);
+    // Đã loại bỏ popup login fallback độc lập
     window.addEventListener('load', loadVoices);
   </script>
   <a href="https://ngxuanhai123.github.io/" class="floating-home-btn">
@@ -3691,6 +3622,22 @@ onAuthStateChanged(auth, async (user) => {
     if (adminStudioBtn) adminStudioBtn.style.display = "none";
     if (dropName) dropName.textContent = "Khách";
     if (dropEmail) dropEmail.textContent = "Chưa đăng nhập";
+
+        const localName = document.getElementById("playerNameDisplay");
+    const localAvatar = document.getElementById("userAvatar");
+    const localLogoutWrapper = document.getElementById("logoutBtnWrapper");
+    if (localName) {
+      localName.textContent = "Khách (Chưa đăng nhập)";
+      localName.style.cursor = "pointer";
+      localName.title = "Nhấp để đăng nhập Google";
+    }
+    if (localAvatar) {
+      localAvatar.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
+      localAvatar.style.cursor = "pointer";
+      localAvatar.title = "Nhấp để đăng nhập Google";
+    }
+    if (localLogoutWrapper) localLogoutWrapper.classList.add('hidden');
+    window.currentUser = null;
 
     window.dispatchEvent(new CustomEvent('hihi-auth-changed', {
       detail: { user: null, isAdmin: false }
