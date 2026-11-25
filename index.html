@@ -62,14 +62,15 @@
     
     body {
       font-family: var(--font-main);
-      background: var(--bg-color);
-      color: var(--text-color);
+      background: var(--color-canvas, var(--bg-color));
+      color: var(--color-ink, var(--text-color));
       min-height: 100vh;
-      padding: 20px;
+      padding: 0;
+      margin: 0;
       line-height: 1.6;
       overflow-x: hidden;
       position: relative;
-      display: flex; flex-direction: column; align-items: center;
+      display: block;
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
@@ -79,22 +80,23 @@
     /* === CONTAINER & GLASS CARD === */
     .container {
       width: 100%; max-width: 900px;
+      margin: 0 auto;
       display: flex; flex-direction: column; gap: 24px;
       position: relative; z-index: 10;
-      padding-top: 20px;
+      padding: 24px 16px 32px;
     }
 
     .glass-card {
-      background: var(--glass-bg);
+      background: var(--color-surface, var(--glass-bg));
       border-radius: var(--radius);
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow);
-      padding: 30px;
+      border: 2.5px solid var(--color-ink, var(--glass-border));
+      box-shadow: var(--shadow-hard, var(--glass-shadow));
+      padding: 28px;
       transition: border-color 0.2s ease;
     }
     
     .glass-card:hover { 
-      border-color: var(--accent-color);
+      border-color: var(--color-ink, var(--accent-color));
     }
 
     .logo h1 {
@@ -110,76 +112,39 @@
     }
 
     .icon-btn {
-      width: 40px; height: 40px; border-radius: 50%; 
-      background: var(--glass-bg); color: var(--text-color);
-      border: 1px solid var(--glass-border); cursor: pointer;
+      width: 40px; height: 40px; border-radius: 12px; 
+      background: var(--color-surface, #ffffff); color: var(--color-ink, #1e1e1e);
+      border: 2px solid var(--color-ink, #1e1e1e); cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: 0.2s; font-size: 1rem;
-    }
-    .icon-btn:hover { border-color: var(--accent-color); }
-
-    .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
-    .tab {
-      padding: 10px 24px; border-radius: 20px; border: 1px solid var(--glass-border);
-      background: var(--glass-bg); color: var(--text-dim); cursor: pointer; transition: 0.2s;
-    }
-    .tab.active {
-      background: var(--accent-color); color: #ffffff; border-color: var(--accent-color);
-    }
-
-    
-    /* === HEADER === */
-    header { text-align: center; margin-bottom: 10px; }
-    
-    .logo h1 {
-      font-family: var(--font-main);
-      font-size: 2.5rem; font-weight: 800; letter-spacing: -1px;
-      color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(0, 210, 255, 0.5);
-      margin-bottom: 5px;
-    }
-    [data-theme="light"] .logo h1 { color: #1e293b; text-shadow: none; }
-
-    .tagline {
-      color: var(--text-dim); font-size: 0.9rem; font-weight: 500;
-    }
-
-    /* === BUTTONS & CONTROLS === */
-    .theme-toggle-wrapper {
-      position: absolute; top: 10px; right: 10px; display: flex; gap: 10px; z-index: 100;
-    }
-    .icon-btn {
-      width: 40px; height: 40px; border-radius: 50%; 
-      background: rgba(255,255,255,0.1); color: var(--text-color);
-      border: 1px solid var(--glass-border); cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: 0.3s; backdrop-filter: blur(5px);
+      transition: 0.15s; box-shadow: var(--shadow-hard-xs, 2px 2px 0 0 #1e1e1e);
       font-size: 1rem;
     }
-    .icon-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.05); }
+    .icon-btn:hover { background: var(--color-yellow, #ffc72e); color: #1e1e1e; transform: translateY(-1px); }
     
     /* Tabs */
     .tabs {
-      display: flex; justify-content: center; gap: 10px; margin-bottom: 10px;
+      display: flex; justify-content: center; gap: 10px; margin-bottom: 14px;
     }
     .tab {
-      padding: 10px 24px; border-radius: 20px; border: 1px solid var(--glass-border);
-      background: rgba(0,0,0,0.2); color: var(--text-dim);
-      font-weight: 600; font-size: 0.9rem; cursor: pointer;
-      transition: 0.3s; font-family: var(--font-main);
+      padding: 10px 24px; border-radius: 999px; border: 2px solid var(--color-ink, #1e1e1e);
+      background: var(--color-surface, #ffffff); color: var(--color-muted, #40484f);
+      font-weight: 800; font-size: 0.9rem; cursor: pointer;
+      transition: 0.15s; font-family: var(--font-main);
+      box-shadow: var(--shadow-hard-xs, 2px 2px 0 0 #1e1e1e);
     }
-    .tab:hover { background: rgba(255,255,255,0.1); color: var(--text-color); }
+    .tab:hover { background: var(--color-surface2, #efeee8); color: var(--color-ink, #1e1e1e); }
     .tab.active {
-      background: #38bdf8; color: white; border-color: #38bdf8;
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+      background: var(--color-yellow, #ffc72e); color: #1e1e1e; border-color: var(--color-ink, #1e1e1e);
+      box-shadow: var(--shadow-hard-sm, 2px 2px 0 0 #1e1e1e);
     }
 
     .user-info-bar { 
         text-align: center; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;
     }
-    .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-ink, #1e1e1e); }
     .name-display {
-      font-size: 1rem; font-weight: 700;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+      font-size: 0.95rem; font-weight: 800;
+      color: var(--color-ink, #1e1e1e);
     }
 
     /* Inputs & Setup */
@@ -187,70 +152,72 @@
       display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
     }
     .setup-item {
-      background: rgba(0,0,0,0.2); border-radius: 16px;
-      padding: 20px; border: 1px solid var(--glass-border);
+      background: var(--color-surface2, #efeee8); border-radius: 16px;
+      padding: 20px; border: 2px solid var(--color-ink, #1e1e1e);
     }
-    [data-theme="light"] .setup-item { background: rgba(255,255,255,0.4); }
+    [data-theme="light"] .setup-item { background: var(--color-surface2, #efeee8); }
 
     .setup-item h3 {
-      font-size: 0.9rem; margin-bottom: 12px; color: #60A5FA;
-      display: flex; align-items: center; gap: 8px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 1px;
+      font-size: 0.9rem; margin-bottom: 12px; color: var(--color-ink, #1e1e1e);
+      display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
     
     select, textarea, input[type="text"] {
-      width: 100%; padding: 14px 16px;
-      border: 1px solid var(--glass-border); border-radius: 16px;
-      background: rgba(0, 0, 0, 0.3); color: white; 
-      font-family: var(--font-main); font-size: 1rem; transition: 0.3s;
+      width: 100%; padding: 12px 14px;
+      border: 2px solid var(--color-ink, #1e1e1e); border-radius: 14px;
+      background: var(--color-surface, #ffffff); color: var(--color-ink, #1e1e1e); 
+      font-family: var(--font-main); font-size: 1rem; font-weight: 600; transition: 0.15s;
     }
     [data-theme="light"] select, [data-theme="light"] textarea, [data-theme="light"] input[type="text"] {
-        background: rgba(255,255,255,0.8); color: #0f172a; border-color: #cbd5e1;
+        background: var(--color-surface, #ffffff); color: var(--color-ink, #1e1e1e); border-color: var(--color-ink, #1e1e1e);
     }
     select:focus, textarea:focus, input[type="text"]:focus {
-      border-color: #fff; background: rgba(0,0,0,0.5);
+      outline: none;
+      border-color: var(--color-ink, #1e1e1e); background: var(--color-surface, #ffffff);
+      box-shadow: var(--shadow-hard-sm, 2px 2px 0 0 #1e1e1e);
     }
 
     /* Radio Custom */
     .radio-group { display: flex; flex-direction: column; gap: 8px; }
     .radio-label {
       display: flex; align-items: center; gap: 12px; padding: 10px;
-      border-radius: 12px; cursor: pointer; transition: 0.2s;
-      background: rgba(255,255,255,0.05);
+      border-radius: 12px; cursor: pointer; transition: 0.15s;
+      background: var(--color-surface, #ffffff); border: 1.5px solid var(--color-ink, #1e1e1e);
+      color: var(--color-ink, #1e1e1e); font-weight: 700;
     }
-    .radio-label:hover { background: rgba(255, 255, 255, 0.1); }
+    .radio-label:hover { background: var(--color-canvas, #f8f6f1); }
     .radio-label:has(input:checked) {
-      background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8;
+      background: var(--color-yellow, #ffc72e); color: #1e1e1e; border: 2px solid var(--color-ink, #1e1e1e);
     }
-    input[type="radio"] { accent-color: #38bdf8; width: 16px; height: 16px; }
+    input[type="radio"] { accent-color: #1e1e1e; width: 16px; height: 16px; }
     
     .source-btn {
-        background: transparent; border: none; color: var(--text-dim);
-        padding: 8px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+        background: transparent; border: 2px solid transparent; color: var(--color-muted, #40484f);
+        padding: 8px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.15s;
         font-size: 0.9rem;
     }
     .source-btn.active {
-        background: #38bdf8; color: #0f172a; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        background: var(--color-yellow, #ffc72e); color: #1e1e1e !important; border-color: var(--color-ink, #1e1e1e); box-shadow: var(--shadow-hard-xs, 2px 2px 0 0 #1e1e1e);
     }
-    [data-theme="light"] .source-btn.active { color: white; }
+    [data-theme="light"] .source-btn.active { color: #1e1e1e !important; }
 
     /* Main Start Button */
     .start-btn {
       grid-column: 1/-1;
       position: relative; overflow: hidden;
-      border: none;
-      background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
-      border: 1px solid rgba(255,255,255,0.5);
-      color: white; font-weight: 800;
-      padding: 18px 28px; border-radius: 20px;
+      background: var(--color-yellow, #ffc72e);
+      border: 2.5px solid var(--color-ink, #1e1e1e);
+      color: #1e1e1e; font-weight: 900;
+      padding: 16px 28px; border-radius: 18px;
       cursor: pointer; width: 100%;
-      font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1.5px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      transition: all 0.2s;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      font-size: 1.05rem; text-transform: uppercase; letter-spacing: 1px;
+      box-shadow: var(--shadow-hard, 4px 4px 0 0 #1e1e1e);
+      transition: all 0.15s;
       display: flex; align-items: center; justify-content: center; gap: 10px;
     }
-    .start-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .start-btn:hover { transform: translateY(-2px); }
+    .start-btn:active { transform: translateY(1px); }
 
     .btn-small-action {
         font-size: 0.8rem; padding: 6px 12px; border-radius: 10px; cursor: pointer; border: none; font-weight: 600; transition: 0.2s;
@@ -311,10 +278,10 @@
     .input-wrapper { position: relative; margin: 20px 0; }
     #userInput {
       font-size: 1.3rem; padding: 20px 50px 20px 20px;
-      border-radius: 20px; border: 1px solid var(--glass-border);
-      background: rgba(0,0,0,0.3); color: white;
+      border-radius: 18px; border: 2.5px solid var(--color-ink, #1e1e1e);
+      background: var(--color-surface, #ffffff); color: var(--color-ink, #1e1e1e);
     }
-    [data-theme="light"] #userInput { background: white; color: #0f172a; }
+    [data-theme="light"] #userInput { background: var(--color-surface, #ffffff); color: var(--color-ink, #1e1e1e); }
 
     .hint-btn {
       position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
@@ -353,53 +320,54 @@
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 30px;
     }
     .stat-item {
-      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      background: var(--color-surface2, #efeee8); border: 2px solid var(--color-ink, #1e1e1e);
       padding: 12px; border-radius: 16px; text-align: center;
     }
     
-    .stat-item h4 { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 5px; }
-    .stat-item .val { font-size: 1.4rem; font-weight: 800; color: #38bdf8; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+    .stat-item h4 { font-size: 0.72rem; color: var(--color-muted, #40484f); font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+    .stat-item .val { font-size: 1.4rem; font-weight: 900; color: var(--color-cyan-deep, #0e9f9b); }
 
     .level-badge {
       display: inline-block; padding: 8px 20px; border-radius: 30px;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-      color: white; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-      margin-top: 20px;
+      background: var(--color-yellow, #ffc72e); border: 2px solid var(--color-ink, #1e1e1e);
+      color: #1e1e1e; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+      margin-top: 20px; box-shadow: var(--shadow-hard-xs, 2px 2px 0 0 #1e1e1e);
     }
 
     /* Modal */
     .modal {
       position: fixed; inset: 0; z-index: 2000;
-      background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
+      background: rgba(18, 22, 26, 0.6); backdrop-filter: blur(4px);
       display: flex; align-items: center; justify-content: center;
-      opacity: 0; visibility: hidden; transition: 0.3s;
+      opacity: 0; visibility: hidden; transition: 0.25s;
     }
     .modal.show { opacity: 1; visibility: visible; }
     .modal-content {
-      background: var(--glass-bg); border: 1px solid var(--glass-border);
-      padding: 30px; border-radius: 32px; width: 90%; max-width: 400px;
-      text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); color: var(--text-color);
+      background: var(--color-surface, #ffffff); border: 2.5px solid var(--color-ink, #1e1e1e);
+      padding: 30px; border-radius: 24px; width: 90%; max-width: 400px;
+      text-align: center; box-shadow: var(--shadow-hard-xl, 8px 8px 0 0 #1e1e1e); color: var(--color-ink, #1e1e1e);
     }
     
-    .modal h3 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 20px; color: white; }
+    .modal h3 { font-family: var(--font-display); font-size: 1.65rem; font-weight: 800; margin-bottom: 20px; color: var(--color-ink, #1e1e1e); }
 
     /* Login Google Btn */
     .btn-google {
         display: flex; align-items: center; justify-content: center; gap: 10px;
-        background: white; color: #333; width: 100%; padding: 12px;
-        border-radius: 30px; border: none; font-weight: 600; cursor: pointer;
-        transition: 0.3s; margin-bottom: 16px; font-family: var(--font-main);
+        background: var(--color-yellow, #ffc72e); color: #1e1e1e; width: 100%; padding: 12px;
+        border-radius: 30px; border: 2px solid var(--color-ink, #1e1e1e); font-weight: 800; cursor: pointer;
+        transition: 0.15s; margin-bottom: 16px; font-family: var(--font-main);
+        box-shadow: var(--shadow-hard-sm, 2px 2px 0 0 #1e1e1e);
     }
-    .btn-google:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,255,255,0.4); }
+    .btn-google:hover { transform: translateY(-2px); }
 
     .mic-btn {
       width: 70px; height: 70px; border-radius: 50%; 
-      background: rgba(255,255,255,0.2); color: white;
-      border: 2px solid rgba(255,255,255,0.4);
-      font-size: 2rem; cursor: pointer; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
-      transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      background: var(--color-surface2, #efeee8); color: var(--color-ink, #1e1e1e);
+      border: 2.5px solid var(--color-ink, #1e1e1e);
+      font-size: 1.8rem; cursor: pointer; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+      transition: 0.2s; box-shadow: var(--shadow-hard-sm, 2px 2px 0 0 #1e1e1e);
     }
-    .mic-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+    .mic-btn:hover { background: var(--color-yellow, #ffc72e); color: #1e1e1e; transform: scale(1.05); }
     .mic-btn.listening { 
         background: #ef4444; border-color: transparent;
         animation: pulseMic 1.5s infinite; 
@@ -486,9 +454,9 @@
   --hihi-card-desc: #64748b;
 }
 
-/* Offset body so content sits cleanly below global navigation bar */
+/* Header uses sticky flow via hihi-phiquiz.css */
 body {
-  padding-top: var(--hihi-nav-h) !important;
+  padding-top: 0 !important;
 }
 
 #hihi-global-nav {
@@ -1387,17 +1355,6 @@ body {
     <a href="https://ngxuanhai123.github.io/note/" class="phiquiz-sidebar-btn " title="Kho Lưu Ghi Chú">
       <span class="msr ">bookmark</span>
     </a>
-    <button type="button" class="phiquiz-sidebar-btn" onclick="window.hihiOpenLeaderboard()" title="Bảng Xếp Hạng">
-      <span class="msr">emoji_events</span>
-    </button>
-  </div>
-  <div class="phiquiz-sidebar-footer">
-    <button type="button" class="phiquiz-sidebar-btn" onclick="toggleHiHiSysTheme()" title="Đổi Chế Độ Sáng / Tối">
-      <span class="msr" id="hihiSidebarThemeIcon">dark_mode</span>
-    </button>
-    <button type="button" class="phiquiz-sidebar-btn login-btn" onclick="hihiAuthLogin()" title="Đăng Nhập">
-      <span class="msr msr-filled">account_circle</span>
-    </button>
   </div>
 </aside>
 
@@ -1515,8 +1472,8 @@ body {
   <div class="hihi-dropdown-header">
     <img id="hihiDropAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" class="hihi-user-avatar" alt="Avatar">
     <div style="min-width:0;">
-      <div id="hihiDropName" style="font-weight:700;font-size:0.88rem;color:var(--hihi-card-text,#f1f5f9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Khách</div>
-      <div id="hihiDropEmail" style="font-size:0.72rem;color:var(--hihi-nav-text,#94a3b8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Chưa đăng nhập</div>
+      <div id="hihiDropName" style="font-weight:800;font-size:0.88rem;color:var(--color-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Khách</div>
+      <div id="hihiDropEmail" style="font-size:0.72rem;color:var(--color-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Chưa đăng nhập</div>
     </div>
   </div>
   <div class="hihi-dropdown-scores">
@@ -1540,67 +1497,6 @@ body {
   </div>
 </div>
 
-<!-- HIHI UNIFIED LEADERBOARD MODAL -->
-<div id="hihiLeaderboardModal" class="hihi-suite-modal-backdrop" onclick="hihiCloseLeaderboard(event)">
-  <div class="hihi-suite-modal" style="max-width:640px;" onclick="event.stopPropagation()">
-    <div class="hihi-suite-modal-header">
-      <div class="hihi-suite-modal-title">
-        <i class="fas fa-trophy" style="color:#f59e0b;"></i>
-        <span>Bảng Xếp Hạng HiHi Study</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <button class="hihi-btn-secondary" style="padding:4px 10px;font-size:0.75rem;" onclick="hihiRefreshLeaderboard()" title="Làm mới dữ liệu bảng xếp hạng">
-          <i class="fas fa-sync-alt" id="hihiLbRefreshIcon"></i> Làm mới
-        </button>
-        <button class="hihi-suite-modal-close" onclick="hihiCloseLeaderboard()">&times;</button>
-      </div>
-    </div>
-
-    <!-- TẦNG 1: BỘ LỌC KỲ THỜI GIAN (Tất cả / Tuần này / Theo Tháng) -->
-    <div class="hihi-lb-filter-row">
-      <div class="hihi-lb-pill-group" id="hihiLbPeriodGroup">
-        <button class="hihi-lb-period-btn active" data-period="all" onclick="hihiSetLbPeriod('all', this)">🏆 Tất cả</button>
-        <button class="hihi-lb-period-btn" data-period="week" onclick="hihiSetLbPeriod('week', this)">📅 Tuần này</button>
-        <button class="hihi-lb-period-btn" data-period="month" onclick="hihiSetLbPeriod('month', this)">🗓️ Theo Tháng</button>
-      </div>
-
-      <!-- CHỌN THÁNG (Hiển thị khi chọn Theo Tháng) -->
-      <div id="hihiLbMonthSelectorWrapper" style="display:none;align-items:center;gap:6px;">
-        <label for="hihiLbMonthSelect" style="font-size:0.78rem;font-weight:600;color:var(--hihi-nav-text,#94a3b8);">Chọn tháng:</label>
-        <select id="hihiLbMonthSelect" class="hihi-lb-select" onchange="hihiOnMonthChange(this.value)"></select>
-      </div>
-    </div>
-
-    <!-- TẦNG 2: BỘ LỌC MÔN HỌC -->
-    <div class="hihi-lb-tabs" style="padding:8px 16px;margin-bottom:0;">
-      <button class="hihi-lb-tab active" data-subject="total" onclick="hihiSetLbSubject('total', this)">🌟 Toàn Hệ Thống</button>
-      <button class="hihi-lb-tab" data-subject="tuvung" onclick="hihiSetLbSubject('tuvung', this)">📚 Từ Vựng</button>
-      <button class="hihi-lb-tab" data-subject="chinhta" onclick="hihiSetLbSubject('chinhta', this)">✍️ Chính Tả</button>
-      <button class="hihi-lb-tab" data-subject="dich" onclick="hihiSetLbSubject('dich', this)">📖 Luyện Dịch</button>
-    </div>
-
-    <!-- THANH TRẠNG THÁI KỲ & SỐ LƯỢNG HỌC VIÊN -->
-    <div id="hihiLbSubHeader" style="padding:6px 16px;font-size:0.75rem;color:#38bdf8;font-weight:600;display:flex;justify-content:space-between;background:rgba(56,189,248,0.04);border-bottom:1px solid rgba(255,255,255,0.05);">
-      <span id="hihiLbPeriodTitle">Kỳ: Toàn thời gian (Tất cả) • Môn: Toàn hệ thống</span>
-      <span id="hihiLbUserCount">Đang tải...</span>
-    </div>
-
-    <div class="hihi-suite-modal-body" style="padding:8px 16px 16px;max-height:420px;overflow-y:auto;">
-      <div id="hihiLbLoading" style="text-align:center;padding:30px;color:var(--hihi-nav-text,#94a3b8);"><i class="fas fa-spinner fa-spin"></i> Đang tải bảng xếp hạng...</div>
-      <table class="hihi-lb-table" id="hihiLbTable" style="display:none;">
-        <thead>
-          <tr>
-            <th style="width:50px;">Hạng</th>
-            <th>Học viên</th>
-            <th style="text-align:right;">Điểm số</th>
-          </tr>
-        </thead>
-        <tbody id="hihiLbBody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
 <!-- HIHI MEMRISE ADMIN STUDIO MODAL -->
 <div id="hihiAdminModal" class="hihi-suite-modal-backdrop" onclick="hihiCloseAdminStudio(event)">
   <div class="hihi-suite-modal" style="max-width:760px;" onclick="event.stopPropagation()">
@@ -1615,11 +1511,11 @@ body {
       <!-- TOPIC NAME & MULTI-LANGUAGE SELECTOR -->
       <div class="hihi-admin-section" style="display:grid;grid-template-columns:1fr 210px;gap:12px;align-items:end;margin-bottom:12px;">
         <div>
-          <label style="font-size:0.85rem;font-weight:700;color:var(--hihi-card-text,#f1f5f9);display:block;margin-bottom:4px;">Tên Chủ Đề (Topic Name) *:</label>
+          <label style="font-size:0.85rem;font-weight:700;color:var(--color-ink);display:block;margin-bottom:4px;">Tên Chủ Đề (Topic Name) *:</label>
           <input type="text" id="hihiTopicNameInput" class="hihi-admin-input" placeholder="Ví dụ: 100 Từ vựng Công nghệ, JLPT N5, HSK 3, Du lịch...">
         </div>
         <div>
-          <label style="font-size:0.85rem;font-weight:700;color:var(--hihi-card-text,#f1f5f9);display:block;margin-bottom:4px;">Ngôn Ngữ Học (Language):</label>
+          <label style="font-size:0.85rem;font-weight:700;color:var(--color-ink);display:block;margin-bottom:4px;">Ngôn Ngữ Học (Language):</label>
           <select id="hihiTopicLangSelect" class="hihi-admin-input" style="cursor:pointer;padding:8px 10px;background:rgba(15,23,42,0.9);color:#f1f5f9;border:1px solid rgba(255,255,255,0.15);" onchange="hihiOnAdminLangChange(this.value)">
             <option value="en">🇺🇸 Tiếng Anh (English)</option>
             <option value="id">🇮🇩 Tiếng Indo (Bahasa)</option>
@@ -1683,7 +1579,7 @@ body {
       <!-- PREVIEW TABLE FOR CURRENT TOPIC -->
       <div id="hihiTopicPreviewWrap" style="margin-top:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);">
-          <span style="font-size:0.85rem;font-weight:700;color:var(--hihi-card-text,#f1f5f9);">Danh sách từ vựng (<span id="hihiWordCount">0</span> từ):</span>
+          <span style="font-size:0.85rem;font-weight:700;color:var(--color-ink);">Danh sách từ vựng (<span id="hihiWordCount">0</span> từ):</span>
           <button class="hihi-btn-secondary" style="padding:4px 8px;font-size:0.75rem;" onclick="hihiClearWordList()"><i class="fas fa-trash"></i> Xóa tất cả</button>
         </div>
         <div style="max-height:220px;overflow-y:auto;">
@@ -1795,6 +1691,20 @@ body {
             <div class="hihi-grid-desc">Dịch câu & ngữ cảnh</div>
           </div>
       </a>
+      <a href="https://ngxuanhai123.github.io/dich-ios/" class="hihi-grid-card">
+          <div class="hihi-grid-icon hihi-icon-dich"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+          <div class="hihi-grid-info">
+            <div class="hihi-grid-name">Dịch Touch</div>
+            <div class="hihi-grid-desc">Dịch nhanh tối ưu Mobile</div>
+          </div>
+      </a>
+      <a href="https://ngxuanhai123.github.io/indo/" class="hihi-grid-card">
+          <div class="hihi-grid-icon hihi-icon-tuvung"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div class="hihi-grid-info">
+            <div class="hihi-grid-name">Tiếng Indo</div>
+            <div class="hihi-grid-desc">Học giao tiếp Bahasa</div>
+          </div>
+      </a>
       <a href="https://ngxuanhai123.github.io/note/" class="hihi-grid-card">
           <div class="hihi-grid-icon hihi-icon-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
           <div class="hihi-grid-info">
@@ -1834,30 +1744,14 @@ body {
   <div id="particles"></div>
   
   <div class="container">
-    <header>
-      <div class="theme-toggle-wrapper">
-        <button class="icon-btn" id="themeBtn" title="Đổi giao diện">
-           <i id="themeIcon" class="fas fa-moon"></i>
-        </button>
-        <div id="logoutBtnWrapper" class="hidden">
-            <button class="icon-btn" id="logoutBtn" title="Đăng xuất" style="color:#ff5252; border-color: rgba(255,82,82,0.3);"><i class="fas fa-sign-out-alt"></i></button>
-        </div>
-      </div>
-
-      <div class="logo">
-        <h1>HiHi Spelling</h1>
-      </div>
-      <p class="tagline">Luyện chính tả & ngoại ngữ - Đua top Realtime ✨</p>
-    </header>
-
     <div class="tabs">
       <div class="tab active" data-tab="setupPanel"><i class="fas fa-keyboard"></i> Luyện Tập</div>
       <div class="tab" data-tab="rankPanel"><i class="fas fa-trophy"></i> BXH</div>
     </div>
 
     <div class="user-info-bar">
-      <img id="userAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" class="user-avatar" alt="User" onclick="if(!window.currentUser || window.currentUser.isAnonymous) hihiAuthLogin()" style="cursor:pointer;" title="Nhấp để đăng nhập Google">
-      <span class="name-display" id="playerNameDisplay" onclick="if(!window.currentUser || window.currentUser.isAnonymous) hihiAuthLogin()" style="cursor:pointer;" title="Nhấp để đăng nhập Google">Khách (Chưa đăng nhập)</span>
+      <img id="userAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" class="user-avatar" alt="User">
+      <span class="name-display" id="playerNameDisplay">Chế độ khách</span>
       <span id="currentMonthDisplay" style="display:none;"></span>
     </div>
 
@@ -1888,7 +1782,7 @@ body {
         <div class="setup-item">
           <h3><i class="fas fa-volume-up"></i> Giọng đọc(EDGE nên chọn System)</h3>
           <div style="display:flex; flex-direction:column; gap:12px;">
-             <div style="background:rgba(0,0,0,0.2); padding:4px; border-radius:12px; display:flex; border:1px solid var(--glass-border);">
+             <div style="background:var(--color-surface); padding:4px; border-radius:12px; display:flex; gap:4px; border:2px solid var(--color-ink);">
                  <button id="btnUseGoogle" class="source-btn active" style="flex:1;"><i class="fab fa-google"></i> Google</button>
                  <button id="btnUseSystem" class="source-btn" style="flex:1;"><i class="fas fa-robot"></i> System</button>
              </div>
@@ -1931,7 +1825,7 @@ body {
     </div>
 
     <div id="rankPanel" class="tab-content glass-card hidden animate__animated animate__fadeIn">
-        <h2 style="text-align:center; color:#fff; text-shadow:0 0 10px rgba(255,255,255,0.4); margin-bottom: 20px;">
+        <h2 style="text-align:center; color:var(--color-ink); font-weight:800; margin-bottom: 20px;">
              Thành Tích Cá Nhân & Bảng Xếp Hạng
         </h2>
 
@@ -1946,20 +1840,20 @@ body {
         </div>
 
         <!-- BẢNG XẾP HẠNG VỚI BỘ LỌC TUẦN / THÁNG / TẤT CẢ -->
-        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-top:40px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);">
-          <h2 style="color:#fbbf24;margin:0;font-size:1.35rem;display:flex;align-items:center;gap:8px;">
-            <i class="fas fa-crown"></i> 
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-top:40px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--color-surface3);">
+          <h2 style="color:var(--color-ink);margin:0;font-size:1.35rem;font-weight:800;display:flex;align-items:center;gap:8px;">
+            <i class="fas fa-crown" style="color:var(--color-yellow-deep);"></i> 
             <span id="chinhtaRankPeriodTitle">Bảng Xếp Hạng Chính Tả — Tuần này</span>
           </h2>
 
           <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
             <!-- BỘ LỌC PHẠM VI (TOÀN HỆ THỐNG / CHÍNH TẢ) -->
-            <div class="hihi-lb-pill-group" style="margin:0;background:rgba(15,23,42,0.6);padding:3px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);">
+            <div class="hihi-lb-pill-group" style="margin:0;background:var(--color-surface2);padding:4px;border-radius:14px;border:2px solid var(--color-ink);">
               <button class="hihi-lb-period-btn active" id="chinhtaScopeAllBtn" onclick="chinhtaSetScope('all')">🌐 Toàn Hệ Thống</button>
               <button class="hihi-lb-period-btn" id="chinhtaScopeChinhtaBtn" onclick="chinhtaSetScope('chinhta')">⌨️ Riêng Chính Tả</button>
             </div>
             <!-- BỘ LỌC KỲ THỜI GIAN -->
-            <div class="hihi-lb-pill-group" style="margin:0;background:rgba(15,23,42,0.6);padding:3px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);">
+            <div class="hihi-lb-pill-group" style="margin:0;background:var(--color-surface2);padding:4px;border-radius:14px;border:2px solid var(--color-ink);">
               <button class="hihi-lb-period-btn" id="chinhtaPeriodAllBtn" onclick="chinhtaSetPeriod('all')">🏆 Tất cả</button>
               <button class="hihi-lb-period-btn active" id="chinhtaPeriodWeekBtn" onclick="chinhtaSetPeriod('week')">📅 Tuần này</button>
               <button class="hihi-lb-period-btn" id="chinhtaPeriodMonthBtn" onclick="chinhtaSetPeriod('month')">🗓️ Theo Tháng</button>
@@ -1967,18 +1861,18 @@ body {
 
             <!-- CHỌN THÁNG (Hiển thị khi chọn Theo Tháng) -->
             <div id="chinhtaMonthSelectWrapper" style="display:none;align-items:center;gap:6px;">
-              <select id="chinhtaRankMonthSelect" class="hihi-lb-select" style="background:rgba(15,23,42,0.9);color:#f1f5f9;border:1px solid rgba(255,255,255,0.2);padding:6px 10px;border-radius:8px;font-size:0.8rem;cursor:pointer;" onchange="chinhtaOnMonthChange(this.value)">
+              <select id="chinhtaRankMonthSelect" class="hihi-lb-select" style="background:var(--color-surface);color:var(--color-ink);border:2px solid var(--color-ink);padding:6px 10px;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;" onchange="chinhtaOnMonthChange(this.value)">
               </select>
             </div>
 
             <!-- NÚT LÀM MỚI -->
-            <button class="hihi-btn-secondary" style="padding:6px 12px;font-size:0.75rem;cursor:pointer;" onclick="chinhtaRefreshLeaderboard()" title="Làm mới bảng xếp hạng">
+            <button class="hihi-btn-secondary" style="padding:6px 12px;font-size:0.78rem;cursor:pointer;" onclick="chinhtaRefreshLeaderboard()" title="Làm mới bảng xếp hạng">
               <i class="fas fa-sync-alt" id="chinhtaRefreshIcon"></i> Làm mới
             </button>
           </div>
         </div>
 
-        <div id="loadingLeaderboard" style="text-align:center; padding:20px; color:var(--text-dim);">
+        <div id="loadingLeaderboard" style="text-align:center; padding:20px; color:var(--color-muted); font-weight:700;">
           <i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu bảng xếp hạng...
         </div>
         <div style="overflow-x:auto;">
@@ -1995,13 +1889,6 @@ body {
                 <tbody id="leaderboardBody">
                 </tbody>
             </table>
-        </div>
-
-        <!-- NÚT MỞ BẢNG XẾP HẠNG TOÀN HỆ THỐNG -->
-        <div style="text-align:center;margin-top:24px;">
-          <button class="hihi-btn-secondary" onclick="hihiOpenLeaderboard()" style="padding:8px 18px;font-size:0.85rem;border-radius:20px;border:1px solid rgba(251,191,36,0.4);color:#fbbf24;cursor:pointer;background:rgba(251,191,36,0.05);transition:all 0.2s;">
-            <i class="fas fa-trophy" style="color:#f59e0b;margin-right:6px;"></i> Xem Bảng Xếp Hạng Toàn Hệ Thống (HiHi Study)
-          </button>
         </div>
     </div>
 
@@ -2216,20 +2103,22 @@ body {
             loadLeaderboard();
         });
     }
-    logoutBtn.addEventListener('click', () => {
-        if (unsubscribeMyStats) {
-            try { unsubscribeMyStats(); } catch(e) {}
-            unsubscribeMyStats = null;
-        }
-        if (window.hihiAuth && window.hihiAuth.logout) {
-            window.hihiAuth.logout();
-        } else if (auth.currentUser) {
-            signOut(auth).then(() => window.location.reload());
-        } else {
-            localStorage.removeItem('hihiGuest');
-            window.location.reload();
-        }
-    });
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            if (unsubscribeMyStats) {
+                try { unsubscribeMyStats(); } catch(e) {}
+                unsubscribeMyStats = null;
+            }
+            if (window.hihiAuth && window.hihiAuth.logout) {
+                window.hihiAuth.logout();
+            } else if (auth.currentUser) {
+                signOut(auth).then(() => window.location.reload());
+            } else {
+                localStorage.removeItem('hihiGuest');
+                window.location.reload();
+            }
+        });
+    }
 
     function updateUserUI(user) {
         const nDisplay = document.getElementById('playerNameDisplay') || nameDisplay;
@@ -2250,14 +2139,14 @@ body {
             if (lWrapper) lWrapper.classList.remove('hidden');
         } else {
             if (nDisplay) {
-                nDisplay.textContent = "Khách (Chưa đăng nhập)";
-                nDisplay.style.cursor = 'pointer';
-                nDisplay.title = 'Nhấp để đăng nhập Google';
+                nDisplay.textContent = "Chế độ khách";
+                nDisplay.style.cursor = 'default';
+                nDisplay.title = 'Đăng nhập bằng nút ở thanh trên để lưu điểm';
             }
             if (uAvatar) {
                 uAvatar.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
-                uAvatar.style.cursor = 'pointer';
-                uAvatar.title = 'Nhấp để đăng nhập Google';
+                uAvatar.style.cursor = 'default';
+                uAvatar.title = 'Chế độ khách';
             }
             if (lWrapper) lWrapper.classList.add('hidden');
         }
@@ -2384,6 +2273,7 @@ body {
 
     // --- CHINHTA MULTI-PERIOD LEADERBOARD LOGIC (Tuần / Tháng / Tất cả) ---
     let chinhtaCurrentPeriod = 'week'; // 'all' | 'week' | 'month'
+    let chinhtaCurrentScope = 'all'; // 'all' | 'chinhta'
     let chinhtaCurrentMonth = '';
 
     function chinhtaWeekKey() {
@@ -2438,6 +2328,13 @@ body {
         loadLeaderboard();
     };
 
+    window.chinhtaSetScope = function(scope) {
+        chinhtaCurrentScope = scope === 'chinhta' ? 'chinhta' : 'all';
+        document.getElementById("chinhtaScopeAllBtn")?.classList.toggle("active", chinhtaCurrentScope === 'all');
+        document.getElementById("chinhtaScopeChinhtaBtn")?.classList.toggle("active", chinhtaCurrentScope === 'chinhta');
+        loadLeaderboard();
+    };
+
     window.chinhtaOnMonthChange = function(mVal) {
         chinhtaCurrentMonth = mVal;
         loadLeaderboard();
@@ -2446,8 +2343,8 @@ body {
     window.chinhtaRefreshLeaderboard = async function() {
         const icon = document.getElementById("chinhtaRefreshIcon");
         if (icon) icon.classList.add("fa-spin");
-        if (typeof window.hihiLoadLeaderboardData === "function") {
-            try { await window.hihiLoadLeaderboardData(true); } catch(e) {}
+        if (window.hihiLeaderboard && typeof window.hihiLeaderboard.refresh === "function") {
+            try { await window.hihiLeaderboard.refresh(); } catch(e) {}
         }
         await loadLeaderboard();
         if (icon) icon.classList.remove("fa-spin");
@@ -2511,14 +2408,9 @@ body {
         try {
             // 1. Lấy dữ liệu Firestore từ cache hoặc gọi hàm HiHi suite
             let firestoreUsers = [];
-            if (window.hihiCachedLeaderboardUsers && window.hihiCachedLeaderboardUsers.length > 0) {
-                firestoreUsers = window.hihiCachedLeaderboardUsers;
-            } else if (typeof window.hihiLoadLeaderboardData === "function") {
-                try {
-                    firestoreUsers = await window.hihiLoadLeaderboardData(false) || [];
-                } catch(e) {
-                    console.warn("hihiLoadLeaderboardData call error:", e);
-                }
+            if (window.hihiLeaderboard && typeof window.hihiLeaderboard.getUsers === "function") {
+                const cached = window.hihiLeaderboard.getUsers();
+                if (cached && cached.length > 0) firestoreUsers = cached;
             }
 
             // Nếu Firestore cache chưa có và firestoreDb sẵn sàng, query trực tiếp
@@ -2555,17 +2447,25 @@ body {
             for (const u of (firestoreUsers || [])) {
                 let pts = 0;
                 if (chinhtaCurrentPeriod === 'all') {
-                    pts = (chinhtaCurrentScope === 'all') ? (u.total_score || ((u.tuvung_score || 0) + (u.chinhta_score || 0) + (u.dich_score || 0))) : (u.chinhta_score || 0);
+                    pts = (chinhtaCurrentScope === 'all')
+                        ? (u.total_score || ((u.tuvung_score || 0) + (u.chinhta_score || 0) + (u.dich_score || 0)))
+                        : (u.chinhta_score || 0);
                 } else if (chinhtaCurrentPeriod === 'week') {
                     if (u.weekKey === currWeek) {
-                        pts = u.week_chinhta || (u.week_score && !u.week_tuvung && !u.week_dich ? u.week_score : 0);
+                        pts = (chinhtaCurrentScope === 'all')
+                            ? (u.week_score || ((u.week_tuvung || 0) + (u.week_chinhta || 0) + (u.week_dich || 0)))
+                            : (u.week_chinhta || (u.week_score && !u.week_tuvung && !u.week_dich ? u.week_score : 0));
                     }
                 } else if (chinhtaCurrentPeriod === 'month') {
                     if (u.monthly && u.monthly[chinhtaCurrentMonth]) {
-                        pts = u.monthly[chinhtaCurrentMonth].chinhta || 
-                              (u.monthly[chinhtaCurrentMonth].score && !u.monthly[chinhtaCurrentMonth].tuvung && !u.monthly[chinhtaCurrentMonth].dich ? u.monthly[chinhtaCurrentMonth].score : 0);
+                        const mData = u.monthly[chinhtaCurrentMonth];
+                        pts = (chinhtaCurrentScope === 'all')
+                            ? (mData.score || ((mData.tuvung || 0) + (mData.chinhta || 0) + (mData.dich || 0)))
+                            : (mData.chinhta || (mData.score && !mData.tuvung && !mData.dich ? mData.score : 0));
                     } else if (u.monthKey === chinhtaCurrentMonth) {
-                        pts = u.month_chinhta || (u.month_score && !u.month_tuvung && !u.month_dich ? u.month_score : 0);
+                        pts = (chinhtaCurrentScope === 'all')
+                            ? (u.month_score || 0)
+                            : (u.month_chinhta || (u.month_score && !u.month_tuvung && !u.month_dich ? u.month_score : 0));
                     }
                 }
 
@@ -2631,10 +2531,10 @@ body {
                         ? `<img src="${safePhoto}" class="lb-avatar" alt="">`
                         : `<div class="lb-avatar" style="display:flex;align-items:center;justify-content:center;background:#555;">${firstLetter}</div>`;
                     
-                    let rankColor = '#fff';
+                    let rankColor = 'var(--color-ink)';
                     let rankIcon = `${index + 1}`;
-                    if (index === 0) { rankColor = '#fbbf24'; rankIcon = '🥇 1'; }
-                    else if (index === 1) { rankColor = '#94a3b8'; rankIcon = '🥈 2'; }
+                    if (index === 0) { rankColor = '#b45309'; rankIcon = '🥇 1'; }
+                    else if (index === 1) { rankColor = '#64748b'; rankIcon = '🥈 2'; }
                     else if (index === 2) { rankColor = '#b45309'; rankIcon = '🥉 3'; }
 
                     return `
@@ -2661,6 +2561,7 @@ body {
             if (table) table.style.display = "table";
         }
     }
+    window.loadLeaderboard = loadLeaderboard;
     
   </script>
 
@@ -2812,11 +2713,11 @@ body {
 
     function updateFallbackUserUI(user) {
       if (user && !user.isAnonymous) {
-        authEls.nameDisplay.textContent = user.name || 'Học viên';
-        authEls.logoutWrapper.classList.remove('hidden');
+        if (authEls.nameDisplay) authEls.nameDisplay.textContent = user.name || 'Học viên';
+        if (authEls.logoutWrapper) authEls.logoutWrapper.classList.remove('hidden');
       } else {
-        authEls.nameDisplay.textContent = 'Khách (Chưa đăng nhập)';
-        authEls.logoutWrapper.classList.add('hidden');
+        if (authEls.nameDisplay) authEls.nameDisplay.textContent = 'Chế độ khách';
+        if (authEls.logoutWrapper) authEls.logoutWrapper.classList.add('hidden');
       }
     }
 
@@ -2840,28 +2741,32 @@ body {
         const body = document.body;
         const isLight = themeMode === 'light';
         
-        if (isLight) {
-            body.setAttribute('data-theme', 'light');
-            els.themeIcon.className = 'fas fa-sun';
-            els.themeIcon.style.color = '#fcd34d';
-        } else {
-            body.setAttribute('data-theme', 'dark');
-            els.themeIcon.className = 'fas fa-moon';
-            els.themeIcon.style.color = '#fff';
+        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+        document.documentElement.classList.toggle('dark', !isLight);
+        document.documentElement.classList.toggle('light', isLight);
+        body.setAttribute('data-theme', isLight ? 'light' : 'dark');
+        if (els.themeIcon) {
+            els.themeIcon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            els.themeIcon.style.color = isLight ? '#fcd34d' : '#fff';
+        }
+        if (typeof window.applyHiHiTheme === 'function') {
+            window.applyHiHiTheme(isLight ? 'light' : 'dark');
         }
     }
 
     function toggleBaseTheme() {
-        const current = localStorage.getItem('baseTheme') === 'light' ? 'light' : 'dark';
+        const current = (localStorage.getItem('hihi-theme') || localStorage.getItem('baseTheme')) === 'dark' ? 'dark' : 'light';
         const next = current === 'dark' ? 'light' : 'dark';
         localStorage.setItem('baseTheme', next);
+        localStorage.setItem('hihi-theme', next);
         applyTheme(next);
     }
 
     function initTheme() {
-        if (!localStorage.getItem('baseTheme')) localStorage.setItem('baseTheme', 'dark'); 
-        const base = localStorage.getItem('baseTheme');
-        applyTheme(base);
+        const saved = localStorage.getItem('hihi-theme') || localStorage.getItem('baseTheme') || 'light';
+        localStorage.setItem('baseTheme', saved);
+        localStorage.setItem('hihi-theme', saved);
+        applyTheme(saved);
     }
 
     // Tabs
@@ -3337,7 +3242,7 @@ body {
     }
 
     // Event Listeners
-    els.theme.addEventListener('click', toggleBaseTheme);
+    if (els.theme) els.theme.addEventListener('click', toggleBaseTheme);
 
     setupTabs(els.mainTabs(), els.tabContents());
 
@@ -3452,53 +3357,6 @@ body {
     // Đã loại bỏ popup login fallback độc lập
     window.addEventListener('load', loadVoices);
   </script>
-  <a href="https://ngxuanhai123.github.io/" class="floating-home-btn">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-    </svg>
-    <span>Trang chủ</span>
-</a>
-
-<style>
-    .floating-home-btn {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 20px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50px;
-        color: white;
-        text-decoration: none;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-    [data-theme="light"] .floating-home-btn {
-        background: rgba(0,0,0,0.05); color: #333; border-color: rgba(0,0,0,0.1);
-    }
-    .floating-home-btn svg { width: 24px; height: 24px; transition: transform 0.3s ease; }
-    .floating-home-btn:hover {
-        background: linear-gradient(90deg, #4facfe, #00f2fe);
-        transform: translateY(2px);
-        box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
-        border-color: transparent;
-        color: #0f172a; 
-    }
-    .floating-home-btn:hover svg { transform: scale(1.1); }
-    @media (max-width: 640px) {
-        .floating-home-btn span { display: none; }
-        .floating-home-btn { padding: 12px; border-radius: 50%; }
-    }
-</style>
 
 <script id="hihi-global-nav-script">
 function applyHiHiTheme(theme) {
@@ -3506,6 +3364,7 @@ function applyHiHiTheme(theme) {
   document.documentElement.classList.toggle('dark', theme === 'dark');
   document.documentElement.classList.toggle('light', theme === 'light');
   if (document.body) {
+    document.body.setAttribute('data-theme', theme);
     document.body.classList.toggle('dark-mode', theme === 'dark');
     document.body.classList.toggle('light-theme', theme === 'light');
   }
@@ -3521,6 +3380,7 @@ function toggleHiHiSysTheme() {
   var isDark = document.documentElement.classList.contains('dark') || document.documentElement.getAttribute('data-theme') === 'dark';
   var next = isDark ? 'light' : 'dark';
   localStorage.setItem('hihi-theme', next);
+  localStorage.setItem('baseTheme', next);
   applyHiHiTheme(next);
 }
 
@@ -3552,10 +3412,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 (function() {
-  var saved = localStorage.getItem('hihi-theme');
-  if (!saved) {
-    saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  }
+  var saved = localStorage.getItem('hihi-theme') || localStorage.getItem('baseTheme') || 'light';
   applyHiHiTheme(saved);
 })();
 </script>
@@ -3719,8 +3576,16 @@ onAuthStateChanged(auth, async (user) => {
     const localAvatar = document.getElementById("userAvatar");
     const localLogoutWrapper = document.getElementById("logoutBtnWrapper");
     const displayName = user.displayName || (user.email ? user.email.split("@")[0] : "Học viên");
-    if (localName) localName.textContent = displayName;
-    if (localAvatar && user.photoURL) localAvatar.src = user.photoURL;
+    if (localName) {
+      localName.textContent = displayName;
+      localName.style.cursor = "default";
+      localName.title = displayName;
+    }
+    if (localAvatar && user.photoURL) {
+      localAvatar.src = user.photoURL;
+      localAvatar.style.cursor = "default";
+      localAvatar.title = displayName;
+    }
     if (localLogoutWrapper) localLogoutWrapper.classList.remove('hidden');
     window.currentUser = {
       uid: user.uid,
@@ -3780,14 +3645,14 @@ onAuthStateChanged(auth, async (user) => {
     const localAvatar = document.getElementById("userAvatar");
     const localLogoutWrapper = document.getElementById("logoutBtnWrapper");
     if (localName) {
-      localName.textContent = "Khách (Chưa đăng nhập)";
-      localName.style.cursor = "pointer";
-      localName.title = "Nhấp để đăng nhập Google";
+      localName.textContent = "Chế độ khách";
+      localName.style.cursor = "default";
+      localName.title = "Đăng nhập ở thanh trên để lưu điểm";
     }
     if (localAvatar) {
       localAvatar.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
-      localAvatar.style.cursor = "pointer";
-      localAvatar.title = "Nhấp để đăng nhập Google";
+      localAvatar.style.cursor = "default";
+      localAvatar.title = "Chế độ khách";
     }
     if (localLogoutWrapper) localLogoutWrapper.classList.add('hidden');
     window.currentUser = null;
@@ -3823,13 +3688,6 @@ function hihiMonthKey(d) {
   d = d || new Date();
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
 }
-
-let hihiCurrentLbPeriod = 'all'; // 'all' | 'week' | 'month'
-let hihiCurrentLbSubject = 'total'; // 'total' | 'tuvung' | 'chinhta' | 'dich'
-let hihiCurrentLbMonth = hihiMonthKey(); // "YYYY-MM"
-let hihiCachedLeaderboardUsers = null;
-let hihiLbCacheTimestamp = 0;
-const HIHI_LB_CACHE_MAX_AGE = 5 * 60 * 1000; // 5 phút
 
 let hihiScoreDebounceTimer = null;
 let hihiPendingScores = { tuvung: 0, chinhta: 0, dich: 0 };
@@ -3947,212 +3805,11 @@ window.hihiUpdateScore = function(appKey, pointsToAdd, extra = {}) {
       await setDoc(userRef, data, { merge: true });
       window.hihiCurrentUserData = data;
       hihiUpdateScoreUI(data);
-
-      // Invalidate cache
-      hihiCachedLeaderboardUsers = null;
-      window.hihiCachedLeaderboardUsers = null;
-      hihiLbCacheTimestamp = 0;
     } catch(e) {
       console.warn("Lưu điểm Firebase:", e);
     }
   }, 2500);
 };
-
-window.hihiOpenLeaderboard = async function() {
-  const m = document.getElementById("hihiLeaderboardModal");
-  if (m) m.classList.add("active");
-  hihiPopulateMonthOptions();
-  await hihiLoadLeaderboardData(false);
-};
-
-window.hihiCloseLeaderboard = function(e) {
-  if (e && e.target !== e.currentTarget && !e.target.classList.contains("hihi-suite-modal-close")) return;
-  const m = document.getElementById("hihiLeaderboardModal");
-  if (m) m.classList.remove("active");
-};
-
-window.hihiRefreshLeaderboard = async function() {
-  const icon = document.getElementById("hihiLbRefreshIcon");
-  if (icon) icon.classList.add("fa-spin");
-  await hihiLoadLeaderboardData(true);
-  if (icon) icon.classList.remove("fa-spin");
-};
-
-window.hihiSetLbPeriod = function(period, btn) {
-  hihiCurrentLbPeriod = period;
-  document.querySelectorAll(".hihi-lb-period-btn").forEach(b => b.classList.remove("active"));
-  if (btn) btn.classList.add("active");
-
-  const monthWrapper = document.getElementById("hihiLbMonthSelectorWrapper");
-  if (monthWrapper) {
-    monthWrapper.style.display = (period === 'month') ? 'inline-flex' : 'none';
-  }
-
-  hihiRenderFilteredLeaderboard();
-};
-
-window.hihiSetLbSubject = function(subject, btn) {
-  hihiCurrentLbSubject = subject;
-  document.querySelectorAll(".hihi-lb-tab").forEach(b => b.classList.remove("active"));
-  if (btn) btn.classList.add("active");
-
-  hihiRenderFilteredLeaderboard();
-};
-
-window.hihiOnMonthChange = function(monthVal) {
-  hihiCurrentLbMonth = monthVal;
-  hihiRenderFilteredLeaderboard();
-};
-
-function hihiPopulateMonthOptions() {
-  const select = document.getElementById("hihiLbMonthSelect");
-  if (!select) return;
-  const curr = new Date();
-  const options = [];
-
-  for (let i = 0; i < 12; i++) {
-    const d = new Date(curr.getFullYear(), curr.getMonth() - i, 1);
-    const mKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
-    const label = 'Tháng ' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear() + (i === 0 ? ' (Hiện tại)' : '');
-    options.push({ key: mKey, label: label });
-  }
-
-  select.innerHTML = options.map(opt => `
-    <option value="${opt.key}" ${opt.key === hihiCurrentLbMonth ? 'selected' : ''}>${opt.label}</option>
-  `).join("");
-}
-
-async function hihiLoadLeaderboardData(forceRefresh = false) {
-  const loadEl = document.getElementById("hihiLbLoading");
-  const tableEl = document.getElementById("hihiLbTable");
-  const now = Date.now();
-
-  if (!forceRefresh && hihiCachedLeaderboardUsers && (now - hihiLbCacheTimestamp < HIHI_LB_CACHE_MAX_AGE)) {
-    window.hihiCachedLeaderboardUsers = hihiCachedLeaderboardUsers;
-    hihiRenderFilteredLeaderboard();
-    return hihiCachedLeaderboardUsers;
-  }
-
-  if (loadEl) loadEl.style.display = "block";
-  if (tableEl) tableEl.style.display = "none";
-
-  try {
-    const q = query(collection(db, "hihi_leaderboard"), orderBy("total_score", "desc"), limit(100));
-    const snap = await getDocs(q);
-    const users = [];
-    snap.forEach(docSnap => users.push(docSnap.data()));
-
-    hihiCachedLeaderboardUsers = users;
-    window.hihiCachedLeaderboardUsers = users;
-    hihiLbCacheTimestamp = now;
-    hihiRenderFilteredLeaderboard();
-    return users;
-  } catch(e) {
-    console.warn("Lỗi tải BXH:", e);
-    if (loadEl) loadEl.innerHTML = `<span style="color:#ef4444;">Lỗi tải dữ liệu: ${e.message}</span>`;
-    return [];
-  }
-}
-
-function hihiRenderFilteredLeaderboard() {
-  const loadEl = document.getElementById("hihiLbLoading");
-  const tableEl = document.getElementById("hihiLbTable");
-  const bodyEl = document.getElementById("hihiLbBody");
-  const titleEl = document.getElementById("hihiLbPeriodTitle");
-  const countEl = document.getElementById("hihiLbUserCount");
-  if (!bodyEl) return;
-
-  if (loadEl) loadEl.style.display = "none";
-  if (tableEl) tableEl.style.display = "table";
-
-  const currWeek = hihiWeekKey();
-  const currMonth = hihiMonthKey();
-  const users = hihiCachedLeaderboardUsers || [];
-
-  let periodText = "Kỳ: Toàn thời gian (Tất cả)";
-  if (hihiCurrentLbPeriod === 'week') {
-    periodText = `Kỳ: Tuần này (${currWeek})`;
-  } else if (hihiCurrentLbPeriod === 'month') {
-    const parts = hihiCurrentLbMonth.split('-');
-    const m = parts[1] || "";
-    const y = parts[0] || "";
-    periodText = `Kỳ: Tháng ${m}/${y}${hihiCurrentLbMonth === currMonth ? ' (Hiện tại)' : ''}`;
-  }
-  const subjectNames = { total: "Toàn hệ thống", tuvung: "Từ Vựng", chinhta: "Chính Tả", dich: "Luyện Dịch" };
-  if (titleEl) titleEl.textContent = `${periodText} • Môn: ${subjectNames[hihiCurrentLbSubject] || "Tất cả"}`;
-
-  const rankedUsers = [];
-
-  for (const u of users) {
-    let pts = 0;
-    if (hihiCurrentLbPeriod === 'all') {
-      if (hihiCurrentLbSubject === 'total') pts = u.total_score || 0;
-      else pts = u[hihiCurrentLbSubject + '_score'] || 0;
-    } else if (hihiCurrentLbPeriod === 'week') {
-      if (u.weekKey === currWeek) {
-        if (hihiCurrentLbSubject === 'total') pts = u.week_score || 0;
-        else pts = u['week_' + hihiCurrentLbSubject] || 0;
-      }
-    } else if (hihiCurrentLbPeriod === 'month') {
-      if (u.monthly && u.monthly[hihiCurrentLbMonth]) {
-        const mData = u.monthly[hihiCurrentLbMonth];
-        pts = (hihiCurrentLbSubject === 'total') ? (mData.score || 0) : (mData[hihiCurrentLbSubject] || 0);
-      } else if (u.monthKey === hihiCurrentLbMonth) {
-        if (hihiCurrentLbSubject === 'total') pts = u.month_score || 0;
-        else pts = u['month_' + hihiCurrentLbSubject] || 0;
-      }
-    }
-
-    if (pts > 0 || hihiCurrentLbPeriod === 'all') {
-      rankedUsers.push({
-        displayName: u.displayName || "Học viên",
-        photoURL: u.photoURL || "",
-        email: u.email || "",
-        score: pts,
-        total_score: u.total_score || 0
-      });
-    }
-  }
-
-  rankedUsers.sort((a, b) => b.score - a.score);
-
-  if (countEl) countEl.textContent = `${rankedUsers.length} người tham gia`;
-
-  if (rankedUsers.length === 0) {
-    bodyEl.innerHTML = `<tr><td colspan="3" style="text-align:center;padding:26px;color:#94a3b8;"><i class="fas fa-medal" style="font-size:1.5rem;margin-bottom:8px;display:block;opacity:0.5;"></i>Chưa có điểm nào được ghi nhận trong kỳ này.<br><span style="font-size:0.75rem;">Hãy là người đầu tiên ghi điểm!</span></td></tr>`;
-    return;
-  }
-
-  bodyEl.innerHTML = rankedUsers.map((u, idx) => {
-    const rank = idx + 1;
-    let badge = `${rank}`;
-    if (rank === 1) badge = "🥇";
-    else if (rank === 2) badge = "🥈";
-    else if (rank === 3) badge = "🥉";
-
-    return `
-      <tr>
-        <td class="hihi-lb-rank rank-${rank}">${badge}</td>
-        <td>
-          <div class="hihi-lb-user-cell">
-            <img src="${u.photoURL || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2394a3b8\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\'/%3E%3C/svg%3E'}" class="hihi-lb-avatar" alt="Avatar">
-            <div>
-              <div style="font-weight:600;color:var(--hihi-card-text,#f1f5f9);font-size:0.85rem;">${u.displayName}</div>
-              <div style="font-size:0.7rem;color:#94a3b8;">${hihiCurrentLbPeriod !== 'all' ? 'Tổng tích lũy: ' + u.total_score + 'đ' : (u.email || '')}</div>
-            </div>
-          </div>
-        </td>
-        <td style="text-align:right;font-weight:700;color:#38bdf8;font-size:0.9rem;">${u.score.toLocaleString()}đ</td>
-      </tr>
-    `;
-  }).join("");
-}
-
-// Expose HiHi Leaderboard Controller to window
-window.hihiLoadLeaderboardData = hihiLoadLeaderboardData;
-window.hihiRenderFilteredLeaderboard = hihiRenderFilteredLeaderboard;
-window.hihiPopulateMonthOptions = hihiPopulateMonthOptions;
-window.hihiCachedLeaderboardUsers = hihiCachedLeaderboardUsers;
 
 // --- 3. MEMRISE ADMIN STUDIO (MULTI-LANGUAGE SUPPORT) ---
 const HIHI_LANGUAGES = {
@@ -4438,7 +4095,7 @@ function hihiRenderWordTable() {
   tbody.innerHTML = window.hihiStagedWords.map((item, idx) => `
     <tr>
       <td style="color:#94a3b8;font-size:0.75rem;width:30px;">${idx + 1}</td>
-      <td style="font-weight:600;color:var(--hihi-card-text,#f1f5f9);">${item.word || item.english}</td>
+      <td style="font-weight:600;color:var(--color-ink);">${item.word || item.english}</td>
       <td>${item.meaning || item.vietnamese}</td>
       <td style="color:#38bdf8;font-size:0.82rem;">${item.phonetic || item.ipa || "-"}</td>
       <td style="font-size:0.8rem;color:#94a3b8;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.example || "-"}</td>
@@ -4542,7 +4199,7 @@ async function hihiLoadCustomTopicsList() {
       div.style.cssText = "display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);";
       div.innerHTML = `
         <div>
-          <div style="font-weight:700;color:var(--hihi-card-text,#f1f5f9);">
+          <div style="font-weight:700;color:var(--color-ink);">
             <span style="margin-right:6px;">${flag}</span>${t.name}
             <span style="display:inline-block;margin-left:6px;font-size:0.7rem;padding:1px 6px;border-radius:4px;background:rgba(56,189,248,0.15);color:#38bdf8;font-weight:600;">${langLabel}</span>
           </div>
@@ -4787,10 +4444,10 @@ function hihiRenderTopicCards(list) {
   if (!list || list.length === 0) {
     const langLabel = (window.hihiCurrentPickerLang && window.hihiCurrentPickerLang !== 'all') 
       ? `cho ngôn ngữ này` : '';
-    container.innerHTML = `<div style='text-align:center;padding:24px 10px;color:#94a3b8;'>
+    container.innerHTML = `<div style='text-align:center;padding:24px 10px;color:var(--color-muted);font-weight:700;'>
       <div style="font-size:1.5rem;margin-bottom:8px;">🔍</div>
       Không tìm thấy chủ đề phù hợp ${langLabel}.
-      <div style="margin-top:10px;"><button type="button" onclick="hihiSetTopicPickerLang('all')" style="font-size:0.75rem;padding:5px 12px;border-radius:6px;background:#38bdf8;color:#0f172a;font-weight:bold;border:none;cursor:pointer;">Xem tất cả chủ đề</button></div>
+      <div style="margin-top:10px;"><button type="button" onclick="hihiSetTopicPickerLang('all')" style="font-size:0.75rem;padding:6px 14px;border-radius:10px;background:var(--color-yellow);color:#1e1e1e;font-weight:800;border:2px solid var(--color-ink);cursor:pointer;">Xem tất cả chủ đề</button></div>
     </div>`;
     return;
   }
@@ -4798,16 +4455,16 @@ function hihiRenderTopicCards(list) {
     const flag = t.flag || (HIHI_LANGUAGES[t.lang]?.flag) || '🇺🇸';
     const langName = t.langName || (HIHI_LANGUAGES[t.lang]?.name) || 'Tiếng Anh';
     return `
-    <div onclick="hihiSelectTopic('${t.id}')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(56,189,248,0.1)';this.style.borderColor='#38bdf8';" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';">
+    <div onclick="hihiSelectTopic('${t.id}')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:14px;background:var(--color-surface);border:2px solid var(--color-ink);box-shadow:var(--shadow-hard-xs);cursor:pointer;transition:transform 0.12s ease;">
       <div>
-        <div style="font-weight:600;font-size:0.88rem;color:var(--hihi-card-text,#f1f5f9);">${t.name}</div>
-        <div style="font-size:0.72rem;color:#94a3b8;margin-top:2px;">
-          <span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(56,189,248,0.15);color:#38bdf8;font-weight:600;margin-right:6px;">${flag} ${langName}</span>
-          <span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.08);color:#cbd5e1;font-weight:500;margin-right:6px;">${t.category || "Chủ đề"}</span>
+        <div style="font-weight:800;font-size:0.9rem;color:var(--color-ink);">${t.name}</div>
+        <div style="font-size:0.74rem;color:var(--color-muted);margin-top:4px;font-weight:700;">
+          <span style="display:inline-block;padding:2px 8px;border-radius:999px;background:var(--color-cyan);color:#1e1e1e;border:1.5px solid var(--color-ink);font-weight:800;margin-right:6px;">${flag} ${langName}</span>
+          <span style="display:inline-block;padding:2px 8px;border-radius:999px;background:var(--color-surface2);color:var(--color-ink);border:1.5px solid var(--color-ink);font-weight:700;margin-right:6px;">${t.category || "Chủ đề"}</span>
           ${t.isCustom ? "⭐ Tùy chỉnh" : "📚 Kho GitHub"}
         </div>
       </div>
-      <i class="fas fa-chevron-right" style="color:#94a3b8;font-size:0.8rem;"></i>
+      <i class="fas fa-chevron-right" style="color:var(--color-ink);font-size:0.85rem;"></i>
     </div>
   `;}).join("");
 }
