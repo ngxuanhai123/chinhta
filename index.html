@@ -252,16 +252,30 @@
       font-size: 1.5rem; line-height: 1.6; text-align: center;
       min-height: 140px; padding: 30px;
       background: rgba(0,0,0,0.2); border-radius: 20px;
-      border: 1px solid var(--glass-border); margin-bottom: 24px;
+      border: 1px solid var(--glass-border); margin-bottom: 10px;
       color: var(--text-color); font-weight: 500;
       display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px;
       position: relative;
+    }
+    .segment-box.has-lookup {
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: pan-y;
+    }
+    .segment-lookup-hint {
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--color-muted, var(--text-dim));
+      margin: 0 0 16px;
+      min-height: 18px;
+      opacity: 0.9;
     }
     [data-theme="light"] .segment-box { background: rgba(255,255,255,0.5); color: #0f172a; }
     
     .karaoke-word {
       padding: 4px 7px; border-radius: 10px;
-      transition: background-color 0.14s ease, color 0.14s ease, transform 0.14s ease, box-shadow 0.14s ease;
+      transition: background-color 0.12s ease, color 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
       position: relative; display: inline-block; white-space: pre-wrap;
       border: 1.5px solid transparent;
     }
@@ -269,10 +283,11 @@
       cursor: help;
       user-select: none;
       -webkit-user-select: none;
-      border-bottom: 2px dashed rgba(56, 189, 248, 0.6);
+      touch-action: none;
+      border-bottom: 2px dashed rgba(56, 189, 248, 0.72);
     }
     [data-theme="light"] .karaoke-word[data-lookup="true"] {
-      border-bottom-color: rgba(14, 159, 155, 0.55);
+      border-bottom-color: rgba(15, 118, 110, 0.65);
     }
     .karaoke-word[data-lookup="true"]:hover,
     .karaoke-word[data-lookup="true"].is-lookup-active,
@@ -290,11 +305,9 @@
 
     .word-tooltip-floating {
       position: fixed;
-      inset: auto;
-      margin: 0;
       top: 0;
       left: 0;
-      z-index: 9999;
+      z-index: 2147483647;
       overflow: visible !important;
       height: auto;
       background: var(--color-surface, #ffffff);
@@ -310,25 +323,49 @@
       text-align: left;
       opacity: 0;
       visibility: hidden;
-      pointer-events: none;
+      pointer-events: none !important;
       transform: translate3d(0, 4px, 0);
-      transition: opacity 0.14s ease, transform 0.14s ease, visibility 0.14s ease;
+      transition-property: opacity, transform, display, overlay;
+      transition-duration: 0.14s;
+      transition-timing-function: ease-out;
+      transition-behavior: allow-discrete;
     }
-    .word-tooltip-floating.is-open {
+    @supports (anchor-name: --a) or (inset: auto) {
+      .word-tooltip-floating[popover] {
+        inset: auto;
+        margin: 0;
+      }
+    }
+    .word-tooltip-floating:is(:popover-open, .\:popover-open, .is-open) {
       display: block;
       opacity: 1;
       visibility: visible;
-      pointer-events: auto;
+      pointer-events: none !important;
       transform: translate3d(0, 0, 0);
+    }
+    @starting-style {
+      .word-tooltip-floating:is(:popover-open, .\:popover-open, .is-open) {
+        opacity: 0;
+        transform: translate3d(0, 4px, 0);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .word-tooltip-floating {
+        transition-duration: 0.01ms;
+        transform: none;
+      }
     }
     .word-tooltip-floating .wt-word {
       font-weight: 800;
       font-size: 0.78rem;
-      color: var(--color-cyan-deep, #0e9f9b);
+      color: #0f766e;
       margin-bottom: 2px;
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+    [data-theme="dark"] .word-tooltip-floating .wt-word {
+      color: var(--color-cyan, #5cc7ff);
     }
     .word-tooltip-floating .wt-lang {
       font-size: 0.65rem;
@@ -1994,6 +2031,7 @@ body {
       </div>
 
       <div class="segment-box" id="currentSegment"></div>
+      <div class="segment-lookup-hint" id="segmentLookupHint"></div>
 
       <div class="mic-box hidden" id="micBox">
         <button class="mic-btn" id="micBtn"><i class="fas fa-microphone"></i></button>
@@ -2462,6 +2500,7 @@ body {
                     }
                 }
                 const cacheSrc = mappedLocale ? mappedLocale.split('-')[0] : (normalizedLang || 'auto');
+                window.chinhtaTopicLookupLang = cacheSrc !== 'vi' ? cacheSrc : null;
                 if (typeof window.seedChinhtaWordCache === 'function') {
                     words.forEach(w => {
                         const rawW = (w.word || w.english || "").trim();
@@ -2764,6 +2803,7 @@ body {
       randomTextBtn: document.getElementById('randomTextBtn'), 
       start: document.getElementById('startBtn'),
       segment: document.getElementById('currentSegment'),
+      lookupHint: document.getElementById('segmentLookupHint'),
       input: document.getElementById('userInput'),
       feedback: document.getElementById('liveFeedback'),
       fullTrans: document.getElementById('fullText'),
@@ -3202,7 +3242,7 @@ body {
     }
     
     async function translateFull(text, src) {
-      if (!text.trim() || globalLang === 'vi-VN') return text;
+      if (!text.trim() || !src) return text;
       try {
         const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(src)}&tl=vi&dt=t&q=${encodeURIComponent(text)}`);
         if (res.ok) {
@@ -3211,16 +3251,20 @@ body {
           if (gTrans) return gTrans;
         }
       } catch {}
-      try {
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${src}|vi`);
-        const data = await res.json();
-        const mm = data?.responseData?.translatedText || '';
-        if (mm && !mm.toUpperCase().includes('MYMEMORY WARNING')) return mm;
-      } catch {}
+      if (src !== 'auto') {
+        try {
+          const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(src)}|vi`);
+          const data = await res.json();
+          const mm = data?.responseData?.translatedText || '';
+          if (mm && !mm.toUpperCase().includes('MYMEMORY WARNING')) return mm;
+        } catch {}
+      }
       return text;
     }
 
-    const VI_DIACRITIC_RE = /[àáảãạăằắẳẵặâầấẩẫậđèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ]/i;
+    // Chỉ nhận diện các dấu thanh/mũ đặc trưng riêng của Tiếng Việt để không nhầm với Tây Ban Nha / Ý / Pháp
+    const DISTINCT_VI_RE = /[ăằắẳẵặầấẩẫậđềếểễệỉĩịỏõọồốổỗộờớởỡợủũụừứửữựỳỷỹỵ]/i;
+    const FOREIGN_SCRIPT_RE = /[\u3040-\u30ff\u4e00-\u9faf\uac00-\ud7af\u0400-\u04ff\u0600-\u06ff]/;
     const karaokeTooltipEl = document.getElementById('karaokeMeaningTooltip');
     const supportsNativePopover = typeof HTMLElement !== 'undefined' && Object.hasOwn(HTMLElement.prototype, 'popover');
     let activeLookupWordEl = null;
@@ -3237,9 +3281,14 @@ body {
 
     function getActiveLookupSource(segmentText) {
       if (globalLang && globalLang !== 'vi-VN') {
-        return globalLang.split('-')[0];
+        return globalLang.split('-')[0].toLowerCase();
       }
-      if (segmentText && !VI_DIACRITIC_RE.test(segmentText) && /[a-zA-Z]{2,}/.test(segmentText)) {
+      if (window.chinhtaTopicLookupLang && window.chinhtaTopicLookupLang !== 'vi') {
+        return window.chinhtaTopicLookupLang;
+      }
+      if (!segmentText) return null;
+      if (FOREIGN_SCRIPT_RE.test(segmentText)) return 'auto';
+      if (!DISTINCT_VI_RE.test(segmentText) && /\p{L}/u.test(segmentText)) {
         return 'auto';
       }
       return null;
@@ -3248,9 +3297,10 @@ body {
     window.seedChinhtaWordCache = function(rawWord, meaning, srcCode) {
       const cleaned = cleanLookupWord(rawWord).toLowerCase();
       if (!cleaned || !meaning) return;
-      const src = srcCode || 'auto';
-      wordCache[`${src}:${cleaned}`] = { primary: meaning, extra: '' };
-      wordCache[`auto:${cleaned}`] = { primary: meaning, extra: '' };
+      const src = (srcCode || 'auto').toLowerCase();
+      const entry = { primary: meaning, extra: '', detectedSrc: src !== 'auto' ? src : '' };
+      wordCache[`${src}:${cleaned}`] = entry;
+      wordCache[`auto:${cleaned}`] = entry;
     };
 
     function renderTooltipBody(wordText, primary, extra, langLabel) {
@@ -3272,6 +3322,8 @@ body {
       const tipW = tipRect.width || 160;
       const tipH = tipRect.height || 48;
       const margin = 8;
+      const navEl = document.getElementById('hihi-global-nav');
+      const safeTop = Math.max(margin, (navEl ? navEl.getBoundingClientRect().bottom : 0) + 6);
 
       const wordCenter = wordRect.left + wordRect.width / 2;
       let left = Math.round(wordCenter - tipW / 2);
@@ -3279,7 +3331,7 @@ body {
 
       let placement = 'top';
       let top = Math.round(wordRect.top - tipH - 10);
-      if (top < margin) {
+      if (top < safeTop) {
         top = Math.round(wordRect.bottom + 10);
         placement = 'bottom';
       }
@@ -3331,7 +3383,7 @@ body {
         }
       };
       if (immediate) closeNow();
-      else hideTooltipTimer = setTimeout(closeNow, 120);
+      else hideTooltipTimer = setTimeout(closeNow, 160);
     }
 
     async function fetchWordTranslation(cleanWord, src, signal) {
@@ -3341,6 +3393,7 @@ body {
         if (res.ok) {
           const data = await res.json();
           const primary = Array.isArray(data?.[0]) ? data[0].map(chunk => chunk?.[0] || '').join('').trim() : '';
+          const detectedSrc = typeof data?.[2] === 'string' ? data[2].toLowerCase() : '';
           let extraParts = [];
           if (Array.isArray(data?.[1])) {
             for (const entry of data[1]) {
@@ -3351,7 +3404,7 @@ body {
             }
           }
           if (primary) {
-            return { primary, extra: extraParts.join(' • ') };
+            return { primary, extra: extraParts.join(' • '), detectedSrc };
           }
         }
       } catch (err) {
@@ -3365,11 +3418,16 @@ body {
           const data = await res.json();
           const result = (data?.responseData?.translatedText || '').trim();
           if (result && !result.toUpperCase().includes('MYMEMORY WARNING')) {
-            return { primary: result, extra: '' };
+            return { primary: result, extra: '', detectedSrc: src };
           }
         }
       }
       return null;
+    }
+
+    function formatLookupBadge(src, detectedSrc) {
+      const code = (src && src !== 'auto') ? src : (detectedSrc || '');
+      return code ? `${code.toUpperCase()} → VI` : 'Tự động → VI';
     }
 
     async function showWordMeaning(wordEl) {
@@ -3383,9 +3441,12 @@ body {
 
       const src = wordEl.dataset.src || getActiveLookupSource(segments[currentIdx]) || 'auto';
       const cacheKey = `${src}:${cleanWord.toLowerCase()}`;
-      const langBadge = src === 'auto' ? 'Tự động → VI' : `${src.toUpperCase()} → VI`;
 
       if (activeLookupWordEl && activeLookupWordEl !== wordEl) {
+        if (activeLookupAbort) {
+          activeLookupAbort.abort();
+          activeLookupAbort = null;
+        }
         activeLookupWordEl.classList.remove('is-lookup-active');
         activeLookupWordEl.removeAttribute('aria-describedby');
       }
@@ -3395,12 +3456,12 @@ body {
 
       const cached = wordCache[cacheKey] || wordCache[`auto:${cleanWord.toLowerCase()}`];
       if (cached) {
-        renderTooltipBody(cleanWord, cached.primary, cached.extra, langBadge);
+        renderTooltipBody(cleanWord, cached.primary, cached.extra, formatLookupBadge(src, cached.detectedSrc));
         openTooltipForWord(wordEl);
         return;
       }
 
-      renderTooltipBody(cleanWord, 'Đang tra nghĩa...', '', langBadge);
+      renderTooltipBody(cleanWord, 'Đang tra nghĩa...', '', formatLookupBadge(src, ''));
       openTooltipForWord(wordEl);
 
       lookupDebounceTimer = setTimeout(async () => {
@@ -3414,52 +3475,94 @@ body {
           if (activeLookupWordEl !== wordEl) return;
           if (entry && entry.primary) {
             wordCache[cacheKey] = entry;
-            renderTooltipBody(cleanWord, entry.primary, entry.extra, langBadge);
+            if (!wordCache[`auto:${cleanWord.toLowerCase()}`]) {
+              wordCache[`auto:${cleanWord.toLowerCase()}`] = entry;
+            }
+            renderTooltipBody(cleanWord, entry.primary, entry.extra, formatLookupBadge(src, entry.detectedSrc));
           } else {
-            renderTooltipBody(cleanWord, 'Chưa tìm thấy nghĩa tiếng Việt', '', langBadge);
+            renderTooltipBody(cleanWord, 'Chưa tìm thấy nghĩa tiếng Việt', '', formatLookupBadge(src, ''));
           }
           positionTooltipForWord(wordEl);
         } catch (err) {
           if (err && err.name === 'AbortError') return;
           if (activeLookupWordEl === wordEl) {
-            renderTooltipBody(cleanWord, 'Không kết nối được máy chủ dịch', '', langBadge);
+            renderTooltipBody(cleanWord, 'Không kết nối được máy chủ dịch', '', formatLookupBadge(src, ''));
             positionTooltipForWord(wordEl);
           }
         }
-      }, 40);
+      }, 35);
+    }
+
+    function findLookupWordAtOrNearPoint(clientX, clientY) {
+      if (!els.segment) return null;
+      const directTarget = document.elementFromPoint(clientX, clientY);
+      const directWord = directTarget && directTarget.closest ? directTarget.closest('.karaoke-word[data-lookup="true"]') : null;
+      if (directWord && els.segment.contains(directWord)) return directWord;
+
+      const lookupNodes = els.segment.querySelectorAll('.karaoke-word[data-lookup="true"]');
+      if (!lookupNodes.length) return null;
+
+      let bestWord = null;
+      let bestDistSq = Infinity;
+      const padX = pointerDraggingInSegment ? 18 : 10;
+      const padY = pointerDraggingInSegment ? 14 : 6;
+
+      for (const el of lookupNodes) {
+        const r = el.getBoundingClientRect();
+        if (clientX >= r.left - padX && clientX <= r.right + padX && clientY >= r.top - padY && clientY <= r.bottom + padY) {
+          const cx = Math.max(r.left, Math.min(clientX, r.right));
+          const cy = Math.max(r.top, Math.min(clientY, r.bottom));
+          const distSq = (clientX - cx) ** 2 + (clientY - cy) ** 2;
+          if (distSq < bestDistSq) {
+            bestDistSq = distSq;
+            bestWord = el;
+          }
+        }
+      }
+      return bestWord;
     }
 
     function handleSegmentPointerAt(clientX, clientY) {
-      const target = document.elementFromPoint(clientX, clientY);
-      const wordEl = target && target.closest ? target.closest('.karaoke-word[data-lookup="true"]') : null;
-      if (wordEl && els.segment.contains(wordEl)) {
+      if (!els.segment) return;
+      const wordEl = findLookupWordAtOrNearPoint(clientX, clientY);
+      if (wordEl) {
+        clearTimeout(hideTooltipTimer);
         if (activeLookupWordEl !== wordEl || !karaokeTooltipEl.classList.contains('is-open')) {
           showWordMeaning(wordEl);
         }
-      } else if (!target || (target !== karaokeTooltipEl && !karaokeTooltipEl.contains(target))) {
-        hideKaraokeTooltip(false);
+        return;
       }
+      const segRect = els.segment.getBoundingClientRect();
+      const insideSegment = clientX >= segRect.left && clientX <= segRect.right && clientY >= segRect.top && clientY <= segRect.bottom;
+      if (pointerDraggingInSegment && insideSegment) {
+        clearTimeout(hideTooltipTimer);
+        return;
+      }
+      hideKaraokeTooltip(false);
     }
 
     if (els.segment) {
+      els.segment.addEventListener('dragstart', (e) => {
+        if (els.segment.classList.contains('has-lookup')) e.preventDefault();
+      });
       els.segment.addEventListener('pointerover', (e) => {
         const wordEl = e.target.closest('.karaoke-word[data-lookup="true"]');
         if (wordEl) showWordMeaning(wordEl);
       });
       els.segment.addEventListener('pointerdown', (e) => {
-        const wordEl = e.target.closest('.karaoke-word[data-lookup="true"]');
+        if (!els.segment.classList.contains('has-lookup')) return;
+        pointerDraggingInSegment = true;
+        const wordEl = e.target.closest('.karaoke-word[data-lookup="true"]') || findLookupWordAtOrNearPoint(e.clientX, e.clientY);
         if (wordEl) {
-          pointerDraggingInSegment = true;
           showWordMeaning(wordEl);
         }
       });
       els.segment.addEventListener('pointermove', (e) => {
+        if (!els.segment.classList.contains('has-lookup')) return;
         handleSegmentPointerAt(e.clientX, e.clientY);
       });
-      els.segment.addEventListener('pointerleave', (e) => {
+      els.segment.addEventListener('pointerleave', () => {
         if (pointerDraggingInSegment) return;
-        const related = e.relatedTarget;
-        if (related && karaokeTooltipEl && (related === karaokeTooltipEl || karaokeTooltipEl.contains(related))) return;
         hideKaraokeTooltip(false);
       });
       els.segment.addEventListener('focusin', (e) => {
@@ -3468,26 +3571,22 @@ body {
       });
       els.segment.addEventListener('focusout', (e) => {
         const related = e.relatedTarget;
-        if (related && (els.segment.contains(related) || (karaokeTooltipEl && karaokeTooltipEl.contains(related)))) return;
+        if (related && els.segment.contains(related)) return;
         hideKaraokeTooltip(false);
       });
     }
 
-    if (karaokeTooltipEl) {
-      karaokeTooltipEl.addEventListener('pointerenter', () => clearTimeout(hideTooltipTimer));
-      karaokeTooltipEl.addEventListener('pointerleave', () => hideKaraokeTooltip(false));
-      if (typeof ResizeObserver === 'function') {
-        let roRaf = 0;
-        new ResizeObserver(() => {
-          if (roRaf) cancelAnimationFrame(roRaf);
-          roRaf = requestAnimationFrame(() => {
-            roRaf = 0;
-            if (activeLookupWordEl && karaokeTooltipEl.classList.contains('is-open')) {
-              positionTooltipForWord(activeLookupWordEl);
-            }
-          });
-        }).observe(karaokeTooltipEl);
-      }
+    if (karaokeTooltipEl && typeof ResizeObserver === 'function') {
+      let roRaf = 0;
+      new ResizeObserver(() => {
+        if (roRaf) cancelAnimationFrame(roRaf);
+        roRaf = requestAnimationFrame(() => {
+          roRaf = 0;
+          if (activeLookupWordEl && karaokeTooltipEl.classList.contains('is-open')) {
+            positionTooltipForWord(activeLookupWordEl);
+          }
+        });
+      }).observe(karaokeTooltipEl);
     }
 
     document.addEventListener('pointermove', (e) => {
@@ -3495,11 +3594,12 @@ body {
       handleSegmentPointerAt(e.clientX, e.clientY);
     }, { passive: true });
     document.addEventListener('pointerup', () => { pointerDraggingInSegment = false; });
-    document.addEventListener('pointercancel', () => { pointerDraggingInSegment = false; });
+    document.addEventListener('pointercancel', () => {
+      if (pointerDraggingInSegment) pointerDraggingInSegment = false;
+    });
     document.addEventListener('pointerdown', (e) => {
       if (!activeLookupWordEl) return;
       if (els.segment && els.segment.contains(e.target)) return;
-      if (karaokeTooltipEl && karaokeTooltipEl.contains(e.target)) return;
       hideKaraokeTooltip(true);
     });
     document.addEventListener('keydown', (e) => {
@@ -3516,6 +3616,8 @@ body {
     // Display
     async function showSegment() {
       hideKaraokeTooltip(true);
+      if (els.segment) els.segment.classList.remove('has-lookup');
+      if (els.lookupHint) els.lookupHint.textContent = '';
       if (!segments.length || currentIdx < 0 || currentIdx >= segments.length) return;
       const text = segments[currentIdx];
       // Cho phép chuyển câu kế tiếp luôn (không disable nút Next)
@@ -3548,6 +3650,7 @@ body {
       const fragment = document.createDocumentFragment();
       const parts = text.split(/(\s+)/);
       let charIndex = 0;
+      let lookupWordCount = 0;
       karaokeWords = [];
 
       parts.forEach(part => {
@@ -3568,6 +3671,7 @@ body {
                   span.dataset.word = part;
                   span.dataset.src = lookupSrc;
                   span.tabIndex = 0;
+                  lookupWordCount++;
               }
 
               karaokeWords.push(span);
@@ -3577,7 +3681,13 @@ body {
       });
 
       els.segment.innerHTML = '';
+      els.segment.classList.toggle('has-lookup', lookupWordCount > 0);
       els.segment.appendChild(fragment);
+      if (els.lookupHint) {
+          els.lookupHint.textContent = lookupWordCount > 0
+            ? '💡 Rà chuột hoặc giữ kéo qua từ gốc ở trên để xem nghĩa tiếng Việt'
+            : '';
+      }
       
       // Logic đọc & highlight
       if (currentMode.includes('listen') && currentMode !== 'read-only') {
@@ -3759,6 +3869,8 @@ body {
         const randomText = library[Math.floor(Math.random() * library.length)];
         els.text.value = randomText;
         userHasEditedText = false;
+        window.userHasEditedText = false;
+        window.chinhtaTopicLookupLang = null;
         els.resetTextBtn.style.display = 'inline-flex';
     }
 
@@ -3779,10 +3891,13 @@ body {
     });
     if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = loadVoices;
 
-    els.lang.addEventListener('change', () => {
+    els.lang.addEventListener('change', (e) => {
       globalLang = els.lang.value;
       localStorage.setItem('lang', globalLang);
       loadVoices();
+      if (e && e.isTrusted) {
+        window.chinhtaTopicLookupLang = null;
+      }
       if ((!userHasEditedText && !window.userHasEditedText) || !els.text.value.trim()) {
         setRandomText(); // Chỉ tự đổi bài mẫu nếu người dùng chưa tự nhập nội dung riêng
       }
@@ -3791,11 +3906,15 @@ body {
 
     els.text.addEventListener('input', () => {
         userHasEditedText = true;
+        window.chinhtaTopicLookupLang = null;
         els.resetTextBtn.style.display = 'inline-flex';
     });
 
     els.resetTextBtn.addEventListener('click', () => {
         els.text.value = '';
+        userHasEditedText = false;
+        window.userHasEditedText = false;
+        window.chinhtaTopicLookupLang = null;
         els.resetTextBtn.style.display = 'none';
         els.text.focus();
     });
