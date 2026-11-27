@@ -74,7 +74,9 @@ async function runTests() {
   // TEST 6: Đồng bộ Bảng Xếp Hạng toàn hệ thống (Toàn Hệ Thống / Riêng Chính Tả) & SSO
   try {
     const hasScopeToggle = html.includes('chinhtaSetScope');
-    const hasHihiLb = html.includes('hihi_leaderboard') && html.includes('hihiLeaderboardModal');
+    const lbPath = path.join(dir, 'hihi-leaderboard.js');
+    const lbJs = fs.existsSync(lbPath) ? fs.readFileSync(lbPath, 'utf8') : '';
+    const hasHihiLb = html.includes('hihi_leaderboard') && (html.includes('hihiLeaderboardModal') || (html.includes('hihi-leaderboard.js') && html.includes('hihiOpenLeaderboard') && lbJs.includes('hihiLeaderboardModal')));
     const hasSSO = html.includes('tuvung-88e8d') && html.includes('window.hihiAuth');
     const passed = hasScopeToggle && hasHihiLb && hasSSO;
     recordResult('6. Đồng bộ Bảng Xếp Hạng toàn hệ sinh thái & Single Sign-On (SSO)', passed, passed ? 'Đã liên kết hihi_leaderboard & SSO tuvung-88e8d' : 'Chưa đồng bộ BXH chung');
