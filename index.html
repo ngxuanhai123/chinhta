@@ -1879,6 +1879,7 @@ body {
 
              <div id="systemVoicePanel" class="hidden">
                 <select id="voiceSelect" style="width:100%; margin-bottom:5px;"></select>
+                <div id="voiceStatusHint" style="font-size:0.75rem; color:var(--color-muted, #64748b); font-weight:600; margin-top:4px;"></div>
              </div>
              
              <div style="display:flex; gap:10px;">
@@ -2753,7 +2754,8 @@ body {
     let voices = [];
     let selectedVoice = null;
     let currentAudio = null; // Biến theo dõi audio của Google TTS
-    let useGoogleVoice = false; // System voice phản hồi nhanh và ổn định hơn khi chạy local
+    let ttsPlaybackToken = 0; // Guard chống chồng chéo playback nhiều chunk
+    let useGoogleVoice = localStorage.getItem('chinhta_voice_source') === 'google';
     let karaokeTimer = []; // Mảng chứa các timeout cho hiệu ứng karaoke giả lập
     
     let segments = [];
@@ -2904,52 +2906,125 @@ body {
     }
 
     // TTS & Translate
+    const LANG_VOICE_RULES = {
+      vi: { label: 'Tiếng Việt', prefixes: ['vi'], nameRe: /vietnamese|tiếng việt/i, google: 'vi', fallbackPrefixes: [] },
+      en: { label: 'Tiếng Anh', prefixes: ['en'], nameRe: /\benglish\b/i, google: 'en-US', fallbackPrefixes: [] },
+      id: { label: 'Tiếng Indonesia', prefixes: ['id', 'in'], nameRe: /indonesian|bahasa indonesia|\bardi\b|\bgadis\b/i, google: 'id', fallbackPrefixes: [] },
+      es: { label: 'Tiếng Tây Ban Nha', prefixes: ['es'], nameRe: /\bspanish|español/i, google: 'es', fallbackPrefixes: [] },
+      it: { label: 'Tiếng Ý', prefixes: ['it'], nameRe: /\bitalian|italiano/i, google: 'it', fallbackPrefixes: [] },
+      la: { label: 'Tiếng Latin', prefixes: ['la'], nameRe: /\blatin\b/i, google: 'la', fallbackPrefixes: ['it'] }
+    };
+
+    const PREVIEW_TEXTS = {
+      'vi-VN': 'Xin chào, đây là giọng đọc thử tiếng Việt.',
+      'en-US': 'Hello, this is an English voice preview.',
+      'id-ID': 'Halo, ini adalah suara percobaan bahasa Indonesia.',
+      'es-ES': 'Hola, esta es una prueba de voz en español.',
+      'it-IT': 'Ciao, questa è una prova vocale in italiano.',
+      'la-VA': 'Salve, haec est probatio vocis Latinae.'
+    };
+
+    function getActivePracticeLang() {
+      const selVal = els.lang && els.lang.value ? els.lang.value : '';
+      const candidate = selVal || globalLang || 'vi-VN';
+      if (LANG_VOICE_RULES[candidate.split('-')[0].toLowerCase()]) {
+        globalLang = candidate;
+        return candidate;
+      }
+      return 'vi-VN';
+    }
+
+    function normalizeLangTag(langTag) {
+      return String(langTag || '').trim().toLowerCase().replace(/_/g, '-');
+    }
+
+    function voiceMatchesPrefixes(voice, prefixes, nameRe) {
+      if (!voice) return false;
+      const vLang = normalizeLangTag(voice.lang);
+      const base = vLang.split('-')[0];
+      if (prefixes.includes(base)) return true;
+      return !!(nameRe && nameRe.test(voice.name || ''));
+    }
+
+    function voiceMatchesLang(voice, lang) {
+      const short = (lang || 'vi-VN').split('-')[0].toLowerCase();
+      const rule = LANG_VOICE_RULES[short];
+      if (!rule) return false;
+      if (voiceMatchesPrefixes(voice, rule.prefixes, rule.nameRe)) return true;
+      if (rule.fallbackPrefixes.length) {
+        return voiceMatchesPrefixes(voice, rule.fallbackPrefixes, null);
+      }
+      return false;
+    }
+
+    function rankVoice(voice, targetLang) {
+      const targetNorm = normalizeLangTag(targetLang);
+      const vLang = normalizeLangTag(voice.lang);
+      const name = (voice.name || '').toLowerCase();
+      let score = 0;
+      if (vLang === targetNorm) score += 100;
+      else if (vLang.startsWith(targetNorm.split('-')[0] + '-')) score += 60;
+      if (name.includes('natural') || name.includes('online')) score += 30;
+      if (name.includes('google')) score += 20;
+      if (!voice.localService) score += 5;
+      return score;
+    }
+
+    function filterVoicesByLang(allVoices, lang) {
+      const short = (lang || 'vi-VN').split('-')[0].toLowerCase();
+      const rule = LANG_VOICE_RULES[short] || LANG_VOICE_RULES.vi;
+      let matched = allVoices.filter(v => voiceMatchesPrefixes(v, rule.prefixes, rule.nameRe));
+      if (matched.length === 0 && rule.fallbackPrefixes.length) {
+        matched = allVoices.filter(v => voiceMatchesPrefixes(v, rule.fallbackPrefixes, null));
+      }
+      return matched.sort((a, b) => rankVoice(b, lang) - rankVoice(a, lang));
+    }
+
+    function setVoiceStatusHint(message) {
+      const hintEl = document.getElementById('voiceStatusHint');
+      if (hintEl) hintEl.textContent = message || '';
+    }
+
     function loadVoices() {
+      const activeLang = getActivePracticeLang();
+      const short = activeLang.split('-')[0].toLowerCase();
+      const langLabel = (LANG_VOICE_RULES[short] && LANG_VOICE_RULES[short].label) || activeLang;
+
       if (!('speechSynthesis' in window)) {
+        voices = [];
+        selectedVoice = null;
         els.voiceSelect.innerHTML = '';
         const option = document.createElement('option');
-        option.textContent = 'Trình duyệt không hỗ trợ';
+        option.value = '';
+        option.textContent = `Trình duyệt không hỗ trợ giọng máy (dùng Google ${langLabel})`;
         els.voiceSelect.appendChild(option);
+        setVoiceStatusHint(`Tự động phát bằng Google TTS cho ${langLabel}.`);
         return;
       }
 
-      // Clear old options
       els.voiceSelect.innerHTML = '';
-      
-      const targetCode = globalLang.split('-')[0]; 
-      // Lấy voices bắt đầu bằng mã ngôn ngữ (vd: 'vi', 'en', 'id')
-      voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(targetCode));
-      
-      // Fallback nếu không tìm thấy voice đúng (vd tiếng Latin thường không có, dùng tiếng Ý hoặc Anh)
-      if (voices.length === 0) {
-          if (globalLang.startsWith('la')) {
-             voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('it') || v.lang.startsWith('en'));
-          } else if (globalLang.startsWith('id')) {
-             // Một số trình duyệt dùng code 'in' cho Indo thay vì 'id'
-             voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('in') || v.lang.startsWith('ms'));
-          }
-      }
-      
-      // Nếu vẫn không có, lấy hết (fallback cuối cùng)
-      if (voices.length === 0) voices = speechSynthesis.getVoices();
+      const allVoices = speechSynthesis.getVoices() || [];
+      voices = filterVoicesByLang(allVoices, activeLang);
 
-      if (voices.length) {
+      if (voices.length > 0) {
         voices.forEach(v => {
           const option = document.createElement('option');
           option.value = v.name;
           option.textContent = `${v.name} (${v.lang})`;
           els.voiceSelect.appendChild(option);
         });
+        const scopedSaved = localStorage.getItem(`voice_${activeLang}`);
+        selectedVoice = voices.find(v => v.name === scopedSaved) || voices[0];
+        if (selectedVoice) els.voiceSelect.value = selectedVoice.name;
+        setVoiceStatusHint('');
       } else {
+        selectedVoice = null;
         const option = document.createElement('option');
-        option.textContent = 'Mặc định (System)';
+        option.value = '';
+        option.textContent = `Chưa có giọng hệ thống (${langLabel}) — tự dùng Google TTS`;
         els.voiceSelect.appendChild(option);
+        setVoiceStatusHint(`Thiết bị chưa cài giọng hệ thống cho ${langLabel}; sẽ tự động phát bằng giọng Google chuẩn.`);
       }
-      
-      // Restore selected voice if possible
-      const saved = localStorage.getItem('voice');
-      selectedVoice = voices.find(v => v.name === saved) || voices[0];
-      if (selectedVoice) els.voiceSelect.value = selectedVoice.name;
     }
 
     // Handle Voice Source UI
@@ -2965,32 +3040,46 @@ body {
         }
     }
 
-    els.btnGoogle.addEventListener('click', () => { useGoogleVoice = true; updateSourceUI(); });
-    els.btnSystem.addEventListener('click', () => { useGoogleVoice = false; updateSourceUI(); });
+    els.btnGoogle.addEventListener('click', () => {
+      useGoogleVoice = true;
+      localStorage.setItem('chinhta_voice_source', 'google');
+      updateSourceUI();
+    });
+    els.btnSystem.addEventListener('click', () => {
+      useGoogleVoice = false;
+      localStorage.setItem('chinhta_voice_source', 'system');
+      loadVoices();
+      updateSourceUI();
+    });
 
     // === SYSTEM TTS ===
-    function speakSystem(text, onWord) {
+    function speakSystem(text, onWord, langOverride) {
       if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
           setEmphasis(els.feedback, 'Trình duyệt này chưa hỗ trợ đọc văn bản.');
           return;
       }
 
-      if (!selectedVoice && voices.length > 0) {
-          selectedVoice = voices[0];
+      const activeLang = langOverride || getActivePracticeLang();
+      if (!voices.length || (selectedVoice && !voiceMatchesLang(selectedVoice, activeLang))) {
+        loadVoices();
       }
-      
+
       const utterance = new SpeechSynthesisUtterance(text);
-      if (selectedVoice) utterance.voice = selectedVoice;
+      if (selectedVoice && voiceMatchesLang(selectedVoice, activeLang)) {
+        utterance.voice = selectedVoice;
+        utterance.lang = selectedVoice.lang || activeLang;
+      } else {
+        // Không gắn giọng ngoại lai (tránh dính Microsoft An vi-VN khi chọn id-ID)
+        utterance.lang = activeLang.startsWith('la') ? 'it-IT' : activeLang;
+      }
       utterance.rate = speechRate;
-      utterance.lang = globalLang; // Quan trọng: set lang cho utterance để system chọn đúng engine
-      
+
       if (onWord) {
         utterance.onboundary = (e) => {
           if (e.name === 'word') onWord(e.charIndex, e.charLength);
         };
       }
-      
-      // Fix lỗi Chrome đôi khi treo TTS
+
       speechSynthesis.cancel();
       setTimeout(() => {
           speechSynthesis.speak(utterance);
@@ -3000,84 +3089,122 @@ body {
     // === GOOGLE TTS ===
     function getGoogleLangCode(lang) {
         if (!lang) return 'vi';
-        const lower = lang.toLowerCase();
-        // Ánh xạ chính xác mã Google TTS
-        if (lower.startsWith('vi')) return 'vi';
-        if (lower.startsWith('en')) return 'en-US'; // Anh Mỹ
-        if (lower.startsWith('id')) return 'id'; // Indo
-        if (lower.startsWith('es')) return 'es'; // TBN
-        if (lower.startsWith('it')) return 'it'; // Ý
-        if (lower.startsWith('la')) return 'la'; // Latin (có hỗ trợ cơ bản)
-        return lower.split('-')[0]; // fallback
+        const short = lang.toLowerCase().split('-')[0];
+        return (LANG_VOICE_RULES[short] && LANG_VOICE_RULES[short].google) || short;
+    }
+
+    function splitTtsChunks(text, maxLen) {
+      const cleaned = String(text || '').replace(/\s+/g, ' ').trim();
+      if (!cleaned) return [];
+      if (cleaned.length <= maxLen) return [cleaned];
+
+      const chunks = [];
+      let remaining = cleaned;
+      while (remaining.length > maxLen) {
+        let cut = remaining.lastIndexOf(' ', maxLen);
+        if (cut < Math.floor(maxLen * 0.4)) cut = maxLen;
+        chunks.push(remaining.slice(0, cut).trim());
+        remaining = remaining.slice(cut).trim();
+      }
+      if (remaining) chunks.push(remaining);
+      return chunks;
     }
 
     // Hàm giả lập Karaoke cho Google Voice (do Google Audio không có sự kiện onboundary)
     function simulateKaraoke(text, onWord) {
-        // Xóa các timer cũ
         karaokeTimer.forEach(t => clearTimeout(t));
         karaokeTimer = [];
-
         if (!onWord) return;
 
-        // Ước lượng thời gian: Giả sử trung bình 1 từ mất 0.5 giây / tốc độ
-        // Đây chỉ là ước lượng để tạo hiệu ứng "chạy", không chính xác 100% như System Voice
         const words = text.split(/(\s+)/);
         let charIndex = 0;
         let timeAccumulator = 0;
-        // Thời gian ước tính cho mỗi ký tự (ms)
-        const msPerChar = 60 / speechRate; 
+        const msPerChar = 60 / speechRate;
 
         words.forEach(w => {
             const len = w.length;
             if (w.trim().length > 0) {
-                 // Tạo timeout để highlight từ này
                  const t = setTimeout(() => {
                      onWord(charIndex, len);
                  }, timeAccumulator);
                  karaokeTimer.push(t);
             }
-            // Cộng thời gian chờ cho từ tiếp theo
-            timeAccumulator += (len * msPerChar) + 50; // +50ms độ trễ giữa các từ
+            timeAccumulator += (len * msPerChar) + 50;
             charIndex += len;
         });
     }
 
+    function speakGoogle(text, activeLang, onWord) {
+      const chunks = splitTtsChunks(text, 160);
+      if (!chunks.length) return;
+      const tl = getGoogleLangCode(activeLang);
+      const token = ++ttsPlaybackToken;
+      let startedKaraoke = false;
+
+      const playChunk = (idx) => {
+        if (token !== ttsPlaybackToken || idx >= chunks.length) return;
+        const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${encodeURIComponent(tl)}&dt=t&q=${encodeURIComponent(chunks[idx])}`;
+        const audio = new Audio(url);
+        audio.playbackRate = speechRate;
+        currentAudio = audio;
+        let settled = false;
+
+        const handleFailure = (e) => {
+          if (settled || token !== ttsPlaybackToken) return;
+          settled = true;
+          console.warn('Google TTS lỗi/không phản hồi, fallback sang giọng hệ thống đúng ngôn ngữ:', e);
+          currentAudio = null;
+          speakSystem(chunks.slice(idx).join(' '), startedKaraoke ? null : onWord, activeLang);
+        };
+
+        audio.addEventListener('error', handleFailure, { once: true });
+        audio.addEventListener('ended', () => {
+          if (token !== ttsPlaybackToken) return;
+          if (idx + 1 < chunks.length) {
+            playChunk(idx + 1);
+          } else {
+            currentAudio = null;
+          }
+        }, { once: true });
+
+        audio.play()
+          .then(() => {
+            if (token !== ttsPlaybackToken) {
+              audio.pause();
+              return;
+            }
+            if (!startedKaraoke && onWord) {
+              startedKaraoke = true;
+              simulateKaraoke(text, onWord);
+            }
+          })
+          .catch(handleFailure);
+      };
+
+      playChunk(0);
+    }
+
     function speak(text, onWord) {
-      // Dừng audio cũ (Google hoặc System)
+      ttsPlaybackToken++;
       if (currentAudio) {
          currentAudio.pause();
          currentAudio = null;
       }
       if ('speechSynthesis' in window) speechSynthesis.cancel();
-      karaokeTimer.forEach(t => clearTimeout(t)); // Xóa highlight cũ
+      karaokeTimer.forEach(t => clearTimeout(t));
       karaokeTimer = [];
 
-      if (useGoogleVoice && text.length <= 180) {
-          const tl = getGoogleLangCode(globalLang);
-          const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${tl}&q=${encodeURIComponent(text)}`;
+      const activeLang = getActivePracticeLang();
+      if (!voices.length && 'speechSynthesis' in window) {
+        loadVoices();
+      }
+      const hasMatchingSysVoice = !!(selectedVoice && voiceMatchesLang(selectedVoice, activeLang));
 
-          currentAudio = new Audio(url);
-          currentAudio.playbackRate = speechRate;
-          let didFallback = false;
-
-          const triggerFallback = (e) => {
-              if (didFallback) return;
-              didFallback = true;
-              console.warn("Google TTS lỗi/không hỗ trợ, chuyển sang System Voice.", e);
-              currentAudio = null;
-              speakSystem(text, onWord);
-          };
-
-          currentAudio.addEventListener('error', triggerFallback, { once: true });
-          
-          currentAudio.play()
-             .then(() => {
-                 // Nếu play thành công, chạy giả lập karaoke
-                 simulateKaraoke(text, onWord);
-             })
-             .catch(triggerFallback);
+      // Dùng Google TTS khi người dùng chọn Google, hoặc khi thiết bị không có giọng Hệ thống khớp ngôn ngữ đang chọn
+      if (useGoogleVoice || !hasMatchingSysVoice) {
+        speakGoogle(text, activeLang, onWord);
       } else {
-          speakSystem(text, onWord);
+        speakSystem(text, onWord, activeLang);
       }
     }
     
@@ -3648,11 +3775,13 @@ body {
     setupTabs(els.mainTabs(), els.tabContents());
 
     els.voiceSelect.addEventListener('change', () => {
-        selectedVoice = voices.find(v => v.name === els.voiceSelect.value);
-        if (selectedVoice) localStorage.setItem('voice', selectedVoice.name);
+        const activeLang = getActivePracticeLang();
+        selectedVoice = voices.find(v => v.name === els.voiceSelect.value) || null;
+        if (selectedVoice) localStorage.setItem(`voice_${activeLang}`, selectedVoice.name);
     });
     els.previewVoice.addEventListener('click', () => {
-         const previewText = (globalLang === 'vi-VN') ? 'Xin chào, đây là giọng đọc thử.' : 'Hello, this is a voice preview.';
+         const activeLang = getActivePracticeLang();
+         const previewText = PREVIEW_TEXTS[activeLang] || PREVIEW_TEXTS['en-US'];
          speak(previewText, null);
     });
     if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = loadVoices;
@@ -3661,7 +3790,10 @@ body {
       globalLang = els.lang.value;
       localStorage.setItem('lang', globalLang);
       loadVoices();
-      setRandomText(); // Tự động đổi bài mẫu khi đổi ngôn ngữ cho tiện
+      if ((!userHasEditedText && !window.userHasEditedText) || !els.text.value.trim()) {
+        setRandomText(); // Chỉ tự đổi bài mẫu nếu người dùng chưa tự nhập nội dung riêng
+      }
+      if (recognition) recognition.lang = globalLang;
     });
 
     els.text.addEventListener('input', () => {
@@ -3753,10 +3885,15 @@ body {
     initTheme(); 
     els.lang.value = globalLang;
     authEls.monthDisplay.textContent = getMonthKey();
+    loadVoices();
     updateSourceUI();
     if (!els.text.value.trim()) setRandomText();
     // Đã loại bỏ popup login fallback độc lập
     window.addEventListener('load', loadVoices);
+    window.addEventListener('pageshow', () => {
+      els.lang.value = globalLang;
+      loadVoices();
+    });
   </script>
 
 <script id="hihi-global-nav-script">
